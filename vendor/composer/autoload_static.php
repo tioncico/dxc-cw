@@ -114,6 +114,8 @@ class ComposerStaticInitb35336b0328778ff9c7f64a5d0c9c8ab
             'EasySwoole\\CodeGeneration\\' => 26,
             'EasySwoole\\Bridge\\' => 18,
             'EasySwoole\\Annotation\\' => 22,
+            'EasySwoole\\Actor\\Test\\' => 22,
+            'EasySwoole\\Actor\\' => 17,
         ),
         'D' => 
         array (
@@ -369,6 +371,14 @@ class ComposerStaticInitb35336b0328778ff9c7f64a5d0c9c8ab
         'EasySwoole\\Annotation\\' => 
         array (
             0 => __DIR__ . '/..' . '/easyswoole/annotation/src',
+        ),
+        'EasySwoole\\Actor\\Test\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/easyswoole/actor/test',
+        ),
+        'EasySwoole\\Actor\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/easyswoole/actor/src',
         ),
         'Doctrine\\Instantiator\\' => 
         array (
@@ -644,7 +654,6 @@ class ComposerStaticInitb35336b0328778ff9c7f64a5d0c9c8ab
         'PHPUnit\\Framework\\SkippedTestSuiteError' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Exception/SkippedTestSuiteError.php',
         'PHPUnit\\Framework\\SyntheticError' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Exception/SyntheticError.php',
         'PHPUnit\\Framework\\SyntheticSkippedError' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Exception/SyntheticSkippedError.php',
-        'PHPUnit\\Framework\\Test' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Test.php',
         'PHPUnit\\Framework\\TestBuilder' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/TestBuilder.php',
         'PHPUnit\\Framework\\TestCase' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/TestCase.php',
         'PHPUnit\\Framework\\TestFailure' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/TestFailure.php',
@@ -802,7 +811,6 @@ class ComposerStaticInitb35336b0328778ff9c7f64a5d0c9c8ab
         'PHPUnit\\Util\\PHP\\WindowsPhpProcess' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/PHP/WindowsPhpProcess.php',
         'PHPUnit\\Util\\Printer' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Printer.php',
         'PHPUnit\\Util\\RegularExpression' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/RegularExpression.php',
-        'PHPUnit\\Util\\Test' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Test.php',
         'PHPUnit\\Util\\TestDox\\CliTestDoxPrinter' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/TestDox/CliTestDoxPrinter.php',
         'PHPUnit\\Util\\TestDox\\HtmlResultPrinter' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/TestDox/HtmlResultPrinter.php',
         'PHPUnit\\Util\\TestDox\\NamePrettifier' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/TestDox/NamePrettifier.php',

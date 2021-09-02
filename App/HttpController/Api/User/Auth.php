@@ -4,9 +4,15 @@
 namespace App\HttpController\Api\User;
 
 
+use App\Model\BaseModel;
+use App\Model\Game\UserAttributeModel;
+use App\Model\Game\UserBaseAttributeModel;
+use App\Model\Game\UserMapModel;
 use App\Model\User\UserModel;
+use App\Utility\ApiErrorCode\UserError;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
+use EasySwoole\EasySwoole\Trigger;
 use EasySwoole\Http\Message\Status;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiDescription;
@@ -47,6 +53,43 @@ class Auth extends UserBase
         $userInfo = $userInfo->toArray();
         $this->response()->setCookie(self::USER_TOKEN_NAME, $session, time() + 86400 * 7, '/');
         $this->writeJson(Status::CODE_OK, $userInfo, "登陆信息");
+    }
+
+    /**
+     * @Api(name="register",path="/Api/User/Auth/register")
+     * @Param(name="account",required="",lengthMin="6",lengthMax="18")
+     * @Param(name="password",required="",lengthMin="8",lengthMax="30")
+     * @ApiSuccess({"code":200,"result":null,"msg":"注册成功"})
+     * @ApiFail({"code":400,"errorCode":4003,"msg":"账号已存在"})
+     * @ApiFail({"code":400,"errorCode":4004,"msg":"系统原因,注册失败"})
+     * @author Tioncico
+     * Time: 15:36
+     */
+    function register()
+    {
+        $param = $this->request()->getRequestParam();
+        $model = new UserModel([
+            'username'   => $param['account'],
+            'account'    => $param['account'],
+            'password'   => md5($param['password']),
+            'createTime' => time(),
+        ]);
+        $userInfo = $model->get(['account' => $param['account']]);
+        Assert::assert(!$userInfo, '账号已存在', UserError::ERROR_ACCOUNT_EXIST);
+        try {
+            BaseModel::transaction(function ()use($model){
+                $model->save();
+                //新增一条游戏数据
+                UserBaseAttributeModel::create()->addData($model->userId);
+                UserAttributeModel::create()->addData($model->userId);
+                //新增玩家初始地图权限
+                UserMapModel::create()->addData($model->userId,1);
+            });
+            $this->writeJson(Status::CODE_OK, null, '注册成功');
+        } catch (\Throwable $throwable) {
+            Trigger::getInstance()->throwable($throwable);
+            $this->writeJson(UserError::ERROR_SYSTEM_REGISTER_ERROR, '系统原因,注册失败');
+        }
     }
 
     /**

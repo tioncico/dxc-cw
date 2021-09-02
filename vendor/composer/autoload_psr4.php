@@ -64,6 +64,8 @@ return array(
     'EasySwoole\\CodeGeneration\\' => array($vendorDir . '/easyswoole/code-generation/src'),
     'EasySwoole\\Bridge\\' => array($vendorDir . '/easyswoole/bridge/src'),
     'EasySwoole\\Annotation\\' => array($vendorDir . '/easyswoole/annotation/src'),
+    'EasySwoole\\Actor\\Test\\' => array($vendorDir . '/easyswoole/actor/test'),
+    'EasySwoole\\Actor\\' => array($vendorDir . '/easyswoole/actor/src'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
     'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib/Doctrine/Common/Lexer'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),

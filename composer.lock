@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1bdcd71821d1a0bef812478f5a4ca236",
+    "content-hash": "ec224b49b8e46ba4961c7f0dfba3139d",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -539,6 +539,64 @@
                 }
             ],
             "time": "2020-10-13T00:52:37+00:00"
+        },
+        {
+            "name": "easyswoole/actor",
+            "version": "2.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/easy-swoole/actor.git",
+                "reference": "1fdd5aa49d42c6a81c35b305ee1c87d471a2851a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/easy-swoole/actor/zipball/1fdd5aa49d42c6a81c35b305ee1c87d471a2851a",
+                "reference": "1fdd5aa49d42c6a81c35b305ee1c87d471a2851a",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "easyswoole/component": ">=1.0",
+                "easyswoole/spl": "^1.1",
+                "easyswoole/trigger": "^1.0",
+                "easyswoole/utility": "^1.0",
+                "ext-swoole": "^4.4.0",
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "easyswoole/swoole-ide-helper": "^1.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "EasySwoole\\Actor\\": "src/",
+                    "EasySwoole\\Actor\\Test\\": "test/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "YF",
+                    "email": "291323003@qq.com"
+                }
+            ],
+            "description": "easyswoole component",
+            "homepage": "https://www.easyswoole.com/",
+            "keywords": [
+                "async",
+                "easyswoole",
+                "framework",
+                "swoole"
+            ],
+            "time": "2019-10-29T16:34:31+00:00"
         },
         {
             "name": "easyswoole/annotation",

@@ -38,7 +38,7 @@ use App\Model\BaseModel;
  * @property int $luck // 幸运值
  * @property int $physicalStrength // 体力
  */
-class UserAttributeModel extends BaseModel
+class UserBaseAttributeModel extends BaseModel
 {
 	protected $tableName = 'user_attribute_list';
 
@@ -96,6 +96,7 @@ class UserAttributeModel extends BaseModel
         ];
         $model = new UserAttributeModel($data);
         $model->save();
+        return $model;
     }
 }
 

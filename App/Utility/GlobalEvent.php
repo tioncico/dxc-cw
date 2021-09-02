@@ -3,6 +3,8 @@
 
 namespace App\Utility;
 
+use App\Actor\UserActor;
+use App\WebSocket\Event;
 use EasySwoole\Component\Di;
 use EasySwoole\Component\Process\Manager;
 use EasySwoole\Component\Singleton;
@@ -56,6 +58,14 @@ class GlobalEvent
                 return false;
             }
         });
+        Event::websocketInit($eventRegister);
+
+        // 注册Actor管理器
+        $server = \EasySwoole\EasySwoole\ServerManager::getInstance()->getSwooleServer();
+        \EasySwoole\Actor\Actor::getInstance()->register(UserActor::class);
+        \EasySwoole\Actor\Actor::getInstance()->setTempDir(EASYSWOOLE_TEMP_DIR)
+            ->setListenAddress('0.0.0.0')->setListenPort('9900')->attachServer($server);
+
 
     }
 

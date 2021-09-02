@@ -26,3 +26,4 @@ Stack trace:
 #1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test2.php(16): App\Service\Game\Fight\Fight->start()
 #2 {main}
   thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/Fight/Fight.php line:40]
+[2021-09-02 18:34:08][debug][error]:[syntax error, unexpected '=', expecting ']' at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Model/Game/UserAttributeModel.php line:73]

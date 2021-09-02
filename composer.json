@@ -13,7 +13,8 @@
     "easyswoole/oss": "^1.0",
     "easyswoole/u-editor": "^1.0",
     "easyswoole/code-generation": "2.x",
-    "alibabacloud/sts": "^1.8"
+    "alibabacloud/sts": "^1.8",
+    "easyswoole/actor": "^2.0"
   },
   "autoload": {
     "psr-4": {
