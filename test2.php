@@ -10,15 +10,17 @@ include "./vendor/autoload.php";
 \EasySwoole\EasySwoole\Core::getInstance()->initialize();
 
 use \App\Service\Game\Attribute;
-
+use \App\Service\Game\Fight\Fight;
 go(function () {
 
     $user = new Attribute();
-    $user->setAttackSpeed(4);
+    $user->setAttackSpeed(1);
+    $user->setAttack(100);
     $monster = new Attribute();
-    $monster->setAttackSpeed(4);
+    $monster->setAttack(8);
+    $monster->setAttackSpeed(1);
 
-    $fight = new \App\Service\Game\Fight\Fight($user, $monster);
+    $fight = new Fight($user, $monster);
     $fight->start();
     \Swoole\Timer::clearAll();
 });

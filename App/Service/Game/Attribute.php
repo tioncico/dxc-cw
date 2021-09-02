@@ -7,32 +7,33 @@ use EasySwoole\Spl\SplBean;
 
 class Attribute extends SplBean
 {
-    protected $hp=100; //血量
-    protected $mp=100; //法力
-    protected $attack=1; //攻击力
-    protected $defense=1; //防御力
-    protected $endurance=1; //耐力
-    protected $intellect=1; //智力
-    protected $strength=1; //力量
-    protected $enduranceQualification=1; //耐力资质
-    protected $intellectQualification=1; //智力资质
-    protected $strengthQualification=1; //力量资质
-    protected $criticalRate=10; //暴击率
-    protected $criticalStrikeDamage=200; //暴击伤害
-    protected $hitRate=90; //命中率
-    protected $penetrate=0; //穿透力
-    protected $attackSpeed=0.4; //攻击速度
-    protected $userElement=0; //角色元素
-    protected $attackElement=0; //攻击元素
-    protected $jin=0; //金
-    protected $mu=0; //木
-    protected $tu=0; //土
-    protected $sui=0; //水
-    protected $huo=0; //火
-    protected $light=0; //光
-    protected $dark=0; //暗
-    protected $luck=0;//幸运
-    protected $attackTimes=1;
+    protected $hp = 100; //血量
+    protected $mp = 100; //法力
+    protected $attack = 1; //攻击力
+    protected $defense = 1; //防御力
+    protected $endurance = 1; //耐力
+    protected $intellect = 1; //智力
+    protected $strength = 1; //力量
+    protected $enduranceQualification = 1; //耐力资质
+    protected $intellectQualification = 1; //智力资质
+    protected $strengthQualification = 1; //力量资质
+    protected $criticalRate = 10; //暴击率
+    protected $criticalStrikeDamage = 200; //暴击伤害
+    protected $hitRate = 90; //命中率
+    protected $penetrate = 0; //穿透力
+    protected $attackSpeed = 0.4; //攻击速度
+    protected $userElement = 0; //角色元素
+    protected $attackElement = 0; //攻击元素
+    protected $jin = 0; //金
+    protected $mu = 0; //木
+    protected $tu = 0; //土
+    protected $sui = 0; //水
+    protected $huo = 0; //火
+    protected $light = 0; //光
+    protected $dark = 0; //暗
+    protected $luck = 0;//幸运
+    protected $attackTimes = 1;
+    protected $isDie = false;
 
     /**
      * @return int
@@ -65,6 +66,9 @@ class Attribute extends SplBean
     public function setHp($hp): void
     {
         $this->hp = $hp;
+        if ($this->hp <= 0) {
+            $this->isDie = true;
+        }
     }
 
     /**
@@ -451,6 +455,36 @@ class Attribute extends SplBean
         $this->luck = $luck;
     }
 
+    /**
+     * @return bool
+     */
+    public function isDie(): bool
+    {
+        return $this->isDie;
+    }
+
+    /**
+     * @param bool $isDie
+     */
+    public function setIsDie(bool $isDie): void
+    {
+        $this->isDie = $isDie;
+    }
+
+    public function getElementNum($elementType)
+    {
+        $array = [
+            'jin'   => $this->jin,
+            'mu'    => $this->mu,
+            'tu'    => $this->tu,
+            'sui'   => $this->sui,
+            'huo'   => $this->huo,
+            'light' => $this->light,
+            'dark'  => $this->dark,
+        ];
+        return $array[$elementType];
+    }
+
 
     public function __toString()
     {
@@ -482,7 +516,6 @@ class Attribute extends SplBean
 幸运:{$this->luck}
 攻击次数:{$this->attackTimes}
 ";
-
     }
 
 }
