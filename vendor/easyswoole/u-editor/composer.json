@@ -1,0 +1,38 @@
+{
+    "name": "easyswoole/u-editor",
+    "type": "library",
+    "description": "百度编辑器easyswoole-composer版本",
+    "keywords": [
+        "swoole",
+        "UEditor",
+        "easyswoole"
+    ],
+    "homepage": "https://www.easyswoole.com/",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "tioncico",
+            "email": "1067197739@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0",
+        "easyswoole/http-client": "^1.3"
+    },
+    "require-dev": {
+        "easyswoole/easyswoole": "^3.3.7",
+        "easyswoole/phpunit": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "EasySwoole\\UEditor\\": "src/",
+            "App\\": "App/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "EasySwoole\\UEditor\\Test\\": "tests/",
+            "App\\": "App/"
+        }
+    }
+}

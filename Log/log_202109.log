@@ -1,0 +1,28 @@
+[2021-09-02 15:56:53][debug][error]:[Uncaught EasySwoole\ORM\Exception\Exception: SQLSTATE[42S02] [1146] Table 'mwxz.goods_equipment_list' doesn't exist [show full columns from goods_equipment_list] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php:78
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Utility/TableObjectGeneration.php(46): EasySwoole\ORM\Db\MysqliClient->query(Object(EasySwoole\Mysqli\QueryBuilder))
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Utility/TableObjectGeneration.php(66): EasySwoole\ORM\Utility\TableObjectGeneration->getTableColumnsInfo()
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test.php(21): EasySwoole\ORM\Utility\TableObjectGeneration->generationTable()
+#3 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
+[2021-09-02 16:27:42][debug][error]:[Uncaught Swoole\Error: API must be called in the coroutine in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test2.php:20
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test2.php(20): Swoole\Coroutine::sleep(0.1)
+#1 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test2.php line:20]
+[2021-09-02 16:48:21][debug][error]:[Uncaught Error: Class 'App\Service\Game\Fight\Attribute' not found in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test2.php:12
+Stack trace:
+#0 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test2.php line:12]
+[2021-09-02 16:48:42][debug][error]:[Uncaught Error: Class 'App\Service\Game\Fight\Attribute' not found in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test2.php:12
+Stack trace:
+#0 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test2.php line:12]
+[2021-09-02 16:53:12][debug][notice]:[Undefined property: App\Service\Game\Attribute::$nextAttackTime at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/Attribute.php line:483]
+[2021-09-02 16:53:12][debug][notice]:[Undefined property: App\Service\Game\Attribute::$nextAttackTime at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/Attribute.php line:483]
+[2021-09-02 16:54:01][debug][error]:[Uncaught Swoole\Error: API must be called in the coroutine in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/Fight/Fight.php:40
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/Fight/Fight.php(40): Swoole\Coroutine::sleep(0.1)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test2.php(16): App\Service\Game\Fight\Fight->start()
+#2 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/Fight/Fight.php line:40]
