@@ -25,8 +25,12 @@ class Fight
     {
         $user = $this->user;
         $monster = $this->monster;
+        $this->state=1;
         //战斗开始
         while (1) {
+            if ($this->state!=1){
+                break;
+            }
             if ($user->isDie()){
                 $this->state=2;
                 break;
@@ -110,6 +114,22 @@ class Fight
         }
         $fightResult->setBuckleBloodNum($buckleBlood);
         return $buckleBlood;
+    }
+
+    /**
+     * @return int
+     */
+    public function getState(): int
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param int $state
+     */
+    public function setState(int $state): void
+    {
+        $this->state = $state;
     }
 
 }

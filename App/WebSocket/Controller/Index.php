@@ -102,4 +102,19 @@ class Index extends BaseController
 
         MapActor::client()->send($actorId, new Command(['action' => 'fight']));
     }
+
+    public function nextLevelMap(){
+        $userId = $this->userId();
+        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
+        Assert::assert(!!$actorId, '不在地图中');
+
+        MapActor::client()->send($actorId, new Command(['action' => 'nextLevelMap']));
+    }
+    public function exitMap(){
+        $userId = $this->userId();
+        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
+        Assert::assert(!!$actorId, '不在地图中');
+
+        MapActor::client()->send($actorId, new Command(['action' => 'exitMap']));
+    }
 }

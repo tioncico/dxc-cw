@@ -31,6 +31,7 @@ abstract class BaseActor extends AbstractActor
 
     protected function onException(\Throwable $throwable)
     {
+        var_dump((string)$throwable);
         $actorId = $this->actorId();
         echo "mapActor {$actorId} onException\n";
     }

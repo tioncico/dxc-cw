@@ -27,6 +27,7 @@ class UserRelationMap
             return $result;
         });
     }
+
     public function getUserMap($userId){
         //一个userId,可能有多个fd,所以使用hash 存储方案
         return RedisClient::invoke(function (RedisClient $redisClient) use ($userId) {

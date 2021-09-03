@@ -15,7 +15,6 @@ use \App\Actor\MapActor;
 
 go(function () {
     $data = [
-        'class'   => 'Map',
         'action'  => 'accessMap',
         'content' => [
             'mapId' => 1,
