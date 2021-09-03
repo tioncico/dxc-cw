@@ -127,7 +127,7 @@ class Rand
         $rand = array_rand($list, $num);
         $data = [];
         if ($num == 1) {
-            $data[] = $list[$rand];
+            $data = $list[$rand];
         } else {
             foreach ($rand as $value) {
                 $data[] = $list[$value];

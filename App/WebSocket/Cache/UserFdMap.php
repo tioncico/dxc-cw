@@ -13,9 +13,6 @@ class UserFdMap
 
     const TTL = 86400 * 1;
 
-    protected $userFdHash;
-    protected $fdUserHash;
-
     /**
      * 绑定fd<->userId
      * bind

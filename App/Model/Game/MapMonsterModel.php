@@ -10,6 +10,9 @@ use App\Model\BaseModel;
  * Create With ClassGeneration
  * @property int $mapMonsterId //
  * @property int $monsterId // 怪物id
+ * @property int $mapId // 地图id
+ * @property int $mapLevelMin // 地图关卡最小
+ * @property int $mapLevelMax // 地图关卡最大
  * @property string $name // 怪物名称
  * @property int $type // 怪物类型 1小怪,2精英,3boss
  * @property string $description // 怪物介绍

@@ -3,8 +3,12 @@
 
 namespace App\Utility;
 
+use App\Actor\Cache\UserRelationMap;
+use App\Actor\MapActor;
 use App\Actor\UserActor;
+use App\WebSocket\Cache\UserFdMap;
 use App\WebSocket\Event;
+use EasySwoole\Actor\Actor;
 use EasySwoole\Component\Di;
 use EasySwoole\Component\Process\Manager;
 use EasySwoole\Component\Singleton;
@@ -38,6 +42,10 @@ class GlobalEvent
         $scheduler = new Scheduler();
         $scheduler->add(function () {
             //注意,这3行代码只能放到最后面执行
+            //删除关联对象
+            UserFdMap::getInstance()->clear();
+            //删除mapActor对象
+            UserRelationMap::getInstance()->clear();
             Timer::clearAll();
             DbManager::getInstance()->getConnection()->__getClientPool()->reset();
             RedisPool::getInstance()->getPool(RedisClient::REDIS_POOL_NAME)->reset();
@@ -62,8 +70,8 @@ class GlobalEvent
 
         // 注册Actor管理器
         $server = \EasySwoole\EasySwoole\ServerManager::getInstance()->getSwooleServer();
-        \EasySwoole\Actor\Actor::getInstance()->register(UserActor::class);
-        \EasySwoole\Actor\Actor::getInstance()->setTempDir(EASYSWOOLE_TEMP_DIR)
+        Actor::getInstance()->register(MapActor::class);
+        Actor::getInstance()->setTempDir(EASYSWOOLE_TEMP_DIR)
             ->setListenAddress('0.0.0.0')->setListenPort('9900')->attachServer($server);
 
 

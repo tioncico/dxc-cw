@@ -8,11 +8,13 @@
 
 namespace App\WebSocket;
 
+use App\Actor\Cache\UserRelationMap;
 use App\Service\User\UserService;
 use App\Service\Wedding\WeddingRedisHashService;
 use App\WebSocket\Cache\UserFdMap;
 use EasySwoole\EasySwoole\ServerManager;
 use EasySwoole\EasySwoole\Swoole\EventRegister;
+use EasySwoole\Socket\Bean\Response;
 use EasySwoole\Socket\Config as SocketConfig;
 use EasySwoole\Socket\Dispatcher;
 use Swoole\Server;
@@ -31,6 +33,14 @@ class Event
         $conf->setType(\EasySwoole\Socket\Config::WEB_SOCKET);
         // 设置解析器对象
         $conf->setParser(new WebSocketParser());
+        $conf->setOnExceptionHandler(function (Server $server, \Throwable $throwable, string $raw, $client, Response $response){
+            $response->setMessage(json_encode([
+                'action' => null,
+                'code'   => 500,
+                'msg'    => $throwable->getMessage(),
+                'data'   => null
+            ]));
+        });
         // 创建 Dispatcher 对象 并注入 config 对象
         $dispatch = new Dispatcher($conf);
         // 给server 注册相关事件 在 WebSocket 模式下  on message 事件必须注册 并且交给 Dispatcher 对象处理

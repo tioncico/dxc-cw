@@ -9,6 +9,8 @@ class Attribute extends SplBean
 {
     protected $hp = 100; //血量
     protected $mp = 100; //法力
+    protected $name = null; //名称
+    protected $level = 1; //等级
     protected $attack = 1; //攻击力
     protected $defense = 1; //防御力
     protected $endurance = 1; //耐力
@@ -34,6 +36,39 @@ class Attribute extends SplBean
     protected $luck = 0;//幸运
     protected $attackTimes = 1;
     protected $isDie = false;
+
+    /**
+     * @return int
+     */
+    public function getLevel(): int
+    {
+        return $this->level;
+    }
+
+    /**
+     * @param int $level
+     */
+    public function setLevel(int $level): void
+    {
+        $this->level = $level;
+    }
+
+    /**
+     * @return null
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param null $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
 
     /**
      * @return int

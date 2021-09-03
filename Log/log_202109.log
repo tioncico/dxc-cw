@@ -27,3 +27,138 @@ Stack trace:
 #2 {main}
   thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/Fight/Fight.php line:40]
 [2021-09-02 18:34:08][debug][error]:[syntax error, unexpected '=', expecting ']' at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Model/Game/UserAttributeModel.php line:73]
+[2021-09-03 10:17:16][debug][error]:[Uncaught EasySwoole\Actor\Exception\InvalidActor: App\Actor\UserActor not register in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php:151
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test3.php(22): EasySwoole\Actor\AbstractActor::client(Object(EasySwoole\Actor\ActorNode))
+#1 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php line:151]
+[2021-09-03 10:18:12][debug][error]:[Uncaught EasySwoole\Actor\Exception\InvalidActor: App\Actor\UserActor not register in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php:151
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test3.php(22): EasySwoole\Actor\AbstractActor::client(Object(EasySwoole\Actor\ActorNode))
+#1 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php line:151]
+[2021-09-03 10:27:49][debug][error]:[Uncaught EasySwoole\Actor\Exception\InvalidActor: Class UserActor does not exist in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/Actor.php:131
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test3.php(20): EasySwoole\Actor\Actor->register('UserActor')
+#1 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/Actor.php line:131]
+[2021-09-03 10:28:09][debug][error]:[Uncaught TypeError: Argument 1 passed to EasySwoole\Actor\ActorClient::send() must be of the type string, null given, called in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test3.php on line 25 and defined in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/ActorClient.php:39
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test3.php(25): EasySwoole\Actor\ActorClient->send(NULL, Array)
+#1 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/ActorClient.php line:39]
+[2021-09-03 10:28:09][debug][error]:[Uncaught Error: Call to a member function toArray() on null in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php:42
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php(113): App\Actor\MapActor->onStart()
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/WorkerProcess.php(84): EasySwoole\Actor\AbstractActor->__run(Object(Swoole\Coroutine\Channel))
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/component/src/Process/Socket/AbstractUnixProcess.php(45): EasySwoole\Actor\WorkerProcess->onAccept(Object(Swoole\Coroutine\Socket))
+#3 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php line:42]
+[2021-09-03 10:47:32][debug][error]:[Uncaught Error: Class 'EasySwoole\RedisPool\Redis' not found in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Utility/RedisClient.php:18
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Cache/UserFdMap.php(125): App\Utility\RedisClient::invoke(Object(Closure))
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Cache/UserFdMap.php(27): App\WebSocket\Cache\UserFdMap->setFdUser(1, 13)
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Event.php(59): App\WebSocket\Cache\UserFdMap->bind(1, '13')
+#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Event.php(46): App\WebSocket\Event::onOpen(Object(Swoole\WebSocket\Server), Object(Swoole\Http\Request))
+#4 [internal function]: App\WebSocket\Event::App\WebSocket\{closure}(Object(Swoole\WebSocket\Server), Object(Swoole\Http\Request))
+#5 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/ServerManager.php(112): call_user_func(Object(Closure), Object at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Utility/RedisClient.php line:18]
+[2021-09-03 14:25:59][debug][notice]:[Undefined index:  at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Controller/Map.php line:39]
+[2021-09-03 14:25:59][debug][error]:[Uncaught TypeError: Return value of App\WebSocket\WebSocketParser::encode() must be of the type string or null, array returned in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/WebSocketParser.php:83
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/socket/src/Dispatcher.php(116): App\WebSocket\WebSocketParser->encode(Object(EasySwoole\Socket\Bean\Response), Object(EasySwoole\Socket\Client\WebSocket))
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/socket/src/Dispatcher.php(97): EasySwoole\Socket\Dispatcher->response(Object(Swoole\WebSocket\Server), Object(EasySwoole\Socket\Client\WebSocket), Object(EasySwoole\Socket\Bean\Response))
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Event.php(42): EasySwoole\Socket\Dispatcher->dispatch(Object(Swoole\WebSocket\Server), '{"class":"Map",...', Object(Swoole\WebSocket\Frame))
+#3 [internal function]: App\WebSocket\Event::App\WebSocket\{closure}(Object(Swoole\WebSocket\Serv at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/WebSocketParser.php line:83]
+[2021-09-03 14:26:18][debug][notice]:[Undefined index:  at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Controller/Map.php line:39]
+[2021-09-03 14:33:38][debug][error]:[Uncaught Error: Using $this when not in object context in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Event.php:36
+Stack trace:
+#0 [internal function]: App\WebSocket\Event::App\WebSocket\{closure}(Object(Swoole\WebSocket\Server), Object(App\Utility\Assert\AssertException), '{"class":"Map",...', Object(EasySwoole\Socket\Client\WebSocket), Object(EasySwoole\Socket\Bean\Response))
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/socket/src/Dispatcher.php(148): call_user_func(Object(Closure), Object(Swoole\WebSocket\Server), Object(App\Utility\Assert\AssertException), '{"class":"Map",...', Object(EasySwoole\Socket\Client\WebSocket), Object(EasySwoole\Socket\Bean\Response))
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/socket/src/Dispatcher.php(67): EasySwoole\Socket\Dispatcher->hookException(Object(Swoole\WebSocket\Server), Object(App\Utility\Assert\AssertException), '{"class":"Map",...', Object(EasySwoole\Socket\Client\WebSocket), Object(EasyS at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Event.php line:36]
+[2021-09-03 14:48:58][debug][error]:[Uncaught Swoole\Error: API must be called in the coroutine in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php:310
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php(310): Swoole\Coroutine\Channel->push(Object(App\Utility\RedisClient))
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php(111): EasySwoole\Pool\AbstractPool->initObject()
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php(381): EasySwoole\Pool\AbstractPool->getObj(3)
+#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/redis-pool/src/RedisPool.php(57): EasySwoole\Pool\AbstractPool->invoke(Object(Closure), NULL)
+#4 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Utility/RedisClient.php(18): EasySwoole\RedisPool\RedisPool::invoke(Object(Closure), 'redis')
+#5 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Cache at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php line:310]
+[2021-09-03 14:49:00][debug][error]:[Uncaught Swoole\Error: API must be called in the coroutine in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php:310
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php(310): Swoole\Coroutine\Channel->push(Object(App\Utility\RedisClient))
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php(111): EasySwoole\Pool\AbstractPool->initObject()
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php(381): EasySwoole\Pool\AbstractPool->getObj(3)
+#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/redis-pool/src/RedisPool.php(57): EasySwoole\Pool\AbstractPool->invoke(Object(Closure), NULL)
+#4 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Utility/RedisClient.php(18): EasySwoole\RedisPool\RedisPool::invoke(Object(Closure), 'redis')
+#5 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Cache at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php line:310]
+[2021-09-03 14:49:27][debug][error]:[Uncaught Swoole\Error: API must be called in the coroutine in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php:310
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php(310): Swoole\Coroutine\Channel->push(Object(App\Utility\RedisClient))
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php(111): EasySwoole\Pool\AbstractPool->initObject()
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php(381): EasySwoole\Pool\AbstractPool->getObj(3)
+#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/redis-pool/src/RedisPool.php(57): EasySwoole\Pool\AbstractPool->invoke(Object(Closure), NULL)
+#4 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Utility/RedisClient.php(18): EasySwoole\RedisPool\RedisPool::invoke(Object(Closure), 'redis')
+#5 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Cache at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php line:310]
+[2021-09-03 15:08:37][debug][error]:[Uncaught Error: Call to a member function toArray() on null in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php:61
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php(113): App\Actor\MapActor->onStart()
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/WorkerProcess.php(84): EasySwoole\Actor\AbstractActor->__run(Object(Swoole\Coroutine\Channel))
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/component/src/Process/Socket/AbstractUnixProcess.php(45): EasySwoole\Actor\WorkerProcess->onAccept(Object(Swoole\Coroutine\Socket))
+#3 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php line:61]
+[2021-09-03 15:09:59][debug][error]:[Uncaught Error: Call to a member function toArray() on null in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php:61
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php(113): App\Actor\MapActor->onStart()
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/WorkerProcess.php(84): EasySwoole\Actor\AbstractActor->__run(Object(Swoole\Coroutine\Channel))
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/component/src/Process/Socket/AbstractUnixProcess.php(45): EasySwoole\Actor\WorkerProcess->onAccept(Object(Swoole\Coroutine\Socket))
+#3 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php line:61]
+[2021-09-03 15:10:21][debug][error]:[Uncaught EasySwoole\ORM\Exception\Exception: SQLSTATE[42S22] [1054] Unknown column 'mapId' in 'where clause' [SELECT  * FROM `map_monster_list` WHERE  `mapId` = 1  AND `mapLevelMin` >= 1  AND `mapLevelMax` <= 1 ] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php:78
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/DbManager.php(137): EasySwoole\ORM\Db\MysqliClient->query(Object(EasySwoole\Mysqli\QueryBuilder), false)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(882): EasySwoole\ORM\DbManager->query(Object(EasySwoole\Mysqli\QueryBuilder), false, 'default')
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(556): EasySwoole\ORM\AbstractModel->query(Object(EasySwoole\Mysqli\QueryBuilder))
+#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php(64): EasySwoole\ORM\AbstractModel->all()
+#4 /Users/tioncico at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
+[2021-09-03 15:11:15][debug][error]:[Uncaught Error: Call to a member function toArray() on array in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php:70
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php(113): App\Actor\MapActor->onStart()
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/WorkerProcess.php(84): EasySwoole\Actor\AbstractActor->__run(Object(Swoole\Coroutine\Channel))
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/component/src/Process/Socket/AbstractUnixProcess.php(45): EasySwoole\Actor\WorkerProcess->onAccept(Object(Swoole\Coroutine\Socket))
+#3 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php line:70]
+[2021-09-03 15:11:35][debug][error]:[Uncaught Error: Call to a member function toArray() on array in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php:71
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php(113): App\Actor\MapActor->onStart()
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/WorkerProcess.php(84): EasySwoole\Actor\AbstractActor->__run(Object(Swoole\Coroutine\Channel))
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/component/src/Process/Socket/AbstractUnixProcess.php(45): EasySwoole\Actor\WorkerProcess->onAccept(Object(Swoole\Coroutine\Socket))
+#3 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php line:71]
+[2021-09-03 15:12:08][debug][error]:[Uncaught Error: Call to a member function toArray() on array in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php:72
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php(113): App\Actor\MapActor->onStart()
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/WorkerProcess.php(84): EasySwoole\Actor\AbstractActor->__run(Object(Swoole\Coroutine\Channel))
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/component/src/Process/Socket/AbstractUnixProcess.php(45): EasySwoole\Actor\WorkerProcess->onAccept(Object(Swoole\Coroutine\Socket))
+#3 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php line:72]
+[2021-09-03 15:12:54][debug][error]:[Uncaught Error: Call to a member function toArray() on array in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php:72
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php(113): App\Actor\MapActor->onStart()
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/WorkerProcess.php(84): EasySwoole\Actor\AbstractActor->__run(Object(Swoole\Coroutine\Channel))
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/component/src/Process/Socket/AbstractUnixProcess.php(45): EasySwoole\Actor\WorkerProcess->onAccept(Object(Swoole\Coroutine\Socket))
+#3 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php line:72]
+[2021-09-03 15:13:32][debug][error]:[Uncaught Error: Call to a member function toArray() on array in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php:72
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php(113): App\Actor\MapActor->onStart()
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/WorkerProcess.php(84): EasySwoole\Actor\AbstractActor->__run(Object(Swoole\Coroutine\Channel))
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/component/src/Process/Socket/AbstractUnixProcess.php(45): EasySwoole\Actor\WorkerProcess->onAccept(Object(Swoole\Coroutine\Socket))
+#3 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php line:72]
+[2021-09-03 15:13:53][debug][error]:[Uncaught Error: Call to a member function toArray() on array in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php:73
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php(113): App\Actor\MapActor->onStart()
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/WorkerProcess.php(84): EasySwoole\Actor\AbstractActor->__run(Object(Swoole\Coroutine\Channel))
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/component/src/Process/Socket/AbstractUnixProcess.php(45): EasySwoole\Actor\WorkerProcess->onAccept(Object(Swoole\Coroutine\Socket))
+#3 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php line:73]

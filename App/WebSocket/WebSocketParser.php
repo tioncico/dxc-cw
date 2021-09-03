@@ -9,6 +9,8 @@
 namespace App\WebSocket;
 
 
+use App\Utility\Assert\Assert;
+use App\WebSocket\Controller\Index;
 use EasySwoole\Socket\AbstractInterface\ParserInterface;
 use EasySwoole\Socket\Client\WebSocket;
 use EasySwoole\Socket\Bean\Caller;
@@ -37,7 +39,7 @@ class WebSocketParser implements ParserInterface
         // 解析 客户端原始消息
         $data = json_decode($raw, true);
         if (!is_array($data)) {
-            echo "decode message error! \n";
+            Assert::assert(false,'解析出错!');
             return null;
         }
 
@@ -49,6 +51,7 @@ class WebSocketParser implements ParserInterface
          * 注 目前 easyswoole 3.0.4 版本及以下 不支持直接传递 class string 可以通过这种方式
          */
         $class = '\\App\\WebSocket\\Controller\\'. ucfirst($data['class'] ?? 'Index');
+        $class = Index::class;
         $caller->setControllerClass($class);
 
         // 提供一个事件风格的写法
