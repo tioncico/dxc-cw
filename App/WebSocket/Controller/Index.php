@@ -9,6 +9,7 @@
 namespace App\WebSocket\Controller;
 
 use App\Actor\Cache\UserRelationMap;
+use App\Actor\Command;
 use App\Actor\MapActor;
 use App\Model\Game\MapModel;
 use App\Model\Game\UserMapModel;
@@ -64,7 +65,7 @@ class Index extends BaseController
         $userId = $this->userId();
         //获取地图actorId
         $actorId = UserRelationMap::getInstance()->getUserMap($userId);
-        $this->push('getMapActorId', ['actorId' => $actorId]);
+        $this->responseMsg('getMapActorId', ['actorId' => $actorId]);
     }
 
     public function accessMap()
@@ -78,10 +79,27 @@ class Index extends BaseController
         $actorId = UserRelationMap::getInstance()->getUserMap($userId);
         Assert::assert(!$actorId, '你已进入地图');
         //创建地图actor
-        MapActor::client()->create(['userId' => $userId, 'mapId' => $mapId]);   // 00101000000000000000001
+        $actorId = MapActor::client()->create(['userId' => $userId, 'mapId' => $mapId]);   // 00101000000000000000001
         //创建关联关系
-        UserRelationMap::getInstance()->addUserMap($userId, $mapId);
+        UserRelationMap::getInstance()->addUserMap($userId, $actorId);
+        MapActor::client()->send($actorId, new Command(['action' => 'mapInfo']));
 
         $this->responseMsg('accessMap', "进入地图成功");
+    }
+
+    public function mapInfo()
+    {
+        $userId = $this->userId();
+        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
+        MapActor::client()->send($actorId, new Command(['action' => 'mapInfo']));
+    }
+
+    public function fight()
+    {
+        $userId = $this->userId();
+        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
+        Assert::assert(!!$actorId, '不在地图中');
+
+        MapActor::client()->send($actorId, new Command(['action' => 'fight']));
     }
 }

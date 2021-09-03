@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\WebSocket;
+namespace App\Actor;
 
 
 use EasySwoole\Spl\SplBean;

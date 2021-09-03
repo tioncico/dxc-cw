@@ -21,7 +21,7 @@ class Fight
         $this->monster = $monster;
     }
 
-    public function start()
+    public function start(callable $callBack)
     {
         $user = $this->user;
         $monster = $this->monster;
@@ -29,29 +29,25 @@ class Fight
         while (1) {
             if ($user->isDie()){
                 $this->state=2;
-                echo "玩家死亡,退出战斗\n";
                 break;
             }
             if ($monster->isDie()){
                 $this->state=2;
-                echo "怪物死亡,退出战斗\n";
                 break;
             }
             $userAttackTimes = $user->getAttackTimes();
             if ($userAttackTimes >= 1) {
-                echo  date("Y-m-d H:i:s") . " 玩家攻击\n";
-                $fightResult = $this->attackJudgment($user, $monster);
-                $monster->setHp($monster->getHp()-$fightResult->getBuckleBloodNum());
-                echo "怪物hp-{$fightResult->getBuckleBloodNum()} 剩余血量{$monster->getHp()}\n";
+                $userFightResult = $this->attackJudgment($user, $monster);
+                $monster->setHp($monster->getHp()-$userFightResult->getBuckleBloodNum());
                 $user->setAttackTimes($user->getAttackTimes() - 1);
+                $callBack('user',$userFightResult);
             }
             $monsterAttackTimes = $monster->getAttackTimes();
             if ($monsterAttackTimes >= 1) {
-                echo date("Y-m-d H:i:s") . " 怪物攻击\n";
-                $fightResult = $this->attackJudgment($monster, $user);
-                $user->setHp($user->getHp()-$fightResult->getBuckleBloodNum());
-                echo "玩家hp-{$fightResult->getBuckleBloodNum()} 剩余血量{$user->getHp()}\n";
+                $monsterFightResult = $this->attackJudgment($monster, $user);
+                $user->setHp($user->getHp()-$monsterFightResult->getBuckleBloodNum());
                 $monster->setAttackTimes($monster->getAttackTimes() - 1);
+                $callBack('monster',$monsterFightResult);
             }
 
             $user->setAttackTimes($user->getAttackTimes() + ($user->getAttackSpeed() * 0.1));

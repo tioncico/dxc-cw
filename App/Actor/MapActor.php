@@ -10,12 +10,14 @@ use App\Model\Game\UserAttributeModel;
 use App\Model\User\UserModel;
 use App\Service\Game\Attribute;
 use App\Service\Game\Fight\Fight;
+use App\Service\Game\Fight\FightResult;
 use App\Utility\Rand\Rand;
+use App\WebSocket\MsgPushEvent;
 use EasySwoole\Actor\AbstractActor;
 use EasySwoole\Actor\ActorConfig;
 use Swoole\Coroutine\Channel;
 
-class MapActor extends AbstractActor
+class MapActor extends BaseActor
 {
     /**
      * @var UserModel
@@ -36,6 +38,9 @@ class MapActor extends AbstractActor
 
     /**@var Fight */
     protected $fight;//战斗状态记录
+
+    /**@var MapMonsterModel */
+    protected $monster;
 
     public function __construct(Channel $mailBox, string $actorId, $arg)
     {
@@ -58,39 +63,49 @@ class MapActor extends AbstractActor
         $this->mapLevel = 1;
         //获取玩家状态数据
         $userAttribute = UserAttributeModel::create()->getInfo($this->user->userId);
-        $this->userAttribute= new Attribute($userAttribute->toArray());
+        $this->userAttribute = new Attribute($userAttribute->toArray());
         $this->userAttribute->setName($this->user->nickname);
         //获取一个1级的怪物
         $model = MapMonsterModel::create();
-        $list =$model ->where('mapId', $this->map->mapId)->where('mapLevelMin', $this->mapLevel, '<=')->where('mapLevelMax', $this->mapLevel, '>=')->all();
+        $list = $model->where('mapId', $this->map->mapId)->where('mapLevelMin', $this->mapLevel, '<=')->where('mapLevelMax', $this->mapLevel, '>=')->all();
         //随机一个
         /**
          * @var $monster MapMonsterModel
          */
         $monster = Rand::randArray($list, 1);
-        $this->monsterAttribute= new Attribute($monster->toArray());
-        $this->monsterAttribute->setName($monster->name);
-        echo "玩家{$this->userAttribute->getName()}({$this->userAttribute->getLevel()}级)\n";
-        echo "怪物{$this->monsterAttribute->getName()}({$this->monsterAttribute->getLevel()}级)\n";
-
+        $this->monster = $monster;
         echo "mapActor {$actorId} onStart\n";
     }
 
-    protected function onMessage($msg)
+
+    public function mapInfo()
     {
-        $actorId = $this->actorId();
-        echo "mapActor {$actorId} onMessage\n";
+        $data = [
+            'map'              => $this->map,
+            'mapLevel'         => $this->mapLevel,
+            'userAttribute'    => $this->userAttribute,
+            'monsterAttribute' => $this->monsterAttribute,
+            'fight'            => $this->fight,
+        ];
+        MsgPushEvent::getInstance()->msgPush($this->user->userId,'mapInfo',200,'地图数据',$data);
+
     }
 
-    protected function onExit($arg)
+    public function fight()
     {
-        $actorId = $this->actorId();
-        echo "mapActor {$actorId} onExit\n";
+        $this->monsterAttribute = new Attribute($this->monster->toArray());
+        $this->monsterAttribute->setName($this->monster->name);
+        echo "玩家{$this->userAttribute->getName()}({$this->userAttribute->getLevel()}级)\n";
+        echo "怪物{$this->monsterAttribute->getName()}({$this->monsterAttribute->getLevel()}级)\n";
+
+        $this->fight = new Fight($this->userAttribute,$this->monsterAttribute);
+        $this->fight->start(function ($attackName,FightResult $fightResult){
+            if($attackName=='user'){
+                MsgPushEvent::getInstance()->msgPush($this->user->userId,'fight',200,'玩家攻击',$fightResult);
+            }else{
+                MsgPushEvent::getInstance()->msgPush($this->user->userId,'fight',200,'怪物攻击',$fightResult);
+            }
+        });
     }
 
-    protected function onException(\Throwable $throwable)
-    {
-        $actorId = $this->actorId();
-        echo "mapActor {$actorId} onException\n";
-    }
 }
