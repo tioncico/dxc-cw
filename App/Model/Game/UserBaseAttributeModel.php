@@ -98,5 +98,13 @@ class UserBaseAttributeModel extends BaseModel
         $model->save();
         return $model;
     }
+
+    public function getInfo($userId){
+        $info = self::create()->get($userId);
+        if (empty($info)){
+            $info = $this->addData($userId);
+        }
+        return $info;
+    }
 }
 

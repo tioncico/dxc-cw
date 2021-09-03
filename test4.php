@@ -14,13 +14,8 @@ use \App\Service\Game\Fight\Fight;
 use \App\Actor\MapActor;
 
 go(function () {
-    $data = [
-        'action'  => 'accessMap',
-        'content' => [
-            'mapId' => 1,
-        ],
-    ];
-    echo json_encode($data);
+    $userInfo = \App\Service\Game\UserService::getInstance()->userAddExp(1,100);
+    var_dump($userInfo->toArray());
 
     \Swoole\Timer::clearAll();
 });

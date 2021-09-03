@@ -162,3 +162,10 @@ Stack trace:
 #2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/component/src/Process/Socket/AbstractUnixProcess.php(45): EasySwoole\Actor\WorkerProcess->onAccept(Object(Swoole\Coroutine\Socket))
 #3 {main}
   thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php line:73]
+[2021-09-03 17:42:47][debug][error]:[Uncaught TypeError: Argument 1 passed to EasySwoole\ORM\AbstractModel::update() must be of the type array, object given, called in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/UserService.php on line 67 and defined in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php:654
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/UserService.php(67): EasySwoole\ORM\AbstractModel->update(Object(App\Model\Game\UserBaseAttributeModel))
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/UserService.php(26): App\Service\Game\UserService->countUserAttribute(Object(App\Model\Game\UserBaseAttributeModel))
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Model/BaseModel.php(20): App\Service\Game\UserService->App\Service\Game\{closure}()
+#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/UserService.php(28): App\Model\BaseModel::transaction(Object(Closure))
+#4 /Users/tioncico/Phps at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php line:654]
