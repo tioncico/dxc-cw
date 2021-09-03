@@ -14,8 +14,14 @@ use \App\Service\Game\Fight\Fight;
 use \App\Actor\MapActor;
 
 go(function () {
-    $userInfo = \App\Service\Game\UserService::getInstance()->userAddExp(1,100);
-    var_dump($userInfo->toArray());
+//    $userInfo = \App\Service\Game\UserService::getInstance()->userAddExp(1,100);
+//    var_dump($userInfo->toArray());
 
+    for ($i=8;$i<=100;$i++){
+        \App\Model\Game\UserLevelConfigModel::create([
+            'level'=>$i,
+            'exp'=>$i*100
+        ])->save();
+    }
     \Swoole\Timer::clearAll();
 });
