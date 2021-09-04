@@ -5,6 +5,7 @@ namespace App\Actor;
 
 
 use App\Actor\Cache\UserRelationMap;
+use App\Model\Game\GoodsModel;
 use App\Model\Game\MapModel;
 use App\Model\Game\MapMonsterModel;
 use App\Model\Game\UserAttributeModel;
@@ -136,7 +137,18 @@ class MapActor extends BaseActor
             $reward = new Reward($this->user->userId, new UserAttributeModel($this->userAttribute->toArray()), $this->map, $this->monster);
             $reward->rewardCount();
             $reward->addUserData();
-            MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, "金币+{$reward->getGold()},经验+{$reward->getExp()}");
+            $msg ="金币+{$reward->getGold()},经验+{$reward->getExp()}";
+            if ($reward->getGoodsList()){
+                /**
+                 * @var $goodsInfo GoodsModel
+                 */
+                foreach ($reward->getGoodsList() as $value){
+                    $goodsInfo = $value['goodsInfo'];
+                    $msg.="  {$goodsInfo->name}*{$value['num']}";
+                }
+            }
+
+            MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200,$msg );
         } else {
             MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, "战斗结束,玩家死亡");
         }

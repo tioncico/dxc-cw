@@ -6,6 +6,7 @@ namespace App\Service\Game\Fight;
 
 use App\Model\BaseModel;
 use App\Model\Game\GoodsEquipmentModel;
+use App\Model\Game\GoodsModel;
 use App\Model\Game\MapGoodsModel;
 use App\Model\Game\MapModel;
 use App\Model\Game\MapMonsterModel;
@@ -55,28 +56,32 @@ class Reward
             $common->setValue(-1);
             $randList[] = $common;
             //获取地图可爆稀有装备列表
-            $list = MapGoodsModel::create()->where(['mapId'=>$this->mapInfo->mapId])->where('goodsType',7)->all();
+            $list = MapGoodsModel::create()->where(['mapId' => $this->mapInfo->mapId])->where('goodsType', 7)->all();
             /**
              * @var $list MapGoodsModel[]
              */
-            foreach ($list as $key=>$value){
+            foreach ($list as $key => $value) {
                 $randList[] = new Bean([
-                    'odds'=>$value->odds,
-                    'value'=>$key,
+                    'odds'  => $value->odds,
+                    'value' => $key,
                 ]);
             }
             /**
              * @var $randValue Bean
              */
-            $randValue = (new Rand($randList,1000))->randOne();
-            if ($randValue->getValue()==1){
+            $randValue = (new Rand($randList, 1000))->randOne();
+            if ($randValue->getValue() == -1) {
                 //随便获取符合该地图等级的传说以下的装备
-                $list = GoodsEquipmentModel::create()->where('rarityLevel',5,'<')->where('level',$this->mapInfo->recommendedLevel+5,'<=')->where('level',$this->mapInfo->recommendedLevel,'>=')->all();
-                $goodsEquipmentInfo = Rand::randArray($list,1);
-            }else{
-                $goodsEquipmentInfo =  GoodsEquipmentModel::create()->where('goodsCode',$list[$randValue->getValue()]->goodsCode)->get();
+                $list = GoodsEquipmentModel::create()->where('rarityLevel', 5, '<')->where('level', $this->mapInfo->recommendedLevel + 5, '<=')->where('level', $this->mapInfo->recommendedLevel, '>=')->all();
+                /**
+                 * @var $goodsEquipmentInfo GoodsEquipmentModel
+                 */
+                $goodsEquipmentInfo = Rand::randArray($list, 1);
+                $goodsInfo = GoodsModel::create()->getInfoByCode($goodsEquipmentInfo->goodsCode) ;
+            } else {
+                $goodsInfo = GoodsModel::create()->getInfoByCode($list[$randValue->getValue()]->goodsCode) ;
             }
-            $goodsList[] = $goodsEquipmentInfo;
+            $goodsList[] = ['goodsInfo' => $goodsInfo,'num'=>1];
         }
         $this->goodsList = $goodsList;
         return $goodsList;
@@ -96,6 +101,9 @@ class Reward
             UserService::getInstance()->userAddExp($this->userId, $this->exp);
             //增加金币
             BackpackService::getInstance()->addGold($this->userId, $this->gold);
+            foreach ($this->goodsList as $value) {
+                BackpackService::getInstance()->addGoods($this->userId, $value['goodsInfo'],$value['num']);
+            }
         });
     }
 

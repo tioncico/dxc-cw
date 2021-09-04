@@ -11,6 +11,7 @@ use App\Model\BaseModel;
  * @property int $userEquipmentBackpackId // 主键
  * @property int $backpackId // 背包id
  * @property int $userId // 用户id
+ * @property int $isUse // 是否使用
  * @property string $goodsCode // 物品code
  * @property int $equipmentType // 装备类型
  * @property string $suitCode // 套装code
