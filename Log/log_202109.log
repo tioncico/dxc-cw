@@ -1546,3 +1546,17 @@ Stack trace:
 [2021-09-04 17:01:59][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
 [2021-09-04 17:02:04][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
 [2021-09-04 17:02:10][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:03:40][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:03:43][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:03:49][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:03:55][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:04:02][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:04:05][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:04:07][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:04:12][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 18:43:59][debug][error]:[Uncaught EasySwoole\ORM\Exception\Exception: SQLSTATE[23000] [1062] Duplicate entry 'eq_0005' for key 'code' [INSERT  INTO `goods_list` (`name`, `code`, `type`, `description`, `gold`, `isSale`, `level`, `rarityLevel`, `extraData`)  VALUES ('新手之披', 'eq_0005', 7, '新手装备', 0, 1, 1, 1, 'NULL')] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php:78
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/DbManager.php(137): EasySwoole\ORM\Db\MysqliClient->query(Object(EasySwoole\Mysqli\QueryBuilder), false)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(882): EasySwoole\ORM\DbManager->query(Object(EasySwoole\Mysqli\QueryBuilder), false, 'default')
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(429): EasySwoole\ORM\AbstractModel->query(Object(EasySwoole\Mysqli\QueryBuilder))
+#3 /Users/tioncico/PhpstormProjects/tionci at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]

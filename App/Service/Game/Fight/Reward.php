@@ -5,12 +5,16 @@ namespace App\Service\Game\Fight;
 
 
 use App\Model\BaseModel;
+use App\Model\Game\GoodsEquipmentModel;
+use App\Model\Game\MapGoodsModel;
 use App\Model\Game\MapModel;
 use App\Model\Game\MapMonsterModel;
 use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserBaseAttributeModel;
 use App\Service\Game\BackpackService;
 use App\Service\Game\UserService;
+use App\Utility\Rand\Bean;
+use App\Utility\Rand\Rand;
 
 class Reward
 {
@@ -23,7 +27,7 @@ class Reward
     protected $exp;
     protected $goodsList;
 
-    public function __construct($userId,UserAttributeModel $userAttributeInfo, MapModel $mapInfo, MapMonsterModel $monsterInfo)
+    public function __construct($userId, UserAttributeModel $userAttributeInfo, MapModel $mapInfo, MapMonsterModel $monsterInfo)
     {
         $this->userId = $userId;
         $this->userAttributeInfo = $userAttributeInfo;
@@ -42,8 +46,40 @@ class Reward
 
     protected function randGoods()
     {
-        $this->goodsList =[];
-        return [];
+        $goodsList = [];
+        $randNum = mt_rand(1, 100);
+        if ($randNum <= $this->mapInfo->equipment) {
+            $randList = [];
+            $common = new Bean();
+            $common->setIsCommon(true);
+            $common->setValue(-1);
+            $randList[] = $common;
+            //获取地图可爆稀有装备列表
+            $list = MapGoodsModel::create()->where(['mapId'=>$this->mapInfo->mapId])->where('goodsType',7)->all();
+            /**
+             * @var $list MapGoodsModel[]
+             */
+            foreach ($list as $key=>$value){
+                $randList[] = new Bean([
+                    'odds'=>$value->odds,
+                    'value'=>$key,
+                ]);
+            }
+            /**
+             * @var $randValue Bean
+             */
+            $randValue = (new Rand($randList,1000))->randOne();
+            if ($randValue->getValue()==1){
+                //随便获取符合该地图等级的传说以下的装备
+                $list = GoodsEquipmentModel::create()->where('rarityLevel',5,'<')->where('level',$this->mapInfo->recommendedLevel+5,'<=')->where('level',$this->mapInfo->recommendedLevel,'>=')->all();
+                $goodsEquipmentInfo = Rand::randArray($list,1);
+            }else{
+                $goodsEquipmentInfo =  GoodsEquipmentModel::create()->where('goodsCode',$list[$randValue->getValue()]->goodsCode)->get();
+            }
+            $goodsList[] = $goodsEquipmentInfo;
+        }
+        $this->goodsList = $goodsList;
+        return $goodsList;
     }
 
     /**
@@ -53,12 +89,13 @@ class Reward
      * @author tioncico
      * Time: 3:51 下午
      */
-    public function addUserData(){
-        BaseModel::transaction(function (){
+    public function addUserData()
+    {
+        BaseModel::transaction(function () {
             //增加经验
-            UserService::getInstance()->userAddExp($this->userId,$this->exp);
+            UserService::getInstance()->userAddExp($this->userId, $this->exp);
             //增加金币
-            BackpackService::getInstance()->addGold($this->userId,$this->gold);
+            BackpackService::getInstance()->addGold($this->userId, $this->gold);
         });
     }
 
