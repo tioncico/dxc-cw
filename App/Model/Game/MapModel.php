@@ -13,6 +13,8 @@ use App\Model\BaseModel;
  * @property string $description // 地图介绍
  * @property int $recommendedLevel // 建议等级
  * @property int $isInstanceZone // 是否为副本
+ * @property int $maxLevel // 最大层数
+ * @property int $monsterNum // 每层怪物最大数量
  * @property int $exp // 经验基数
  * @property int $gold // 金币基数
  * @property int $material // 材料基数

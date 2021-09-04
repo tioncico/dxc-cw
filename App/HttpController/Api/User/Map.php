@@ -44,6 +44,8 @@ class Map extends UserBase
 	 * @Param(name="description",alias="地图介绍",description="地图介绍",lengthMax="255",required="")
 	 * @Param(name="recommendedLevel",alias="建议等级",description="建议等级",lengthMax="255",required="")
 	 * @Param(name="isInstanceZone",alias="是否为副本",description="是否为副本",lengthMax="255",required="")
+	 * @Param(name="maxLevel",alias="最大层数",description="最大层数",lengthMax="255",required="")
+	 * @Param(name="monsterNum",alias="每层怪物数量",description="每层怪物数量",lengthMax="255",required="")
 	 * @Param(name="exp",alias="经验基数",description="经验基数",lengthMax="255",required="")
 	 * @Param(name="gold",alias="金币基数",description="金币基数",lengthMax="255",required="")
 	 * @Param(name="material",alias="材料基数",description="材料基数",lengthMax="255",required="")

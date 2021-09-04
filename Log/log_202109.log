@@ -1492,3 +1492,57 @@ Stack trace:
 [2021-09-04 16:26:56][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
 [2021-09-04 16:29:01][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
 [2021-09-04 16:29:08][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:47:04][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:47:05][debug][warning]:[array_rand(): Second argument has to be between 1 and the number of elements in the array at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Utility/Rand/Rand.php line:127]
+[2021-09-04 16:47:05][debug][warning]:[Invalid argument supplied for foreach() at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Utility/Rand/Rand.php line:132]
+[2021-09-04 16:47:09][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:55:49][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:55:49][debug][error]:[Uncaught Error: Call to a member function setOdds() on null in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Utility/Rand/Rand.php:60
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php(209): App\Utility\Rand\Rand->randValue(0)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php(70): App\Actor\MapActor->refreshMonster()
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php(113): App\Actor\MapActor->onStart()
+#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/WorkerProcess.php(84): EasySwoole\Actor\AbstractActor->__run(Object(Swoole\Coroutine\Channel))
+#4 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/component/src/Process/Socket/AbstractUnixProcess.php(45): EasySwoole\Actor\WorkerProcess->onAccept(Object(Swoole\Coroutine\Socket))
+#5 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Utility/Rand/Rand.php line:60]
+[2021-09-04 16:56:12][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:56:35][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:57:00][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:57:51][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:58:18][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:58:28][debug][notice]:[Undefined property: App\Utility\Rand\Bean::$name at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php line:103]
+[2021-09-04 16:58:29][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:59:31][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:59:35][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:59:37][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:59:43][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:59:45][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:59:47][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 16:59:59][debug][error]:[Uncaught EasySwoole\Actor\Exception\InvalidActor: syntax error, unexpected '$this' (T_VARIABLE) in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/Actor.php:131
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Utility/GlobalEvent.php(73): EasySwoole\Actor\Actor->register('App\\Actor\\MapAc...')
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/EasySwooleEvent.php(21): App\Utility\GlobalEvent->mainServerCreate(Object(EasySwoole\EasySwoole\Swoole\EventRegister))
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/Core.php(109): EasySwoole\EasySwoole\EasySwooleEvent::mainServerCreate(Object(EasySwoole\EasySwoole\Swoole\EventRegister))
+#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/Command/DefaultCommand/Server.php(114): EasySwoole\EasySwoole\Core->createServer()
+#4 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/Command/DefaultCommand/Server.php(5 at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/Actor.php line:131]
+[2021-09-04 17:00:08][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:00:13][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:00:19][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:00:22][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:00:26][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:00:43][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:01:00][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:01:02][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:01:05][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:01:08][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:01:34][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:01:37][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:01:40][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:01:42][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:01:44][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:01:46][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:01:49][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:01:59][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:02:04][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]
+[2021-09-04 17:02:10][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:67]

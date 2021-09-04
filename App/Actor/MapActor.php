@@ -13,11 +13,13 @@ use App\Service\Game\Attribute;
 use App\Service\Game\Fight\Fight;
 use App\Service\Game\Fight\FightResult;
 use App\Service\Game\Fight\Reward;
+use App\Utility\Rand\Bean;
 use App\Utility\Rand\Rand;
 use App\WebSocket\MsgPushEvent;
 use EasySwoole\Actor\AbstractActor;
 use EasySwoole\Actor\ActorConfig;
 use Swoole\Coroutine\Channel;
+use function AlibabaCloud\Client\value;
 
 class MapActor extends BaseActor
 {
@@ -37,6 +39,9 @@ class MapActor extends BaseActor
 
     /**@var Attribute */
     protected $monsterAttribute;//怪物状态记录
+
+    /**@var MapMonsterModel[]* */
+    protected $monsterList;//当前层怪物列表
 
     /**@var Fight */
     protected $fight;//战斗状态记录
@@ -76,6 +81,7 @@ class MapActor extends BaseActor
             'mapLevel'         => $this->mapLevel,
             'userAttribute'    => $this->userAttribute,
             'monsterAttribute' => $this->monsterAttribute,
+            'monsterList'      => $this->monsterList,
             'fight'            => $this->fight,
         ];
         MsgPushEvent::getInstance()->msgPush($this->user->userId, 'mapInfo', 200, '地图数据', $data);
@@ -86,18 +92,19 @@ class MapActor extends BaseActor
         if ($this->fight && $this->fight->getState() == 1) {
             return;
         }
-//        if ($this->monsterAttribute&&$this->monsterAttribute->isDie()){
-//            return;
-//        }
-        if ($this->userAttribute&&$this->userAttribute->isDie()){
+        if ($this->userAttribute && $this->userAttribute->isDie()) {
             MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 400, "你已死亡");
             return;
         }
-
-        $this->refreshMonster();
         $this->refreshUser();
-        $this->monsterAttribute = new Attribute($this->monster->toArray());
-        $this->monsterAttribute->setName($this->monster->name);
+
+        $monster = array_pop($this->monsterList);
+        if (empty($monster)){
+            return;
+        }
+        $this->monster = $monster;
+        $this->monsterAttribute = new Attribute($monster->toArray());
+        $this->monsterAttribute->setName($monster->name);
         echo "玩家{$this->userAttribute->getName()}({$this->userAttribute->getLevel()}级)\n";
         echo "怪物{$this->monsterAttribute->getName()}({$this->monsterAttribute->getLevel()}级)\n";
 
@@ -126,10 +133,9 @@ class MapActor extends BaseActor
         if ($this->monsterAttribute->isDie()) {
             MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, "战斗结束,怪物死亡");
             //计算奖励
-            $reward = new Reward($this->user->userId,new UserAttributeModel($this->userAttribute->toArray()), $this->map, $this->monster);
+            $reward = new Reward($this->user->userId, new UserAttributeModel($this->userAttribute->toArray()), $this->map, $this->monster);
             $reward->rewardCount();
             $reward->addUserData();
-
             MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, "金币+{$reward->getGold()},经验+{$reward->getExp()}");
         } else {
             MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, "战斗结束,玩家死亡");
@@ -138,15 +144,15 @@ class MapActor extends BaseActor
 
     public function nextLevelMap()
     {
-        if ($this->fight && $this->fight->getState() == 1) {
-            MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 400, "战斗未结束,无法进入下一层");
+        if (!empty($this->monsterList)) {
+            MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 400, "怪物未清理");
             return;
         }
-        if ($this->userAttribute->isDie()){
+        if ($this->userAttribute->isDie()) {
             MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 400, "你已死亡");
             return;
         }
-        if ($this->mapLevel >= 10) {
+        if ($this->mapLevel >= $this->map->maxLevel) {
             MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 400, "地图已经通过,请退出地下城修整吧");
             return;
         }
@@ -180,6 +186,7 @@ class MapActor extends BaseActor
         $this->mapLevel = null;
         $this->userAttribute = null;
         $this->monsterAttribute = null;
+        $this->monsterList = null;
         $this->fight = null;
         $this->monster = null;
         $this->exit();
@@ -187,17 +194,42 @@ class MapActor extends BaseActor
 
     protected function refreshMonster()
     {
-        if (!empty($this->monster)) {
+        if (!empty($this->monsterList)) {
             return;
         }
         $model = MapMonsterModel::create();
-        $list = $model->where('mapId', $this->map->mapId)->where('mapLevelMin', $this->mapLevel, '<=')->where('mapLevelMax', $this->mapLevel, '>=')->all();
-        //随机一个
+        $list = $model->where('mapId', $this->map->mapId)->where('mapLevelMin', $this->mapLevel, '<=')->where('type', 1)->where('mapLevelMax', $this->mapLevel, '>=')->all();
+        //随机n个怪物
+        $num = mt_rand(($this->map->monsterNum * 0.5), $this->map->monsterNum);
+        $randList = [];
+        foreach ($list as $value) {
+            $randList[] = new Bean([
+                'odds'  => 1,
+                'value' => $value
+            ]);
+        }
         /**
-         * @var $monster MapMonsterModel
+         * @var $monster MapMonsterModel[]
          */
-        $monster = Rand::randArray($list, 1);
-        $this->monster = $monster;
+        $randResultList = (new Rand($randList))->randValue($num);
+        $monsterList = [];
+        foreach ($randResultList as $result) {
+            for ($i = $result['num']; $i > 0; $i--) {
+                $monsterList [] = $result['info']->getValue();
+            }
+        }
+
+        //每隔5层随机一个精英怪
+        if ($this->mapLevel % 5 == 0) {
+            $list = $model->where('mapId', $this->map->mapId)->where('mapLevelMin', $this->mapLevel, '<=')->where('type', 2)->where('mapLevelMax', $this->mapLevel, '>=')->all();
+            $elite = Rand::randArray($list, 1);
+            if ($elite) {
+                $monsterList[] = $elite;
+            }
+        }
+        //打乱数组
+        shuffle($monsterList);
+        $this->monsterList = $monsterList;
     }
 
     protected function refreshUser()
@@ -206,7 +238,7 @@ class MapActor extends BaseActor
         //获取玩家状态数据
         $userAttribute = UserAttributeModel::create()->getInfo($this->user->userId);
         //升级则更新为满状态
-        if (empty($oldAttribute)||$userAttribute->level>$oldAttribute->getLevel()){
+        if (empty($oldAttribute) || $userAttribute->level > $oldAttribute->getLevel()) {
             $this->userAttribute = new Attribute($userAttribute->toArray());
             $this->userAttribute->setName($this->user->nickname);
         }
@@ -220,6 +252,7 @@ class MapActor extends BaseActor
             return;
         }
         $this->fight->setState(0);
+        $this->monsterList[] = $this->monster;//原有的怪物重新回到怪物列表
         MsgPushEvent::getInstance()->msgPush($this->user->userId, 'stopFight', 400, "战斗已停止");
     }
 }

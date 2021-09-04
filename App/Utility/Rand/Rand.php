@@ -41,7 +41,7 @@ class Rand
          * @var $randList Bean[]
          */
         foreach ($randList as $key => $va) {
-            if ($va->isCommon()&&$commonKey===null) {
+            if ($va->isCommon() && $commonKey === null) {
                 $commonKey = $key;
                 $commonObj = $va;
             } else {
@@ -49,15 +49,16 @@ class Rand
                 $nowOddsNum += $va->getOdds();//
             }
         }
-        if ($nowOddsNum > $exactNum) {
-            throw  new RandException('概率值设置不正确,比相应的值更大');
-        }
-        if (empty($commonObj)) {
-            throw  new RandException('通用元素不存在');
+        if (empty($commonObj)) {//没有通用元素,则直接根据概率值加
+            $exactNum = $this->exactNum = $nowOddsNum;
+        } else {
+            if ($nowOddsNum > $exactNum) {
+                throw  new RandException('概率值设置不正确,比相应的值更大');
+            }
+            $commonObj->setOdds($exactNum - $nowOddsNum);
+            $randKeyList[$commonKey] = $commonObj;
         }
 
-        $commonObj->setOdds($exactNum - $nowOddsNum);
-        $randKeyList[$commonKey] = $commonObj;
 
         //开始随机
         $ids = [];
@@ -87,7 +88,7 @@ class Rand
         return array_values($ids);
     }
 
-    public function randOne():Bean
+    public function randOne(): Bean
     {
         $data = $this->randValue(1);
         return $data[0]['info'];

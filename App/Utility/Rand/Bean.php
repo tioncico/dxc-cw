@@ -4,7 +4,9 @@
 namespace App\Utility\Rand;
 
 
-class Bean
+use EasySwoole\Spl\SplBean;
+
+class Bean extends SplBean
 {
     protected $odds = 0;
     protected $isCommon = false;
