@@ -68,7 +68,7 @@ class Index extends BaseController
         $this->responseMsg('getMapActorId', ['actorId' => $actorId]);
     }
 
-    public function accessMap()
+    public function intoMap()
     {
         $userId = $this->userId();
         $param = $this->getParam();
@@ -84,7 +84,7 @@ class Index extends BaseController
         UserRelationMap::getInstance()->addUserMap($userId, $actorId);
         MapActor::client()->send($actorId, new Command(['action' => 'mapInfo']));
 
-        $this->responseMsg('accessMap', "进入地图成功");
+        $this->responseMsg(200, "进入地图成功");
     }
 
     public function mapInfo()

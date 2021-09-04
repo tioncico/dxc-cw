@@ -87,9 +87,10 @@ class Event
     static function pushSessionError($fd)
     {
         $command = new Command([
-            'op'   => Command::SERVER_SESSION_ERROR,
-            'msg'  => '登陆状态失效',
-            'args' => [],
+           'action'=>null,
+           'code'=>401,
+           'data'=>[],
+           'msg'=>'登陆状态失效',
         ]);
         ServerManager::getInstance()->getSwooleServer()->push($fd, json_encode($command->toArray()));
     }

@@ -16,10 +16,10 @@ class UserService extends BaseService
 {
     use Singleton;
 
-    public function userAddExp($userId, $expNum):UserBaseAttributeModel
+    public function userAddExp($userId, $expNum): UserBaseAttributeModel
     {
-        $userBaseAttributeInfo =  BaseModel::transaction(function () use ($userId, $expNum) {
-            $userBaseAttributeInfo = UserBaseAttributeModel::create()->lockForUpdate()->get($userId);
+        $userBaseAttributeInfo = BaseModel::transaction(function () use ($userId, $expNum) {
+            $userBaseAttributeInfo = UserBaseAttributeModel::create()->lockForUpdate()->getInfo($userId);
             $userBaseAttributeInfo->update(['exp' => QueryBuilder::inc($expNum)]);
             $this->levelUp($userBaseAttributeInfo);
             $this->countUserBaseAttribute($userBaseAttributeInfo);
@@ -33,9 +33,9 @@ class UserService extends BaseService
     {
         //获取等级配置
         $levelConfig = UserLevelConfigModel::create()->get($userBaseAttributeInfo->level);
-        $levelUpConfig = UserLevelConfigModel::create()->get($userBaseAttributeInfo->level+1);
-        if (empty($levelUpConfig)){
-            return;
+        $levelUpConfig = UserLevelConfigModel::create()->get($userBaseAttributeInfo->level + 1);
+        if (empty($levelUpConfig)) {
+            return false;
         }
         if ($userBaseAttributeInfo->exp >= $levelConfig->exp) {
             $userBaseAttributeInfo->level += 1;
@@ -46,7 +46,7 @@ class UserService extends BaseService
             $userBaseAttributeInfo->strength += $userBaseAttributeInfo->strengthQualification;
             $userBaseAttributeInfo->update();
         }
-        if ($userBaseAttributeInfo->exp>=$levelUpConfig->exp){
+        if ($userBaseAttributeInfo->exp >= $levelUpConfig->exp) {
             $this->levelUp($userBaseAttributeInfo);
         }
     }

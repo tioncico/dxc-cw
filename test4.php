@@ -12,16 +12,14 @@ include "./vendor/autoload.php";
 use \App\Service\Game\Attribute;
 use \App\Service\Game\Fight\Fight;
 use \App\Actor\MapActor;
+Co::set(['hook_flags'=> SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-//    $userInfo = \App\Service\Game\UserService::getInstance()->userAddExp(1,100);
-//    var_dump($userInfo->toArray());
+    $ws = new \UnitTest\WebSocket();
+    $ws->intoMap();
+    $ws->fight();
+    $ws->console();
 
-    for ($i=8;$i<=100;$i++){
-        \App\Model\Game\UserLevelConfigModel::create([
-            'level'=>$i,
-            'exp'=>$i*100
-        ])->save();
-    }
+
     \Swoole\Timer::clearAll();
 });

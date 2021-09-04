@@ -40,7 +40,7 @@ use App\Model\BaseModel;
  */
 class UserBaseAttributeModel extends BaseModel
 {
-	protected $tableName = 'user_attribute_list';
+	protected $tableName = 'user_base_attribute_list';
 
 
 	public function getList(int $page = 1, int $pageSize = 10, string $field = '*'): array
@@ -79,7 +79,7 @@ class UserBaseAttributeModel extends BaseModel
             'strengthQualification'=>1,
             'criticalRate'=>0,
             'criticalStrikeDamage'=>200,
-            'hitRate'=>50,
+            'hitRate'=>100,
             'penetrate'=>0,
             'attackSpeed'=>0.5,
             'userElement'=>null,
@@ -94,13 +94,13 @@ class UserBaseAttributeModel extends BaseModel
             'luck'=>0,
             'physicalStrength'=>100,
         ];
-        $model = new UserAttributeModel($data);
+        $model = new UserBaseAttributeModel($data);
         $model->save();
         return $model;
     }
 
     public function getInfo($userId){
-        $info = self::create()->get($userId);
+        $info = $this->get($userId);
         if (empty($info)){
             $info = $this->addData($userId);
         }

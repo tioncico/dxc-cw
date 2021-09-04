@@ -1392,16 +1392,16 @@
         },
         {
             "name": "easyswoole/orm",
-            "version": "1.4.33",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/easy-swoole/orm.git",
-                "reference": "092649e54906a011e6bc0e356664aa0056838e36"
+                "reference": "10157285f718caf1f27e3488b5aadaf5b2dc8e57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/easy-swoole/orm/zipball/092649e54906a011e6bc0e356664aa0056838e36",
-                "reference": "092649e54906a011e6bc0e356664aa0056838e36",
+                "url": "https://api.github.com/repos/easy-swoole/orm/zipball/10157285f718caf1f27e3488b5aadaf5b2dc8e57",
+                "reference": "10157285f718caf1f27e3488b5aadaf5b2dc8e57",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1447,7 +1447,7 @@
                 "framework",
                 "swoole"
             ],
-            "time": "2021-02-26T07:14:45+00:00"
+            "time": "2021-09-03T07:09:10+00:00"
         },
         {
             "name": "easyswoole/oss",
@@ -4844,6 +4844,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {
