@@ -3,6 +3,7 @@
 namespace App\Model\Game;
 
 use App\Model\BaseModel;
+use EasySwoole\Mysqli\QueryBuilder;
 
 /**
  * UserBackpackModel
@@ -71,6 +72,13 @@ class UserBackpackModel extends BaseModel
         ];
         $model->data($data)->save();
         return $model;
+    }
+
+    public function goodsInfo()
+    {
+        return $this->hasOne(GoodsModel::class, function (QueryBuilder $query) {
+            return $query;
+        }, 'goodsCode', 'code');
     }
 }
 

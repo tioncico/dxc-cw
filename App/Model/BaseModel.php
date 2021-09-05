@@ -16,12 +16,12 @@ class BaseModel extends AbstractModel
     public static function transaction(callable $callable)
     {
         try {
-            DbManager::getInstance()->startTransaction();
+            DbManager::getInstance()->startTransactionWithCount();
             $result = $callable();
-            DbManager::getInstance()->commit();
+            DbManager::getInstance()->commitWithCount();
             return $result;
         } catch (\Throwable $throwable) {
-            DbManager::getInstance()->rollback();
+            DbManager::getInstance()->rollbackWithCount();
             throw $throwable;
         }
     }

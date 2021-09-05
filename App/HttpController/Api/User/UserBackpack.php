@@ -30,40 +30,6 @@ use EasySwoole\Validate\Validate;
 class UserBackpack extends UserBase
 {
 	/**
-	 * @Api(name="add",path="/Api/User/UserBackpack/add")
-	 * @ApiDescription("新增数据")
-	 * @Method(allow={GET,POST})
-	 * @InjectParamsContext(key="param")
-	 * @ApiSuccessParam(name="code",description="状态码")
-	 * @ApiSuccessParam(name="result",description="api请求结果")
-	 * @ApiSuccessParam(name="msg",description="api提示信息")
-	 * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
-	 * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
-	 * @Param(name="backpackId",alias="背包id",description="背包id",lengthMax="11",required="")
-	 * @Param(name="userId",alias="用户id",description="用户id",lengthMax="11",required="")
-	 * @Param(name="goodsId",alias="物品id",description="物品id",lengthMax="11",required="")
-	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="255",required="")
-	 * @Param(name="num",alias="数量",description="数量",lengthMax="11",required="")
-	 * @Param(name="goodsType",alias="物品类型",description="物品类型",lengthMax="1",required="")
-	 */
-	public function add()
-	{
-		$param = ContextManager::getInstance()->get('param');
-		$data = [
-		    'backpackId'=>$param['backpackId'],
-		    'userId'=>$param['userId'],
-		    'goodsId'=>$param['goodsId'],
-		    'goodsCode'=>$param['goodsCode'],
-		    'num'=>$param['num'],
-		    'goodsType'=>$param['goodsType'],
-		];
-		$model = new UserBackpackModel($data);
-		$model->save();
-		$this->writeJson(Status::CODE_OK, $model->toArray(), "新增成功");
-	}
-
-
-	/**
 	 * @Api(name="update",path="/Api/User/UserBackpack/update")
 	 * @ApiDescription("更新数据")
 	 * @Method(allow={GET,POST})
@@ -142,6 +108,8 @@ class UserBackpack extends UserBase
 	 * @ApiSuccessParam(name="msg",description="api提示信息")
 	 * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
 	 * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+	 * @Param(name="goodsType", from={GET,POST}, alias="物品类型",description="1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备", optional="")
+	 * @Param(name="code", from={GET,POST}, alias="物品code", optional="")
 	 * @Param(name="page", from={GET,POST}, alias="页数", optional="")
 	 * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
 	 * @ApiSuccessParam(name="result[].backpackId",description="背包id")
@@ -157,34 +125,43 @@ class UserBackpack extends UserBase
 		$page = (int)($param['page'] ?? 1);
 		$pageSize = (int)($param['pageSize'] ?? 20);
 		$model = new UserBackpackModel();
-		$data = $model->getList($page, $pageSize);
+		if ($param['goodsType']){
+		    $model->where('goodsType',$param['goodsType']);
+        }
+		if ($param['code']){
+		    $model->where('code',$param['goodsType']);
+        }
+		$data = $model->with(['goodsInfo'],false)->where('userId',$this->who->userId)->getList($page, $pageSize);
 		$this->writeJson(Status::CODE_OK, $data, '获取列表成功');
 	}
 
 
-	/**
-	 * @Api(name="delete",path="/Api/User/UserBackpack/delete")
-	 * @ApiDescription("删除数据")
-	 * @Method(allow={GET,POST})
-	 * @InjectParamsContext(key="param")
-	 * @ApiSuccessParam(name="code",description="状态码")
-	 * @ApiSuccessParam(name="result",description="api请求结果")
-	 * @ApiSuccessParam(name="msg",description="api提示信息")
-	 * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
-	 * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
-	 * @Param(name="backpackId",alias="背包id",description="背包id",lengthMax="11",required="")
-	 */
-	public function delete()
-	{
-		$param = ContextManager::getInstance()->get('param');
-		$model = new UserBackpackModel();
-		$info = $model->get(['backpackId' => $param['backpackId']]);
-		if (!$info) {
-		    $this->writeJson(Status::CODE_OK, $info, "数据不存在.");
-		}
+    /**
+     * @Api(name="getList",path="/Api/User/UserBackpack/getList")
+     * @ApiDescription("获取数据列表")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @Param(name="goodsType", from={GET,POST}, alias="物品类型",description="1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备", optional="")
+     * @Param(name="code", from={GET,POST}, alias="物品code", optional="")
+     * @Param(name="page", from={GET,POST}, alias="页数", optional="")
+     * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
+     * @ApiSuccessParam(name="result[].backpackId",description="背包id")
+     * @ApiSuccessParam(name="result[].userId",description="用户id")
+     * @ApiSuccessParam(name="result[].goodsId",description="物品id")
+     * @ApiSuccessParam(name="result[].goodsCode",description="物品code")
+     * @ApiSuccessParam(name="result[].num",description="数量")
+     * @ApiSuccessParam(name="result[].goodsType",description="物品类型")
+     */
+	public function getGold(){
+        $model = new UserBackpackModel();
+        $goldInfo = $model->getUseGoldInfo($this->who->userId);
+        $this->writeJson(Status::CODE_OK, $goldInfo, '获取数据成功');
+    }
 
-		$info->destroy();
-		$this->writeJson(Status::CODE_OK, [], "删除成功.");
-	}
 }
 
