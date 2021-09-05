@@ -25,6 +25,7 @@ class WebSocket
         $data = [
             'action' => 'intoMap',
             'mapId'  => 1,
+            'skillIds'=>[0=>1]
         ];
         $this->push($data);
     }
@@ -56,6 +57,11 @@ class WebSocket
     public function exitMap()
     {
         $data = ['action' => 'exitMap'];
+        $this->push($data);
+    }
+    public function useSkill()
+    {
+        $data = ['action' => 'useSkill','skillId'=>0];
         $this->push($data);
     }
 

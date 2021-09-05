@@ -24,7 +24,7 @@ class UserService extends BaseService
             $userBaseAttributeInfo->update(['exp' => QueryBuilder::inc($expNum)]);
             $this->levelUp($userBaseAttributeInfo);
             $this->countUserBaseAttribute($userBaseAttributeInfo);
-            $this->countUserAttribute($userBaseAttributeInfo);
+            $this->countUserAttribute($userBaseAttributeInfo->userId);
             return $userBaseAttributeInfo;
         });
         return $userBaseAttributeInfo;

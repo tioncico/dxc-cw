@@ -9,11 +9,13 @@ use App\Model\Game\GoodsModel;
 use App\Model\Game\MapModel;
 use App\Model\Game\MapMonsterModel;
 use App\Model\Game\UserAttributeModel;
+use App\Model\Game\UserSkillModel;
 use App\Model\User\UserModel;
 use App\Service\Game\Attribute;
 use App\Service\Game\Fight\Fight;
 use App\Service\Game\Fight\FightResult;
 use App\Service\Game\Fight\Reward;
+use App\Service\Game\SkillAttribute;
 use App\Utility\Rand\Bean;
 use App\Utility\Rand\Rand;
 use App\WebSocket\MsgPushEvent;
@@ -50,6 +52,16 @@ class MapActor extends BaseActor
     /**@var MapMonsterModel */
     protected $monster;
 
+    /**
+     * @var SkillAttribute[]
+     */
+    protected $userSkillList = [
+        0 => null,
+        1 => null,
+        2 => null,
+        3 => null,
+    ];
+
     public function __construct(Channel $mailBox, string $actorId, $arg)
     {
         parent::__construct($mailBox, $actorId, $arg);
@@ -57,6 +69,8 @@ class MapActor extends BaseActor
         $mapId = $arg['mapId'];
         $this->user = UserModel::create()->get($userId);
         $this->map = MapModel::create()->get($mapId);
+        $skillIds = $arg['skillIds'];
+        $this->initSkill($skillIds);
     }
 
     public static function configure(ActorConfig $actorConfig)
@@ -75,6 +89,12 @@ class MapActor extends BaseActor
     }
 
 
+    /**
+     * 返回地图信息
+     * mapInfo
+     * @author tioncico
+     * Time: 6:56 下午
+     */
     public function mapInfo()
     {
         $data = [
@@ -84,10 +104,19 @@ class MapActor extends BaseActor
             'monsterAttribute' => $this->monsterAttribute,
             'monsterList'      => $this->monsterList,
             'fight'            => $this->fight,
+            'userSkillList'    => $this->userSkillList,
         ];
         MsgPushEvent::getInstance()->msgPush($this->user->userId, 'mapInfo', 200, '地图数据', $data);
     }
 
+    /**
+     * 选择最近的怪物战斗
+     * fight
+     * @throws \EasySwoole\ORM\Exception\Exception
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 6:56 下午
+     */
     public function fight()
     {
         if ($this->fight && $this->fight->getState() == 1) {
@@ -100,7 +129,7 @@ class MapActor extends BaseActor
         $this->refreshUser();
 
         $monster = array_pop($this->monsterList);
-        if (empty($monster)){
+        if (empty($monster)) {
             return;
         }
         $this->monster = $monster;
@@ -137,23 +166,29 @@ class MapActor extends BaseActor
             $reward = new Reward($this->user->userId, new UserAttributeModel($this->userAttribute->toArray()), $this->map, $this->monster);
             $reward->rewardCount();
             $reward->addUserData();
-            $msg ="金币+{$reward->getGold()},经验+{$reward->getExp()}";
-            if ($reward->getGoodsList()){
+            $msg = "金币+{$reward->getGold()},经验+{$reward->getExp()}";
+            if ($reward->getGoodsList()) {
                 /**
                  * @var $goodsInfo GoodsModel
                  */
-                foreach ($reward->getGoodsList() as $value){
+                foreach ($reward->getGoodsList() as $value) {
                     $goodsInfo = $value['goodsInfo'];
-                    $msg.="  {$goodsInfo->name}*{$value['num']}";
+                    $msg .= "  {$goodsInfo->name}*{$value['num']}";
                 }
             }
 
-            MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200,$msg );
+            MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, $msg);
         } else {
             MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, "战斗结束,玩家死亡");
         }
     }
 
+    /**
+     * 进入下一层
+     * nextLevelMap
+     * @author tioncico
+     * Time: 6:56 下午
+     */
     public function nextLevelMap()
     {
         if (!empty($this->monsterList)) {
@@ -204,6 +239,15 @@ class MapActor extends BaseActor
         $this->exit();
     }
 
+    /**
+     * 刷新怪物数据(进入下一层时刷新)
+     * refreshMonster
+     * @throws \App\Utility\Rand\RandException
+     * @throws \EasySwoole\ORM\Exception\Exception
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 6:57 下午
+     */
     protected function refreshMonster()
     {
         if (!empty($this->monsterList)) {
@@ -256,6 +300,12 @@ class MapActor extends BaseActor
         }
     }
 
+    /**
+     * 停止战斗(当打不过时可以停止)
+     * stopFight
+     * @author tioncico
+     * Time: 6:57 下午
+     */
     protected function stopFight()
     {
         //判断是否结束战斗或者未开始
@@ -267,4 +317,47 @@ class MapActor extends BaseActor
         $this->monsterList[] = $this->monster;//原有的怪物重新回到怪物列表
         MsgPushEvent::getInstance()->msgPush($this->user->userId, 'stopFight', 400, "战斗已停止");
     }
+
+    protected function useUserSkill($param)
+    {
+        var_dump($param);
+        $skillId = $param['skillId'];
+        $skillInfo = $this->userSkillList[$skillId];
+        if (!$this->fight || $this->fight->getState() != 1) {
+            MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 400, "战斗未开始,无法释放技能");
+            return;
+        }
+        //判断冷却时间
+        if ($skillInfo->isCanUse() == false) {
+            MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 400, "技能未冷却");
+            return;
+        }
+        //技能攻击
+        $fightResult = $this->fight->useSkill($this->userAttribute, $this->monsterAttribute, $skillInfo);
+        var_dump(2);
+        var_dump($fightResult);
+    }
+
+    /**
+     * 初始化用户技能
+     * initSkill
+     * @param $ids
+     * @throws \EasySwoole\Mysqli\Exception\Exception
+     * @throws \EasySwoole\ORM\Exception\Exception
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 6:57 下午
+     */
+    protected function initSkill($ids)
+    {
+        //4个技能槽
+        for ($i = 0; $i < 4; $i++) {
+            if (!empty($ids[$i])) {
+                $skillInfo = UserSkillModel::create()->get($ids[$i]);
+                $this->userSkillList[$i] = new SkillAttribute($skillInfo->toArray());
+            }
+        }
+    }
+
+
 }

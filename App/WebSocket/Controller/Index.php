@@ -79,7 +79,7 @@ class Index extends BaseController
         $actorId = UserRelationMap::getInstance()->getUserMap($userId);
         Assert::assert(!$actorId, '你已进入地图');
         //创建地图actor
-        $actorId = MapActor::client()->create(['userId' => $userId, 'mapId' => $mapId]);   // 00101000000000000000001
+        $actorId = MapActor::client()->create(['userId' => $userId, 'mapId' => $mapId,'skillIds'=>$param['skillIds']]);   // 00101000000000000000001
         //创建关联关系
         UserRelationMap::getInstance()->addUserMap($userId, $actorId);
         MapActor::client()->send($actorId, new Command(['action' => 'mapInfo']));
@@ -116,5 +116,14 @@ class Index extends BaseController
         Assert::assert(!!$actorId, '不在地图中');
 
         MapActor::client()->send($actorId, new Command(['action' => 'exitMap']));
+    }
+
+    public function useSkill(){
+        $param = $this->getParam();
+        $userId = $this->userId();
+        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
+        Assert::assert(!!$actorId, '不在地图中');
+
+        MapActor::client()->send($actorId, new Command(['action' => 'useUserSkill','data'=>['skillId'=>$param['skillId']]]));
     }
 }

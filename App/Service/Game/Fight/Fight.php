@@ -5,7 +5,9 @@ namespace App\Service\Game\Fight;
 
 
 use App\Service\Game\Attribute;
+use App\Service\Game\SkillAttribute;
 use App\Utility\Rand\Rand;
+use EasySwoole\Utility\Str;
 
 class Fight
 {
@@ -13,7 +15,7 @@ class Fight
     protected $user;
     /**@var Attribute */
     protected $monster;
-    protected $state=0;//0未战斗,1战斗中,2战斗结束
+    protected $state = 0;//0未战斗,1战斗中,2战斗结束
 
     public function __construct($user, $monster)
     {
@@ -25,33 +27,40 @@ class Fight
     {
         $user = $this->user;
         $monster = $this->monster;
-        $this->state=1;
+        $this->state = 1;
         //战斗开始
         while (1) {
-            if ($this->state!=1){
+            if ($this->state != 1) {
                 break;
             }
-            if ($user->isDie()){
-                $this->state=2;
+            if ($user->isDie()) {
+                $this->state = 2;
                 break;
             }
-            if ($monster->isDie()){
-                $this->state=2;
+            if ($monster->isDie()) {
+                $this->state = 2;
                 break;
             }
             $userAttackTimes = $user->getAttackTimes();
             if ($userAttackTimes >= 1) {
+                //攻击,命中判定
                 $userFightResult = $this->attackJudgment($user, $monster);
-                $monster->setHp($monster->getHp()-$userFightResult->getBuckleBloodNum());
+                //伤害计算
+                $this->harmCount($user, $userFightResult);
+                //扣血计算
+                $this->buckleBloodCalculation($user, $monster, $userFightResult);
+                $monster->setHp($monster->getHp() - $userFightResult->getBuckleBloodNum());
                 $user->setAttackTimes($user->getAttackTimes() - 1);
-                $callBack('user',$userFightResult);
+                $callBack('user', $userFightResult);
             }
             $monsterAttackTimes = $monster->getAttackTimes();
             if ($monsterAttackTimes >= 1) {
                 $monsterFightResult = $this->attackJudgment($monster, $user);
-                $user->setHp($user->getHp()-$monsterFightResult->getBuckleBloodNum());
+                $this->harmCount($monster, $monsterFightResult);
+                $this->buckleBloodCalculation($monster, $user, $monsterFightResult);
+                $user->setHp($user->getHp() - $monsterFightResult->getBuckleBloodNum());
                 $monster->setAttackTimes($monster->getAttackTimes() - 1);
-                $callBack('monster',$monsterFightResult);
+                $callBack('monster', $monsterFightResult);
             }
 
             $user->setAttackTimes($user->getAttackTimes() + ($user->getAttackSpeed() * 0.1));
@@ -78,8 +87,6 @@ class Fight
         if ($randNum <= $attack->getCriticalRate()) {
             $fightResult->setIsCritical(true);
         }
-        $this->harmCount($attack, $fightResult);
-        $this->buckleBloodCalculation($attack, $beAttack, $fightResult);
         return $fightResult;
     }
 
@@ -93,7 +100,7 @@ class Fight
             $harm = intval($attackNum * $attack->getCriticalStrikeDamage() / 100);
         }
         //计算元素攻击
-        if (!empty($attack->getAttackElement())){
+        if (!empty($attack->getAttackElement())) {
             $fightResult->setAttackElement($attack->getAttackElement());
             //元素伤害
             $fightResult->setElementHarm($attack->getElementNum($attack->getAttackElement()));
@@ -109,12 +116,28 @@ class Fight
         //扣血计算=初始伤害-(防御力*2.5)
         $buckleBlood = intval($fightResult->getHarmNum() - ($beAttack->getDefense() * 2.5));
 
-        if ($buckleBlood<=0){
-            $buckleBlood=1;//强制扣除1点血
+        if ($buckleBlood <= 0) {
+            $buckleBlood = 1;//强制扣除1点血
         }
         $fightResult->setBuckleBloodNum($buckleBlood);
         return $buckleBlood;
     }
+
+
+    public function useSkill(Attribute $attackAttribute, Attribute $beAttackAttribute, SkillAttribute $skillAttribute)
+    {
+        //攻击,命中判定
+        $fightResult = $this->attackJudgment($attackAttribute, $beAttackAttribute);
+        $entryCode = $skillAttribute->getEntryCode();
+        $actionName = 'entry' . Str::studly($entryCode);
+        $this->$actionName($attackAttribute, $beAttackAttribute, $skillAttribute, $fightResult);
+        //伤害计算
+        $this->harmCount($attackAttribute, $fightResult);
+        //扣血计算
+        $this->buckleBloodCalculation($attackAttribute, $beAttackAttribute, $fightResult);
+        return $fightResult;
+    }
+
 
     /**
      * @return int
