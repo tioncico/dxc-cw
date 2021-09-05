@@ -33,7 +33,7 @@ class UserBaseTestCase extends BaseTest
     protected $modelName = '';
     protected $userData = [
         'name'     => '单元测试用户',
-        'account'  => 'unitTest',
+        'account'  => 'admin',
         'password' => '123456',
     ];
 
@@ -82,7 +82,7 @@ class UserBaseTestCase extends BaseTest
 
     public function getUserInfo()
     {
-        $response = $this->request('getInfo');
+        $response = $this->request('getInfo',[],'Auth');
         $this->userBean = new UserModel((array)$response->result);
     }
 
@@ -95,13 +95,13 @@ class UserBaseTestCase extends BaseTest
             'verifyCodeTime' => $time,
         ]);
         $userData = $this->userData;
-        $response = $this->request('login', $userData);
+        $response = $this->request('login', $userData,'Auth');
         $this->userSession = $response->result->session;
     }
 
     public function logout()
     {
-        $this->request('logout');
+        $this->request('logout',[],'Auth');
     }
 
 
