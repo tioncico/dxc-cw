@@ -33,15 +33,15 @@ class BackpackService extends BaseService
         return $userGoldInfo;
     }
 
-    public function addGoods($userId, GoodsModel $goodsModel,$num)
+    public function addGoods($userId, GoodsModel $goodsModel, $num)
     {
         //装备无法叠加
         if ($goodsModel->type == 7) {
             $backpackInfo = UserBackpackModel::create()->addData($userId, $goodsModel, 1);
-            $equipmentModel = GoodsEquipmentModel::create()->get(['goodsCode'=>$backpackInfo->goodsCode]);
-            $this->addUserEquipmentInfo($userId,$backpackInfo,$equipmentModel);
-        }elseif ($goodsModel->type==1){
-            $backpackInfo = $this->addGold($userId,$num);
+            $equipmentModel = GoodsEquipmentModel::create()->get(['goodsCode' => $backpackInfo->goodsCode]);
+            $this->addUserEquipmentInfo($userId, $backpackInfo, $equipmentModel);
+        } elseif ($goodsModel->type == 1) {
+            $backpackInfo = $this->addGold($userId, $num);
         } else {
             $backpackInfo = UserBackpackModel::create()->getInfoByCode($userId, $goodsModel->code);
             if (empty($backpackInfo)) {
@@ -65,6 +65,7 @@ class BackpackService extends BaseService
             'suitCode'               => $equipmentModel->suitCode,
             'rarityLevel'            => $equipmentModel->rarityLevel,
             'level'                  => $equipmentModel->level,
+            'isUse'                  => 0,
             'hp'                     => mt_rand(intval($equipmentModel->hp * 0.7), intval($equipmentModel->hp * 1.5)),
             'mp'                     => mt_rand(intval($equipmentModel->mp * 0.7), intval($equipmentModel->mp * 1.5)),
             'attack'                 => mt_rand(intval($equipmentModel->attack * 0.7), intval($equipmentModel->attack * 1.5)),

@@ -105,6 +105,16 @@ class UserEquipmentBackpackTest extends UserBaseTestCase
 	}
 
 
+	public function testUse()
+	{
+		$data = [];
+		$data['userEquipmentBackpackId'] = 1;
+		$response = $this->request('use',$data);
+
+		//var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
+	}
+
+
 	public function testUpdate()
 	{
 		$data = [];

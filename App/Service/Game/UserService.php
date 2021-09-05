@@ -7,6 +7,7 @@ namespace App\Service\Game;
 use App\Model\BaseModel;
 use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserBaseAttributeModel;
+use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserLevelConfigModel;
 use App\Service\BaseService;
 use EasySwoole\Component\Singleton;
@@ -51,7 +52,7 @@ class UserService extends BaseService
         }
     }
 
-    protected function countUserBaseAttribute(UserBaseAttributeModel $userBaseAttributeInfo)
+    public function countUserBaseAttribute(UserBaseAttributeModel $userBaseAttributeInfo)
     {
         //血量公式计算=用户等级*100+用户耐力*100
         $hp = $userBaseAttributeInfo->level * 100 + $userBaseAttributeInfo->endurance * 100;
@@ -69,9 +70,56 @@ class UserService extends BaseService
         return $userBaseAttributeInfo;
     }
 
-    protected function countUserAttribute(UserBaseAttributeModel $userBaseAttributeInfo)
+    public function countUserAttribute($userId)
     {
-        UserAttributeModel::create()->where('userId', $userBaseAttributeInfo->userId)->update($userBaseAttributeInfo->toArray());
+        //获取用户基础信息
+        $userBaseAttributeInfo = UserBaseAttributeModel::create()->getInfo($userId);
+        $userBaseAttributeBean = new Attribute($userBaseAttributeInfo->toArray());
+        $userAttributeBean = clone $userBaseAttributeBean;
+        //获取用户穿戴装备信息
+        $userEquipmentBackpackList = UserEquipmentBackpackModel::create()->where('userId', $userId)->where('isUse', 1)->all();
+
+        /**
+         * @var $userEquipment UserEquipmentBackpackModel
+         */
+        foreach ($userEquipmentBackpackList as $userEquipment) {
+            //部分属性相加
+            $userAttributeBean->setHp($userAttributeBean->getHp() + $userEquipment->hp);
+            $userAttributeBean->setMp($userAttributeBean->getMp() + $userEquipment->mp);
+            $userAttributeBean->setAttack($userAttributeBean->getAttack() + $userEquipment->attack);
+            $userAttributeBean->setDefense($userAttributeBean->getDefense() + $userEquipment->defense);
+            $userAttributeBean->setEndurance($userAttributeBean->getEndurance() + $userEquipment->endurance);
+            $userAttributeBean->setIntellect($userAttributeBean->getIntellect() + $userEquipment->intellect);
+            $userAttributeBean->setStrength($userAttributeBean->getStrength() + $userEquipment->strength);
+            $userAttributeBean->setCriticalRate($userAttributeBean->getCriticalRate() + $userEquipment->criticalRate);
+            $userAttributeBean->setCriticalStrikeDamage($userAttributeBean->getCriticalStrikeDamage() + $userEquipment->criticalStrikeDamage);
+            $userAttributeBean->setHitRate($userAttributeBean->getHitRate() + $userEquipment->hitRate);
+            $userAttributeBean->setPenetrate($userAttributeBean->getPenetrate() + $userEquipment->penetrate);
+            $userAttributeBean->setJin($userAttributeBean->getJin() + $userEquipment->jin);
+            $userAttributeBean->setMu($userAttributeBean->getMu() + $userEquipment->mu);
+            $userAttributeBean->setTu($userAttributeBean->getTu() + $userEquipment->tu);
+            $userAttributeBean->setSui($userAttributeBean->getSui() + $userEquipment->sui);
+            $userAttributeBean->setHuo($userAttributeBean->getHuo() + $userEquipment->huo);
+            $userAttributeBean->setLight($userAttributeBean->getLight() + $userEquipment->light);
+            $userAttributeBean->setDark($userAttributeBean->getDark() + $userEquipment->dark);
+            $userAttributeBean->setLuck($userAttributeBean->getLuck() + $userEquipment->luck);
+            $userAttributeBean->setAttackSpeed($userAttributeBean->getAttackSpeed() + $userEquipment->attackSpeed);
+            //元素属性覆盖
+            if (!empty($userEquipment->attackElement)) {
+                $userAttributeBean->setAttackElement($userEquipment->attackElement);
+            }
+            //todo 词条相关
+            $userEquipmentArray = $userEquipment->toArray();
+            $userEquipmentArray = array_filter($userEquipmentArray, function ($data) {
+                if (empty($data)) {
+                    return false;
+                }
+                return true;
+            });
+            var_dump($userEquipmentArray);
+        }
+
+        UserAttributeModel::create()->where('userId', $userBaseAttributeInfo->userId)->update($userAttributeBean->toArray());
     }
 
 }

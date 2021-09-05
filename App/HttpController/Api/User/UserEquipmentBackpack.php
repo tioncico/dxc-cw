@@ -136,7 +136,7 @@ class UserEquipmentBackpack extends UserBase
      * @Param(name="userEquipmentBackpackId",alias="主键",description="主键",lengthMax="11",required="")
      * @Param(name="backpackId",alias="背包id",description="背包id",lengthMax="11",optional="")
      * @Param(name="userId",alias="用户id",description="用户id",lengthMax="11",optional="")
-     * @Param(name="userId",alias="用户id",description="用户id",lenisUse="11",option是否使用")
+     * @Param(name="userId",alias="用户id",description="用户id",lenisUse="11",optiona")
      * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="255",optional="")
      * @Param(name="equipmentType",alias="装备类型",description="装备类型",lengthMax="1",optional="")
      * @Param(name="suitCode",alias="套装code",description="套装code",lengthMax="255",optional="")
@@ -336,72 +336,5 @@ class UserEquipmentBackpack extends UserBase
         $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
     }
 
-    /**
-     * @Api(name="use",path="/Api/User/UserEquipmentBackpack/use")
-     * @ApiDescription("获取一条数据")
-     * @Method(allow={GET,POST})
-     * @InjectParamsContext(key="param")
-     * @ApiSuccessParam(name="code",description="状态码")
-     * @ApiSuccessParam(name="result",description="api请求结果")
-     * @ApiSuccessParam(name="msg",description="api提示信息")
-     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
-     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
-     * @Param(name="userEquipmentBackpackId",alias="主键",description="主键",lengthMax="11",required="")
-     * @ApiSuccessParam(name="result.userEquipmentBackpackId",description="主键")
-     * @ApiSuccessParam(name="result.backpackId",description="背包id")
-     * @ApiSuccessParam(name="result.userId",description="用户id")
-     * @ApiSuccessParam(name="result.isUse",description="是否使用")
-     * @ApiSuccessParam(name="result.goodsCode",description="物品code")
-     * @ApiSuccessParam(name="result.equipmentType",description="装备类型")
-     * @ApiSuccessParam(name="result.suitCode",description="套装code")
-     * @ApiSuccessParam(name="result.rarityLevel",description="稀有度")
-     * @ApiSuccessParam(name="result.level",description="装备等级")
-     * @ApiSuccessParam(name="result.hp",description="血量")
-     * @ApiSuccessParam(name="result.mp",description="法力值")
-     * @ApiSuccessParam(name="result.attack",description="攻击力")
-     * @ApiSuccessParam(name="result.defense",description="防御力")
-     * @ApiSuccessParam(name="result.endurance",description="耐力")
-     * @ApiSuccessParam(name="result.intellect",description="智力")
-     * @ApiSuccessParam(name="result.strength",description="力量")
-     * @ApiSuccessParam(name="result.enduranceQualification",description="耐力资质")
-     * @ApiSuccessParam(name="result.intellectQualification",description="智力资质")
-     * @ApiSuccessParam(name="result.strengthQualification",description="力量资质")
-     * @ApiSuccessParam(name="result.criticalRate",description="暴击率")
-     * @ApiSuccessParam(name="result.criticalStrikeDamage",description="暴击伤害")
-     * @ApiSuccessParam(name="result.hitRate",description="命中率")
-     * @ApiSuccessParam(name="result.penetrate",description="穿透")
-     * @ApiSuccessParam(name="result.attackSpeed",description="攻击速度")
-     * @ApiSuccessParam(name="result.userElement",description="角色元素")
-     * @ApiSuccessParam(name="result.attackElement",description="攻击元素")
-     * @ApiSuccessParam(name="result.jin",description="金")
-     * @ApiSuccessParam(name="result.mu",description="木")
-     * @ApiSuccessParam(name="result.tu",description="土")
-     * @ApiSuccessParam(name="result.sui",description="水")
-     * @ApiSuccessParam(name="result.huo",description="火")
-     * @ApiSuccessParam(name="result.light",description="光")
-     * @ApiSuccessParam(name="result.dark",description="暗")
-     * @ApiSuccessParam(name="result.luck",description="幸运值")
-     * @ApiSuccessParam(name="result.physicalStrength",description="体力")
-     */
-    public function use()
-    {
-        $param = ContextManager::getInstance()->get('param');
-        $model = new UserEquipmentBackpackModel();
-        $info = $model->where('userId', $this->who->userId)->get(['userEquipmentBackpackId' => $param['userEquipmentBackpackId']]);
-        Assert::assert(!!$info, '数据不存在');
-        Assert::assert($info->isUse == 0, '装备已经穿戴');
-        $userAttribute = BaseModel::transaction(function () use ($info) {
-            //将同类型已穿戴装备改为未穿戴
-            $info->where('userId', $this->who->userId)->where('isUse', 1)->where('equipmentType', $info->equipmentType)->update(['isUse' => 0]);
-            $info->update(['isUse' => 1]);
-            //更新用户的属性
-            $userAttribute = UserService::getInstance()->countUserAttribute($this->who->userId);
-            return $userAttribute;
-        });
-
-        $this->writeJson(Status::CODE_OK, $userAttribute, "穿戴成功.");
-
-
-    }
 }
 
