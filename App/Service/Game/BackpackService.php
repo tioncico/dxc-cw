@@ -40,6 +40,8 @@ class BackpackService extends BaseService
             $backpackInfo = UserBackpackModel::create()->addData($userId, $goodsModel, 1);
             $equipmentModel = GoodsEquipmentModel::create()->get(['goodsCode'=>$backpackInfo->goodsCode]);
             $this->addUserEquipmentInfo($userId,$backpackInfo,$equipmentModel);
+        }elseif ($goodsModel->type==1){
+            $backpackInfo = $this->addGold($userId,$num);
         } else {
             $backpackInfo = UserBackpackModel::create()->getInfoByCode($userId, $goodsModel->code);
             if (empty($backpackInfo)) {

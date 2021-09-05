@@ -3,6 +3,7 @@
 namespace App\Model\Game;
 
 use App\Model\BaseModel;
+use EasySwoole\Mysqli\QueryBuilder;
 
 /**
  * MailGoodsModel
@@ -10,7 +11,7 @@ use App\Model\BaseModel;
  * Create With ClassGeneration
  * @property int $id //
  * @property int $mailId // 邮件id
- * @property int $goodsId // 物品id
+ * @property string $goodsCode // 物品id
  * @property int $num // 数量
  */
 class MailGoodsModel extends BaseModel
@@ -36,5 +37,13 @@ class MailGoodsModel extends BaseModel
 		];
 		return $data;
 	}
+
+
+    public function goodsInfo()
+    {
+        return $this->hasOne(GoodsModel::class, function (QueryBuilder $query) {
+            return $query;
+        }, 'goodsCode', 'code');
+    }
 }
 
