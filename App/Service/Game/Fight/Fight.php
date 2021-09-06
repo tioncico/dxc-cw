@@ -33,36 +33,28 @@ class Fight
             if ($this->state != 1) {
                 break;
             }
-            if ($user->isDie()) {
-                $this->state = 2;
+            if ($this->checkDie() == true) {
                 break;
             }
-            if ($monster->isDie()) {
-                $this->state = 2;
-                break;
-            }
+
             $userAttackTimes = $user->getAttackTimes();
             if ($userAttackTimes >= 1) {
                 //攻击,命中判定
-                $userFightResult = $this->attackJudgment($user, $monster);
-                //伤害计算
-                $this->harmCount($user, $userFightResult);
-                //扣血计算
-                $this->buckleBloodCalculation($user, $monster, $userFightResult);
+                $userFightResult = $this->normalAttack($user,$monster);
+                //扣除血量
                 $monster->setHp($monster->getHp() - $userFightResult->getBuckleBloodNum());
-                $user->setAttackTimes($user->getAttackTimes() - 1);
-                $callBack('user', $userFightResult);
+                call_user_func($callBack,'user',$userFightResult);
             }
             $monsterAttackTimes = $monster->getAttackTimes();
             if ($monsterAttackTimes >= 1) {
-                $monsterFightResult = $this->attackJudgment($monster, $user);
-                $this->harmCount($monster, $monsterFightResult);
-                $this->buckleBloodCalculation($monster, $user, $monsterFightResult);
+                //攻击,命中判定
+                $monsterFightResult = $this->normalAttack($monster,$user);
+                //扣除血量
                 $user->setHp($user->getHp() - $monsterFightResult->getBuckleBloodNum());
-                $monster->setAttackTimes($monster->getAttackTimes() - 1);
-                $callBack('monster', $monsterFightResult);
+                call_user_func($callBack,'monster',$monsterFightResult);
             }
 
+            //增加攻击次数
             $user->setAttackTimes($user->getAttackTimes() + ($user->getAttackSpeed() * 0.1));
             $monster->setAttackTimes($monster->getAttackTimes() + ($monster->getAttackSpeed() * 0.1));
             //最小单位为每秒10次
@@ -70,10 +62,48 @@ class Fight
         }
     }
 
+
+    /**
+     * 普通攻击
+     * normalAttack
+     * @param $attack
+     * @param $beAttack
+     * @return FightResult
+     * @author tioncico
+     * Time: 2:33 下午
+     */
+    public function normalAttack($attack,$beAttack){
+        //攻击,命中判定
+        $fightResult = $this->attackJudgment($attack, $beAttack);
+        //伤害计算
+        $this->harmCount($attack, $fightResult);
+        //扣血计算
+        $this->buckleBloodCalculation($attack, $beAttack, $fightResult);
+        //攻击次数-1
+        $attack->setAttackTimes($attack->getAttackTimes() - 1);
+        return $fightResult;
+    }
+
+    public function checkDie()
+    {
+        //判断用户是否死亡
+        if ($this->user->isDie()) {
+            $this->state = 2;
+            return true;
+        }
+        if ($this->monster->isDie()) {
+            $this->state = 2;
+            return true;
+        }
+        return false;
+    }
+
     //攻击判定
     public function attackJudgment(Attribute $attack, Attribute $beAttack)
     {
         $fightResult = new FightResult();
+        $fightResult->setAttack($attack);
+        $fightResult->setBeAttack($beAttack);
         //计算是否命中
         $randNum = mt_rand(1, 100);
         //未命中
@@ -90,6 +120,15 @@ class Fight
         return $fightResult;
     }
 
+    /**
+     * 普攻伤害计算
+     * harmCount
+     * @param Attribute   $attack
+     * @param FightResult $fightResult
+     * @return int|mixed
+     * @author tioncico
+     * Time: 2:03 下午
+     */
     public function harmCount(Attribute $attack, FightResult $fightResult)
     {
         //普通攻击伤害=攻击力
@@ -124,6 +163,16 @@ class Fight
     }
 
 
+    /**
+     * 使用主动技能
+     * useSkill
+     * @param Attribute      $attackAttribute
+     * @param Attribute      $beAttackAttribute
+     * @param SkillAttribute $skillAttribute
+     * @return FightResult
+     * @author tioncico
+     * Time: 2:35 下午
+     */
     public function useSkill(Attribute $attackAttribute, Attribute $beAttackAttribute, SkillAttribute $skillAttribute)
     {
         //攻击,命中判定
@@ -135,6 +184,8 @@ class Fight
         $this->harmCount($attackAttribute, $fightResult);
         //扣血计算
         $this->buckleBloodCalculation($attackAttribute, $beAttackAttribute, $fightResult);
+        //攻击次数-1
+        $attackAttribute->setAttackTimes($attackAttribute->getAttackTimes() - 1);
         return $fightResult;
     }
 

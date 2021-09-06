@@ -1626,3 +1626,24 @@ Stack trace:
 [2021-09-05 21:51:13][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:73]
 [2021-09-05 21:51:56][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:73]
 [2021-09-05 21:52:03][debug][notice]:[Function Swoole\Coroutine\System::fread() is deprecated at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/WebSocket.php line:73]
+[2021-09-06 17:10:22][debug][error]:[Uncaught EasySwoole\ORM\Exception\Exception: SQLSTATE[42S02] [1146] Table 'mwxz.real_name_authentication_list' doesn't exist [show full columns from real_name_authentication_list] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php:78
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Utility/TableObjectGeneration.php(46): EasySwoole\ORM\Db\MysqliClient->query(Object(EasySwoole\Mysqli\QueryBuilder))
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Utility/TableObjectGeneration.php(67): EasySwoole\ORM\Utility\TableObjectGeneration->getTableColumnsInfo()
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test.php(21): EasySwoole\ORM\Utility\TableObjectGeneration->generationTable()
+#3 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
+[2021-09-06 17:10:37][debug][error]:[Uncaught EasySwoole\ORM\Exception\Exception: SQLSTATE[42S02] [1146] Table 'mwxz.real_name_authentication_list' doesn't exist [show full columns from real_name_authentication_list] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php:78
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Utility/TableObjectGeneration.php(46): EasySwoole\ORM\Db\MysqliClient->query(Object(EasySwoole\Mysqli\QueryBuilder))
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Utility/TableObjectGeneration.php(67): EasySwoole\ORM\Utility\TableObjectGeneration->getTableColumnsInfo()
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test.php(21): EasySwoole\ORM\Utility\TableObjectGeneration->generationTable()
+#3 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
+[2021-09-06 17:41:29][debug][error]:[Uncaught EasySwoole\ORM\Exception\Exception: SQLSTATE[42S02] [1146] Table 'mwxz.real_name_authentication_list' doesn't exist [show full columns from real_name_authentication_list] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php:78
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Utility/TableObjectGeneration.php(46): EasySwoole\ORM\Db\MysqliClient->query(Object(EasySwoole\Mysqli\QueryBuilder))
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Utility/TableObjectGeneration.php(67): EasySwoole\ORM\Utility\TableObjectGeneration->getTableColumnsInfo()
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test.php(21): EasySwoole\ORM\Utility\TableObjectGeneration->generationTable()
+#3 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
