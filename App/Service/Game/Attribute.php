@@ -36,6 +36,10 @@ class Attribute extends SplBean
     protected $luck = 0;//幸运
     protected $attackTimes = 1;
     protected $isDie = false;
+    /**
+     * @var Buff[]
+     */
+    protected $buffList=[];
 
     /**
      * @return int
