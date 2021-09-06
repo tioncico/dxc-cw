@@ -12,10 +12,12 @@ use App\Actor\Cache\UserRelationMap;
 use App\Actor\Command;
 use App\Actor\MapActor;
 use App\Model\Game\MapModel;
+use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserMapModel;
 use App\Utility\Assert\Assert;
 use EasySwoole\EasySwoole\ServerManager;
 use EasySwoole\EasySwoole\Task\TaskManager;
+use EasySwoole\Mysqli\QueryBuilder;
 use EasySwoole\Socket\AbstractInterface\Controller;
 use EasySwoole\Socket\Bean\Response;
 
@@ -75,6 +77,14 @@ class Index extends BaseController
         $mapId = (int)$param['mapId'];
         $mapInfo = UserMapModel::create()->get(['mapId' => $mapId, 'userId' => $userId]);
         Assert::assert(!!$mapInfo, '地图信息不存在或未解锁');
+        //获取用户体力
+        $userAttribute = UserAttributeModel::create()->get($userId);
+        $decPhysicalStrengthNum = 10;
+        //每次进入地下城扣除10体力
+        Assert::assert($userAttribute->physicalStrength>=$decPhysicalStrengthNum,'体力不足10点,无法进入地下城');
+        //扣除10点体力
+        $userAttribute->update(['physicalStrength'=>QueryBuilder::dec($decPhysicalStrengthNum)]);
+
         //获取地图actorId
         $actorId = UserRelationMap::getInstance()->getUserMap($userId);
         Assert::assert(!$actorId, '你已进入地图');
