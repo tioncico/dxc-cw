@@ -10,4 +10,6 @@ class Buff extends SplBean
 {
 
 
+
+
 }
