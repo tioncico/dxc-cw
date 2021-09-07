@@ -10,6 +10,7 @@ class SkillAttribute extends SplBean
 {
     protected $skillId;
     protected $level;
+    protected $type;//触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发
     protected $rarityLevel;
     protected $maxLevel;
     protected $coolingTime;

@@ -10,6 +10,8 @@ use App\Model\BaseModel;
  * Create With ClassGeneration
  * @property int $mapId // 地图id
  * @property string $name // 地图名
+ * @property int $mapEnvironmentId //所属环境id
+ * @property int $difficultyLevel // 难度级别
  * @property string $description // 地图介绍
  * @property int $recommendedLevel // 建议等级
  * @property int $isInstanceZone // 是否为副本

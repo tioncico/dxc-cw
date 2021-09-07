@@ -353,8 +353,8 @@ class MapActor extends BaseActor
         //4个技能槽
         for ($i = 0; $i < 4; $i++) {
             if (!empty($ids[$i])) {
-                $skillInfo = UserSkillModel::create()->get($ids[$i]);
-                $this->userSkillList[$i] = new SkillAttribute($skillInfo->toArray());
+//                $skillInfo = UserSkillModel::create()->get($ids[$i]);
+//                $this->userSkillList[$i] = new SkillAttribute($skillInfo->toArray());
             }
         }
     }
