@@ -1647,3 +1647,7 @@ Stack trace:
 #2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/test.php(21): EasySwoole\ORM\Utility\TableObjectGeneration->generationTable()
 #3 {main}
   thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
+[2021-09-07 19:01:34][debug][error]:[Uncaught EasySwoole\ORM\Exception\Exception: SQLSTATE[HY000] [1366] Incorrect integer value: 'tu' for column 'userElement' at row 1 [INSERT  INTO `monster_list` (`name`, `type`, `description`, `level`, `hp`, `mp`, `attack`, `defense`, `endurance`, `intellect`, `strength`, `enduranceQualification`, `intellectQualification`, `strengthQualification`, `criticalRate`, `criticalStrikeDamage`, `hitRate`, `dodgeRate`, `penetrate`, `attackSpeed`, `userElement`, `attackElement`, `jin`, `mu`, `tu`, `sui`, `huo`, `light`, `dark`)  VALUES ('哥布林', 1, '瘦小的哥布林,在一号洞穴是最弱小的存在', 1, 100, 0, 10, 0, 0, 0, 0, 0, 0, 0, 10, 200, 100, 0, 0, 0, 'tu', 0, 0, 0, 10, 0, 0, 0, 0)] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php:78
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/DbManager.php(137): EasySwoole\ORM\Db\MysqliClient->query(Object(EasySwoole\Mysqli\QueryBuilder), false)
+#1 /Users/tioncico/Phpst at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
