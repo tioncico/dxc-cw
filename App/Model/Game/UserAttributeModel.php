@@ -24,6 +24,7 @@ use App\Model\BaseModel;
  * @property int $criticalRate // 暴击率
  * @property int $criticalStrikeDamage // 暴击伤害
  * @property int $hitRate // 命中率
+ * @property int $dodgeRate // 闪避率
  * @property int $penetrate // 穿透
  * @property int $attackSpeed // 攻击速度
  * @property int $userElement // 角色元素
@@ -80,6 +81,7 @@ class UserAttributeModel extends BaseModel
             'criticalRate'=>0,
             'criticalStrikeDamage'=>200,
             'hitRate'=>50,
+            'dodgeRate'=>0,
             'penetrate'=>0,
             'attackSpeed'=>0.5,
             'userElement'=>null,

@@ -79,6 +79,7 @@ class BackpackService extends BaseService
             'criticalRate'           => $equipmentModel->criticalRate,
             'criticalStrikeDamage'   => $equipmentModel->criticalStrikeDamage,
             'hitRate'                => $equipmentModel->hitRate,
+            'dodgeRate'              => $equipmentModel->dodgeRate,
             'penetrate'              => $equipmentModel->penetrate,
             'attackSpeed'            => $equipmentModel->attackSpeed,
             'userElement'            => $equipmentModel->userElement,

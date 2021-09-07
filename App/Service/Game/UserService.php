@@ -94,6 +94,7 @@ class UserService extends BaseService
             $userAttributeBean->setCriticalRate($userAttributeBean->getCriticalRate() + $userEquipment->criticalRate);
             $userAttributeBean->setCriticalStrikeDamage($userAttributeBean->getCriticalStrikeDamage() + $userEquipment->criticalStrikeDamage);
             $userAttributeBean->setHitRate($userAttributeBean->getHitRate() + $userEquipment->hitRate);
+            $userAttributeBean->setDodgeRate($userAttributeBean->getDodgeRate() + $userEquipment->dodgeRate);
             $userAttributeBean->setPenetrate($userAttributeBean->getPenetrate() + $userEquipment->penetrate);
             $userAttributeBean->setJin($userAttributeBean->getJin() + $userEquipment->jin);
             $userAttributeBean->setMu($userAttributeBean->getMu() + $userEquipment->mu);

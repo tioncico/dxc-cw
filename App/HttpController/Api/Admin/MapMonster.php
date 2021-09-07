@@ -58,7 +58,8 @@ class MapMonster extends AdminBase
 	 * @Param(name="criticalRate",alias="暴击率",description="暴击率",lengthMax="11",required="")
 	 * @Param(name="criticalStrikeDamage",alias="暴击伤害",description="暴击伤害",lengthMax="11",required="")
 	 * @Param(name="hitRate",alias="命中率",description="命中率",lengthMax="11",required="")
-	 * @Param(name="penetrate",alias="穿透力",description="穿透力",lengthMax="11",required="")
+     * @Param(name="dodgeRate",alias="闪避率",description="闪避率",lengthMax="11",optional="")
+     * @Param(name="penetrate",alias="穿透力",description="穿透力",lengthMax="11",required="")
 	 * @Param(name="attackSpeed",alias="攻击速度",description="攻击速度",lengthMax="11",required="")
 	 * @Param(name="userElement",alias="角色元素",description="角色元素",lengthMax="11",required="")
 	 * @Param(name="attackElement",alias="攻击元素",description="攻击元素",lengthMax="11",required="")
@@ -93,6 +94,7 @@ class MapMonster extends AdminBase
 		    'criticalRate'=>$param['criticalRate'],
 		    'criticalStrikeDamage'=>$param['criticalStrikeDamage'],
 		    'hitRate'=>$param['hitRate'],
+		    'dodgeRate'=>$param['dodgeRate'],
 		    'penetrate'=>$param['penetrate'],
 		    'attackSpeed'=>$param['attackSpeed'],
 		    'userElement'=>$param['userElement'],
@@ -140,7 +142,8 @@ class MapMonster extends AdminBase
 	 * @Param(name="criticalRate",alias="暴击率",description="暴击率",lengthMax="11",optional="")
 	 * @Param(name="criticalStrikeDamage",alias="暴击伤害",description="暴击伤害",lengthMax="11",optional="")
 	 * @Param(name="hitRate",alias="命中率",description="命中率",lengthMax="11",optional="")
-	 * @Param(name="penetrate",alias="穿透力",description="穿透力",lengthMax="11",optional="")
+     * @Param(name="dodgeRate",alias="闪避率",description="闪避率",lengthMax="11",optional="")
+     * @Param(name="penetrate",alias="穿透力",description="穿透力",lengthMax="11",optional="")
 	 * @Param(name="attackSpeed",alias="攻击速度",description="攻击速度",lengthMax="11",optional="")
 	 * @Param(name="userElement",alias="角色元素",description="角色元素",lengthMax="11",optional="")
 	 * @Param(name="attackElement",alias="攻击元素",description="攻击元素",lengthMax="11",optional="")
@@ -181,7 +184,8 @@ class MapMonster extends AdminBase
 		$updateData['criticalRate']=$param['criticalRate'] ?? $info->criticalRate;
 		$updateData['criticalStrikeDamage']=$param['criticalStrikeDamage'] ?? $info->criticalStrikeDamage;
 		$updateData['hitRate']=$param['hitRate'] ?? $info->hitRate;
-		$updateData['penetrate']=$param['penetrate'] ?? $info->penetrate;
+        $updateData['dodgeRate']=$param['dodgeRate'] ?? $info->dodgeRate;
+        $updateData['penetrate']=$param['penetrate'] ?? $info->penetrate;
 		$updateData['attackSpeed']=$param['attackSpeed'] ?? $info->attackSpeed;
 		$updateData['userElement']=$param['userElement'] ?? $info->userElement;
 		$updateData['attackElement']=$param['attackElement'] ?? $info->attackElement;
@@ -227,7 +231,8 @@ class MapMonster extends AdminBase
 	 * @ApiSuccessParam(name="result.criticalRate",description="暴击率")
 	 * @ApiSuccessParam(name="result.criticalStrikeDamage",description="暴击伤害")
 	 * @ApiSuccessParam(name="result.hitRate",description="命中率")
-	 * @ApiSuccessParam(name="result.penetrate",description="穿透力")
+     * @ApiSuccessParam(name="result.dodgeRate",description="闪避率")
+     * @ApiSuccessParam(name="result.penetrate",description="穿透力")
 	 * @ApiSuccessParam(name="result.attackSpeed",description="攻击速度")
 	 * @ApiSuccessParam(name="result.userElement",description="角色元素")
 	 * @ApiSuccessParam(name="result.attackElement",description="攻击元素")
@@ -283,7 +288,8 @@ class MapMonster extends AdminBase
 	 * @ApiSuccessParam(name="result[].criticalRate",description="暴击率")
 	 * @ApiSuccessParam(name="result[].criticalStrikeDamage",description="暴击伤害")
 	 * @ApiSuccessParam(name="result[].hitRate",description="命中率")
-	 * @ApiSuccessParam(name="result[].penetrate",description="穿透力")
+     * @ApiSuccessParam(name="result[].dodgeRate",description="闪避率")
+     * @ApiSuccessParam(name="result[].penetrate",description="穿透力")
 	 * @ApiSuccessParam(name="result[].attackSpeed",description="攻击速度")
 	 * @ApiSuccessParam(name="result[].userElement",description="角色元素")
 	 * @ApiSuccessParam(name="result[].attackElement",description="攻击元素")

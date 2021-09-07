@@ -22,6 +22,7 @@ class Attribute extends SplBean
     protected $criticalRate = 10; //暴击率
     protected $criticalStrikeDamage = 200; //暴击伤害
     protected $hitRate = 90; //命中率
+    protected $dodgeRate = 0; //闪避率
     protected $penetrate = 0; //穿透力
     protected $attackSpeed = 0.4; //攻击速度
     protected $userElement = 0; //角色元素
@@ -524,6 +525,38 @@ class Attribute extends SplBean
         return $array[$elementType];
     }
 
+    /**
+     * @return int
+     */
+    public function getDodgeRate(): int
+    {
+        return $this->dodgeRate;
+    }
+
+    /**
+     * @param int $dodgeRate
+     */
+    public function setDodgeRate(int $dodgeRate): void
+    {
+        $this->dodgeRate = $dodgeRate;
+    }
+
+    /**
+     * @return Buff[]
+     */
+    public function getBuffList(): array
+    {
+        return $this->buffList;
+    }
+
+    /**
+     * @param Buff[] $buffList
+     */
+    public function setBuffList(array $buffList): void
+    {
+        $this->buffList = $buffList;
+    }
+
 
     public function __toString()
     {
@@ -541,6 +574,7 @@ class Attribute extends SplBean
 暴击率:{$this->criticalRate}
 暴击伤害:{$this->criticalStrikeDamage}
 命中率:{$this->hitRate}
+闪避率:{$this->dodgeRate}
 穿透力:{$this->penetrate}
 攻击速度:{$this->attackSpeed}
 角色元素:{$this->userElement}
