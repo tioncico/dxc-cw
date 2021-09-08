@@ -3,6 +3,7 @@
 namespace App\Model\Game;
 
 use App\Model\BaseModel;
+use EasySwoole\Utility\Random;
 
 /**
  * UserAttributeModel
@@ -10,6 +11,7 @@ use App\Model\BaseModel;
  * Create With ClassGeneration
  * @property int $userId //
  * @property int $level // 等级
+ * @property int $name // 游戏名
  * @property int $exp // 经验
  * @property int $hp // 血量
  * @property int $mp // 法力值
@@ -63,10 +65,11 @@ class UserAttributeModel extends BaseModel
 		return $data;
 	}
 
-	public function addData($userId){
+	public function addData($userId,$name=null){
         $data = [
             'userId'=>$userId,
             'level'=>1,
+            'name'=>$name??"玩家".Random::character(10),
             'exp'=>0,
             'hp'=>100,
             'mp'=>100,

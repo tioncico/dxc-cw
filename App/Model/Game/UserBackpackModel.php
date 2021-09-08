@@ -54,6 +54,17 @@ class UserBackpackModel extends BaseModel
         return $info;
     }
 
+    public function getUseMoneyInfo($userId)
+    {
+        $info = $this->getInfoByCode($userId, self::MONEY_CODE);
+        if (empty($info)) {
+            $goldGoodsInfo = GoodsModel::create()->get(['code' => self::MONEY_CODE]);
+
+            $info = $this->addData($userId, $goldGoodsInfo, 0);
+        }
+        return $info;
+    }
+
     public function getInfoByCode($userId, $code)
     {
         $info = $this->get(['userId' => $userId, 'goodsCode' => $code]);
