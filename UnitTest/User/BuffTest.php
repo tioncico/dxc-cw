@@ -17,13 +17,14 @@ class BuffTest extends UserBaseTestCase
 	public function testAdd()
 	{
 		$data = [];
-		$data['name'] = '测试文本PG8dLr';
-		$data['code'] = '测试文本VFYdW1';
-		$data['stackLayer'] = '60306';
-		$data['entryCode'] = '测试文本bHZICy';
-		$data['param'] = '测试文本mUk2dz';
-		$data['type'] = '31245';
-		$data['description'] = '测试文本kFctZ3';
+		$data['name'] = '测试文本0aDtCM';
+		$data['isDebuff'] = '1';
+		$data['code'] = '测试文本PnTldk';
+		$data['stackLayer'] = '52864';
+		$data['entryCode'] = '测试文本xOIq6C';
+		$data['param'] = '测试文本W8fqkF';
+		$data['type'] = '17943';
+		$data['description'] = '测试文本M25Oa9';
 		$response = $this->request('add',$data);
 		$model = new BuffModel();
 		$model->destroy($response->result->buffId);
@@ -34,13 +35,14 @@ class BuffTest extends UserBaseTestCase
 	public function testGetOne()
 	{
 		$data = [];
-		$data['name'] = '测试文本VUuC7D';
-		$data['code'] = '测试文本t6Egp9';
-		$data['stackLayer'] = '62219';
-		$data['entryCode'] = '测试文本FI2LVT';
-		$data['param'] = '测试文本fiyGJd';
-		$data['type'] = '54324';
-		$data['description'] = '测试文本Z6P9eH';
+		$data['name'] = '测试文本Q0c2Ej';
+		$data['isDebuff'] = '2';
+		$data['code'] = '测试文本zrFpaX';
+		$data['stackLayer'] = '35275';
+		$data['entryCode'] = '测试文本lXbOct';
+		$data['param'] = '测试文本5BfgoG';
+		$data['type'] = '36271';
+		$data['description'] = '测试文本60sr5m';
 		$model = new BuffModel();
 		$model->data($data)->save();
 
@@ -56,25 +58,27 @@ class BuffTest extends UserBaseTestCase
 	public function testUpdate()
 	{
 		$data = [];
-		$data['name'] = '测试文本VzM0mF';
-		$data['code'] = '测试文本FNepl1';
-		$data['stackLayer'] = '26140';
-		$data['entryCode'] = '测试文本8Y4rzl';
-		$data['param'] = '测试文本O5YDUP';
-		$data['type'] = '17871';
-		$data['description'] = '测试文本ngmUBM';
+		$data['name'] = '测试文本ecMtmd';
+		$data['isDebuff'] = '1';
+		$data['code'] = '测试文本n6zbDs';
+		$data['stackLayer'] = '86326';
+		$data['entryCode'] = '测试文本KUQeDS';
+		$data['param'] = '测试文本tMCaso';
+		$data['type'] = '40558';
+		$data['description'] = '测试文本8NWrzm';
 		$model = new BuffModel();
 		$model->data($data)->save();
 
 		$update = [];
 		$update['buffId'] = $model->buffId;
-		$update['name'] = '测试文本raM1Bc';
-		$update['code'] = '测试文本PVioO2';
-		$update['stackLayer'] = '61723';
-		$update['entryCode'] = '测试文本5rfiNX';
-		$update['param'] = '测试文本hJIRc0';
-		$update['type'] = '65106';
-		$update['description'] = '测试文本AlnD5z';
+		$update['name'] = '测试文本vGjNIL';
+		$update['isDebuff'] = '0';
+		$update['code'] = '测试文本TbP4L0';
+		$update['stackLayer'] = '92163';
+		$update['entryCode'] = '测试文本a5jl4B';
+		$update['param'] = '测试文本WlFYxb';
+		$update['type'] = '42336';
+		$update['description'] = '测试文本v1LMGd';
 		$response = $this->request('update',$update);
 		$model->destroy($model->buffId);
 		//var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
@@ -94,13 +98,14 @@ class BuffTest extends UserBaseTestCase
 	public function testDel()
 	{
 		$data = [];
-		$data['name'] = '测试文本VBsjlC';
-		$data['code'] = '测试文本GRVdFp';
-		$data['stackLayer'] = '80327';
-		$data['entryCode'] = '测试文本TZBfFX';
-		$data['param'] = '测试文本0LJGTE';
-		$data['type'] = '25624';
-		$data['description'] = '测试文本dIBPVR';
+		$data['name'] = '测试文本Fw8bWx';
+		$data['isDebuff'] = '1';
+		$data['code'] = '测试文本C4m0iO';
+		$data['stackLayer'] = '31424';
+		$data['entryCode'] = '测试文本SuTpei';
+		$data['param'] = '测试文本QMJRNV';
+		$data['type'] = '21841';
+		$data['description'] = '测试文本5V32FY';
 		$model = new BuffModel();
 		$model->data($data)->save();
 

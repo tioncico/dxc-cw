@@ -10,6 +10,7 @@ use App\Model\BaseModel;
  * Create With ClassGeneration
  * @property int $buffId //
  * @property string $name // buff名称
+ * @property int $isDebuff // 是否为debuff
  * @property string $code // buffcode
  * @property int $stackLayer // 最大叠加层数
  * @property string $entryCode // 词条code

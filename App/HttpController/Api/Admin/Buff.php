@@ -41,6 +41,7 @@ class Buff extends AdminBase
 	 * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
 	 * @Param(name="buffId",lengthMax="11",required="")
 	 * @Param(name="name",alias="buff名称",description="buff名称",lengthMax="255",optional="")
+	 * @Param(name="isDebuff",alias="是否为debuff",description="是否为debuff",lengthMax="1",optional="")
 	 * @Param(name="code",alias="buffcode",description="buffcode",lengthMax="255",optional="")
 	 * @Param(name="stackLayer",alias="最大叠加层数",description="最大叠加层数",lengthMax="11",optional="")
 	 * @Param(name="entryCode",alias="词条code",description="词条code",lengthMax="255",optional="")
@@ -54,6 +55,7 @@ class Buff extends AdminBase
 		$data = [
 		    'buffId'=>$param['buffId'],
 		    'name'=>$param['name'] ?? '',
+		    'isDebuff'=>$param['isDebuff'] ?? '',
 		    'code'=>$param['code'] ?? '',
 		    'stackLayer'=>$param['stackLayer'] ?? '',
 		    'entryCode'=>$param['entryCode'] ?? '',
@@ -79,6 +81,7 @@ class Buff extends AdminBase
 	 * @ApiFail({"code":400,"result":[],"msg":"更新失败"})
 	 * @Param(name="buffId",lengthMax="11",required="")
 	 * @Param(name="name",alias="buff名称",description="buff名称",lengthMax="255",optional="")
+	 * @Param(name="isDebuff",alias="是否为debuff",description="是否为debuff",lengthMax="1",optional="")
 	 * @Param(name="code",alias="buffcode",description="buffcode",lengthMax="255",optional="")
 	 * @Param(name="stackLayer",alias="最大叠加层数",description="最大叠加层数",lengthMax="11",optional="")
 	 * @Param(name="entryCode",alias="词条code",description="词条code",lengthMax="255",optional="")
@@ -98,6 +101,7 @@ class Buff extends AdminBase
 		$updateData = [];
 
 		$updateData['name']=$param['name'] ?? $info->name;
+		$updateData['isDebuff']=$param['isDebuff'] ?? $info->isDebuff;
 		$updateData['code']=$param['code'] ?? $info->code;
 		$updateData['stackLayer']=$param['stackLayer'] ?? $info->stackLayer;
 		$updateData['entryCode']=$param['entryCode'] ?? $info->entryCode;
@@ -122,6 +126,7 @@ class Buff extends AdminBase
 	 * @Param(name="buffId",lengthMax="11",required="")
 	 * @ApiSuccessParam(name="result.buffId",description="")
 	 * @ApiSuccessParam(name="result.name",description="buff名称")
+	 * @ApiSuccessParam(name="result.isDebuff",description="是否为debuff")
 	 * @ApiSuccessParam(name="result.code",description="buffcode")
 	 * @ApiSuccessParam(name="result.stackLayer",description="最大叠加层数")
 	 * @ApiSuccessParam(name="result.entryCode",description="词条code")
@@ -156,6 +161,7 @@ class Buff extends AdminBase
 	 * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
 	 * @ApiSuccessParam(name="result[].buffId",description="")
 	 * @ApiSuccessParam(name="result[].name",description="buff名称")
+	 * @ApiSuccessParam(name="result[].isDebuff",description="是否为debuff")
 	 * @ApiSuccessParam(name="result[].code",description="buffcode")
 	 * @ApiSuccessParam(name="result[].stackLayer",description="最大叠加层数")
 	 * @ApiSuccessParam(name="result[].entryCode",description="词条code")
