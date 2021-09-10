@@ -8,33 +8,51 @@ use EasySwoole\Spl\SplBean;
 
 class SkillAttribute extends SplBean
 {
-    protected $skillId;
-    protected $level;
+    protected $skillName;//技能名
+    protected $isUse;//是否谢爱
+    protected $level;//技能等级
     protected $type;//触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发
-    protected $rarityLevel;
-    protected $maxLevel;
-    protected $coolingTime;
-    protected $manaCost;
-    protected $entryCode;
-    protected $description;
-    protected $param;
-    protected $qualification;
-    protected $manaCostQualification;
+    protected $rarityLevel;//技能罕见等级
+    protected $maxLevel;//最大等级
+    protected $coolingTime;//冷却时间
+    protected $manaCostQualification;//法力消耗
+    protected $entryCode;//词条code
+    protected $description;//介绍
+    protected $param;//参数
+    protected $qualification;//资质
+    protected $manaCost;//mp消耗
+    protected $tickTime;
 
     /**
      * @return mixed
      */
-    public function getSkillId()
+    public function getSkillName()
     {
-        return $this->skillId;
+        return $this->skillName;
     }
 
     /**
-     * @param mixed $skillId
+     * @param mixed $skillName
      */
-    public function setSkillId($skillId): void
+    public function setSkillName($skillName): void
     {
-        $this->skillId = $skillId;
+        $this->skillName = $skillName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsUse()
+    {
+        return $this->isUse;
+    }
+
+    /**
+     * @param mixed $isUse
+     */
+    public function setIsUse($isUse): void
+    {
+        $this->isUse = $isUse;
     }
 
     /**
@@ -51,6 +69,22 @@ class SkillAttribute extends SplBean
     public function setLevel($level): void
     {
         $this->level = $level;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type): void
+    {
+        $this->type = $type;
     }
 
     /**
@@ -104,17 +138,17 @@ class SkillAttribute extends SplBean
     /**
      * @return mixed
      */
-    public function getManaCost()
+    public function getManaCostQualification()
     {
-        return $this->manaCost;
+        return $this->manaCostQualification;
     }
 
     /**
-     * @param mixed $manaCost
+     * @param mixed $manaCostQualification
      */
-    public function setManaCost($manaCost): void
+    public function setManaCostQualification($manaCostQualification): void
     {
-        $this->manaCost = $manaCost;
+        $this->manaCostQualification = $manaCostQualification;
     }
 
     /**
@@ -184,17 +218,32 @@ class SkillAttribute extends SplBean
     /**
      * @return mixed
      */
-    public function getManaCostQualification()
+    public function getManaCost()
     {
-        return $this->manaCostQualification;
+        return $this->manaCost;
     }
 
     /**
-     * @param mixed $manaCostQualification
+     * @param mixed $manaCost
      */
-    public function setManaCostQualification($manaCostQualification): void
+    public function setManaCost($manaCost): void
     {
-        $this->manaCostQualification = $manaCostQualification;
+        $this->manaCost = $manaCost;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTickTime()
+    {
+        return $this->tickTime;
+    }
+
+    /**
+     * @param mixed $tickTime
+     */
+    public function setTickTime($tickTime): void
+    {
+        $this->tickTime = $tickTime;
+    }
 }

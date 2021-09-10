@@ -61,3 +61,5 @@ Stack trace:
 [2021-09-06 09:08:19 $85430.0]	WARNING	swManager_check_exit_status: worker#10[pid=85441] abnormal exit, status=0, signal=1
 [2021-09-06 09:08:19 $85430.0]	WARNING	swManager_check_exit_status: worker#9[pid=85440] abnormal exit, status=0, signal=1
 [2021-09-06 09:08:19 $85430.0]	WARNING	swManager_check_exit_status: worker#8[pid=85439] abnormal exit, status=0, signal=1
+[2021-09-10 17:03:05 @22165.0]	WARNING	~Channel (ERRNO 10003): channel is destroyed, 1 consumers will be discarded
+[2021-09-10 17:03:05 $22153.0]	WARNING	swManager_check_exit_status: worker#11[pid=22165] abnormal exit, status=255, signal=0

@@ -1669,3 +1669,18 @@ Stack trace:
 #1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(882): EasySwoole\ORM\DbManager->query(Object(EasySwoole\Mysqli\QueryBuilder), false, 'default')
 #2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(429): EasySwoole\ORM\AbstractModel->query(Object(EasySwoole\Mysqli\QueryBuilder))
 #3 /Users/tioncico/Ph at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
+[2021-09-10 16:30:16][debug][error]:[Uncaught EasySwoole\ORM\Exception\Exception: SQLSTATE[23000] [1062] Duplicate entry '1-1' for key 'userId' [INSERT  INTO `user_skill_list` (`userId`, `skillId`, `skillName`, `isUse`, `level`, `type`, `rarityLevel`, `maxLevel`, `coolingTime`, `manaCostQualification`, `entryCode`, `description`, `param`, `qualification`, `manaCost`)  VALUES (1, 1, '蓄力一击', 0, 1, 0, 1, 10, 5, 'NULL', '0001', '重重的一击,攻击附带100+100%的伤害', '[100,100]', '[50,10%]', 10)] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php:78
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/DbManager.php(137): EasySwoole\ORM\Db\MysqliClient->query(Object(EasySwoole\Mysqli\QueryBuilder), false)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(882): EasySwoole\ORM\DbManager->query(Object(EasySwoole\Mysqli\QueryBuilder), false, 'default')
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mw at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
+[2021-09-10 17:03:04][debug][notice]:[Undefined index: skillIds at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Controller/Index.php line:92]
+[2021-09-10 17:03:05][debug][error]:[Uncaught App\Utility\Rand\RandException: 随机数据不存在 in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Utility/Rand/Rand.php:29
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php(270): App\Utility\Rand\Rand->randValue(2)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Actor/MapActor.php(86): App\Actor\MapActor->refreshMonster()
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/AbstractActor.php(113): App\Actor\MapActor->onStart()
+#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/actor/src/WorkerProcess.php(84): EasySwoole\Actor\AbstractActor->__run(Object(Swoole\Coroutine\Channel))
+#4 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/component/src/Process/Socket/AbstractUnixProcess.php(45): EasySwoole\Actor\WorkerProcess->onAccept(Object(Swoole\Coroutine\Socket))
+#5 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Utility/Rand/Rand.php line:29]

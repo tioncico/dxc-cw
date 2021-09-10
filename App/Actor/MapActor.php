@@ -341,23 +341,18 @@ class MapActor extends BaseActor
     /**
      * 初始化用户技能
      * initSkill
-     * @param $ids
      * @throws \EasySwoole\Mysqli\Exception\Exception
      * @throws \EasySwoole\ORM\Exception\Exception
      * @throws \Throwable
      * @author tioncico
      * Time: 6:57 下午
      */
-    protected function initSkill($ids)
+    protected function initSkill()
     {
+        $skillList = UserSkillModel::create()->where('userId', $this->user->userId)->where('isUse', 1)->all();
         //4个技能槽
-        for ($i = 0; $i < 4; $i++) {
-            if (!empty($ids[$i])) {
-//                $skillInfo = UserSkillModel::create()->get($ids[$i]);
-//                $this->userSkillList[$i] = new SkillAttribute($skillInfo->toArray());
-            }
+        foreach ($skillList as $skillInfo) {
+            $this->userSkillList[$skillInfo->userSkillId] = new SkillAttribute($skillInfo->toArray());
         }
     }
-
-
 }
