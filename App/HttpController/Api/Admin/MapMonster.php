@@ -40,72 +40,78 @@ class MapMonster extends AdminBase
 	 * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
 	 * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
 	 * @Param(name="mapMonsterId",lengthMax="11",required="")
-	 * @Param(name="monsterId",alias="怪物id",description="怪物id",lengthMax="11",required="")
-	 * @Param(name="name",alias="怪物名称",description="怪物名称",lengthMax="255",required="")
-	 * @Param(name="type",alias="怪物类型 1小怪,2精英,3boss",description="怪物类型 1小怪,2精英,3boss",lengthMax="11",required="")
-	 * @Param(name="description",alias="怪物介绍",description="怪物介绍",lengthMax="255",required="")
-	 * @Param(name="level",alias="怪物等级",description="怪物等级",lengthMax="11",required="")
-	 * @Param(name="hp",alias="血量",description="血量",lengthMax="11",required="")
-	 * @Param(name="mp",alias="法力",description="法力",lengthMax="11",required="")
-	 * @Param(name="attack",alias="攻击力",description="攻击力",lengthMax="11",required="")
-	 * @Param(name="defense",alias="防御力",description="防御力",lengthMax="11",required="")
-	 * @Param(name="endurance",alias="耐力",description="耐力",lengthMax="11",required="")
-	 * @Param(name="intellect",alias="智力",description="智力",lengthMax="11",required="")
-	 * @Param(name="strength",alias="力量",description="力量",lengthMax="11",required="")
-	 * @Param(name="enduranceQualification",alias="耐力资质",description="耐力资质",lengthMax="11",required="")
-	 * @Param(name="intellectQualification",alias="智力资质",description="智力资质",lengthMax="11",required="")
-	 * @Param(name="strengthQualification",alias="力量资质",description="力量资质",lengthMax="11",required="")
-	 * @Param(name="criticalRate",alias="暴击率",description="暴击率",lengthMax="11",required="")
-	 * @Param(name="criticalStrikeDamage",alias="暴击伤害",description="暴击伤害",lengthMax="11",required="")
-	 * @Param(name="hitRate",alias="命中率",description="命中率",lengthMax="11",required="")
-     * @Param(name="dodgeRate",alias="闪避率",description="闪避率",lengthMax="11",optional="")
-     * @Param(name="penetrate",alias="穿透力",description="穿透力",lengthMax="11",required="")
-	 * @Param(name="attackSpeed",alias="攻击速度",description="攻击速度",lengthMax="11",required="")
-	 * @Param(name="userElement",alias="角色元素",description="角色元素",lengthMax="11",required="")
-	 * @Param(name="attackElement",alias="攻击元素",description="攻击元素",lengthMax="11",required="")
-	 * @Param(name="jin",alias="金",description="金",lengthMax="11",required="")
-	 * @Param(name="mu",alias="木",description="木",lengthMax="11",required="")
-	 * @Param(name="tu",alias="土",description="土",lengthMax="11",required="")
-	 * @Param(name="sui",alias="水",description="水",lengthMax="11",required="")
-	 * @Param(name="huo",alias="火",description="火",lengthMax="11",required="")
-	 * @Param(name="light",alias="光",description="光",lengthMax="11",required="")
-	 * @Param(name="dark",alias="暗",description="暗",lengthMax="11",required="")
+	 * @Param(name="monsterId",alias="怪物id",description="怪物id",lengthMax="11",optional="")
+	 * @Param(name="mapId",alias="地图id",description="地图id",lengthMax="11",optional="")
+	 * @Param(name="mapLevelMin",alias="地图关卡最小",description="地图关卡最小",lengthMax="3",optional="")
+	 * @Param(name="mapLevelMax",alias="地图关卡最大",description="地图关卡最大",lengthMax="3",optional="")
+	 * @Param(name="name",alias="怪物名称",description="怪物名称",lengthMax="255",optional="")
+	 * @Param(name="type",alias="怪物类型 1小怪,2精英,3boss",description="怪物类型 1小怪,2精英,3boss",lengthMax="11",optional="")
+	 * @Param(name="description",alias="怪物介绍",description="怪物介绍",lengthMax="255",optional="")
+	 * @Param(name="level",alias="怪物等级",description="怪物等级",lengthMax="11",optional="")
+	 * @Param(name="hp",alias="血量",description="血量",lengthMax="11",optional="")
+	 * @Param(name="mp",alias="法力",description="法力",lengthMax="11",optional="")
+	 * @Param(name="attack",alias="攻击力",description="攻击力",lengthMax="11",optional="")
+	 * @Param(name="defense",alias="防御力",description="防御力",lengthMax="11",optional="")
+	 * @Param(name="endurance",alias="耐力",description="耐力",lengthMax="11",optional="")
+	 * @Param(name="intellect",alias="智力",description="智力",lengthMax="11",optional="")
+	 * @Param(name="strength",alias="力量",description="力量",lengthMax="11",optional="")
+	 * @Param(name="enduranceQualification",alias="耐力资质",description="耐力资质",lengthMax="11",optional="")
+	 * @Param(name="intellectQualification",alias="智力资质",description="智力资质",lengthMax="11",optional="")
+	 * @Param(name="strengthQualification",alias="力量资质",description="力量资质",lengthMax="11",optional="")
+	 * @Param(name="criticalRate",alias="暴击率",description="暴击率",lengthMax="11",optional="")
+	 * @Param(name="criticalStrikeDamage",alias="暴击伤害",description="暴击伤害",lengthMax="11",optional="")
+	 * @Param(name="hitRate",alias="命中率",description="命中率",lengthMax="11",optional="")
+	 * @Param(name="dodgeRate",alias="闪避率",description="闪避率",lengthMax="11",optional="")
+	 * @Param(name="penetrate",alias="穿透力",description="穿透力",lengthMax="11",optional="")
+	 * @Param(name="attackSpeed",alias="攻击速度",description="攻击速度",lengthMax="11",optional="")
+	 * @Param(name="userElement",alias="角色元素",description="角色元素",lengthMax="11",optional="")
+	 * @Param(name="attackElement",alias="攻击元素",description="攻击元素",lengthMax="11",optional="")
+	 * @Param(name="jin",alias="金",description="金",lengthMax="11",optional="")
+	 * @Param(name="mu",alias="木",description="木",lengthMax="11",optional="")
+	 * @Param(name="tu",alias="土",description="土",lengthMax="11",optional="")
+	 * @Param(name="sui",alias="水",description="水",lengthMax="11",optional="")
+	 * @Param(name="huo",alias="火",description="火",lengthMax="11",optional="")
+	 * @Param(name="light",alias="光",description="光",lengthMax="11",optional="")
+	 * @Param(name="dark",alias="暗",description="暗",lengthMax="11",optional="")
 	 */
 	public function add()
 	{
 		$param = ContextManager::getInstance()->get('param');
 		$data = [
 		    'mapMonsterId'=>$param['mapMonsterId'],
-		    'monsterId'=>$param['monsterId'],
-		    'name'=>$param['name'],
-		    'type'=>$param['type'],
-		    'description'=>$param['description'],
-		    'level'=>$param['level'],
-		    'hp'=>$param['hp'],
-		    'mp'=>$param['mp'],
-		    'attack'=>$param['attack'],
-		    'defense'=>$param['defense'],
-		    'endurance'=>$param['endurance'],
-		    'intellect'=>$param['intellect'],
-		    'strength'=>$param['strength'],
-		    'enduranceQualification'=>$param['enduranceQualification'],
-		    'intellectQualification'=>$param['intellectQualification'],
-		    'strengthQualification'=>$param['strengthQualification'],
-		    'criticalRate'=>$param['criticalRate'],
-		    'criticalStrikeDamage'=>$param['criticalStrikeDamage'],
-		    'hitRate'=>$param['hitRate'],
-		    'dodgeRate'=>$param['dodgeRate'],
-		    'penetrate'=>$param['penetrate'],
-		    'attackSpeed'=>$param['attackSpeed'],
-		    'userElement'=>$param['userElement'],
-		    'attackElement'=>$param['attackElement'],
-		    'jin'=>$param['jin'],
-		    'mu'=>$param['mu'],
-		    'tu'=>$param['tu'],
-		    'sui'=>$param['sui'],
-		    'huo'=>$param['huo'],
-		    'light'=>$param['light'],
-		    'dark'=>$param['dark'],
+		    'monsterId'=>$param['monsterId'] ?? '',
+		    'mapId'=>$param['mapId'] ?? '',
+		    'mapLevelMin'=>$param['mapLevelMin'] ?? '',
+		    'mapLevelMax'=>$param['mapLevelMax'] ?? '',
+		    'name'=>$param['name'] ?? '',
+		    'type'=>$param['type'] ?? '',
+		    'description'=>$param['description'] ?? '',
+		    'level'=>$param['level'] ?? '',
+		    'hp'=>$param['hp'] ?? '',
+		    'mp'=>$param['mp'] ?? '',
+		    'attack'=>$param['attack'] ?? '',
+		    'defense'=>$param['defense'] ?? '',
+		    'endurance'=>$param['endurance'] ?? '',
+		    'intellect'=>$param['intellect'] ?? '',
+		    'strength'=>$param['strength'] ?? '',
+		    'enduranceQualification'=>$param['enduranceQualification'] ?? '',
+		    'intellectQualification'=>$param['intellectQualification'] ?? '',
+		    'strengthQualification'=>$param['strengthQualification'] ?? '',
+		    'criticalRate'=>$param['criticalRate'] ?? '',
+		    'criticalStrikeDamage'=>$param['criticalStrikeDamage'] ?? '',
+		    'hitRate'=>$param['hitRate'] ?? '',
+		    'dodgeRate'=>$param['dodgeRate'] ?? '',
+		    'penetrate'=>$param['penetrate'] ?? '',
+		    'attackSpeed'=>$param['attackSpeed'] ?? '',
+		    'userElement'=>$param['userElement'] ?? '',
+		    'attackElement'=>$param['attackElement'] ?? '',
+		    'jin'=>$param['jin'] ?? '',
+		    'mu'=>$param['mu'] ?? '',
+		    'tu'=>$param['tu'] ?? '',
+		    'sui'=>$param['sui'] ?? '',
+		    'huo'=>$param['huo'] ?? '',
+		    'light'=>$param['light'] ?? '',
+		    'dark'=>$param['dark'] ?? '',
 		];
 		$model = new MapMonsterModel($data);
 		$model->save();
@@ -125,6 +131,9 @@ class MapMonster extends AdminBase
 	 * @ApiFail({"code":400,"result":[],"msg":"更新失败"})
 	 * @Param(name="mapMonsterId",lengthMax="11",required="")
 	 * @Param(name="monsterId",alias="怪物id",description="怪物id",lengthMax="11",optional="")
+	 * @Param(name="mapId",alias="地图id",description="地图id",lengthMax="11",optional="")
+	 * @Param(name="mapLevelMin",alias="地图关卡最小",description="地图关卡最小",lengthMax="3",optional="")
+	 * @Param(name="mapLevelMax",alias="地图关卡最大",description="地图关卡最大",lengthMax="3",optional="")
 	 * @Param(name="name",alias="怪物名称",description="怪物名称",lengthMax="255",optional="")
 	 * @Param(name="type",alias="怪物类型 1小怪,2精英,3boss",description="怪物类型 1小怪,2精英,3boss",lengthMax="11",optional="")
 	 * @Param(name="description",alias="怪物介绍",description="怪物介绍",lengthMax="255",optional="")
@@ -142,8 +151,8 @@ class MapMonster extends AdminBase
 	 * @Param(name="criticalRate",alias="暴击率",description="暴击率",lengthMax="11",optional="")
 	 * @Param(name="criticalStrikeDamage",alias="暴击伤害",description="暴击伤害",lengthMax="11",optional="")
 	 * @Param(name="hitRate",alias="命中率",description="命中率",lengthMax="11",optional="")
-     * @Param(name="dodgeRate",alias="闪避率",description="闪避率",lengthMax="11",optional="")
-     * @Param(name="penetrate",alias="穿透力",description="穿透力",lengthMax="11",optional="")
+	 * @Param(name="dodgeRate",alias="闪避率",description="闪避率",lengthMax="11",optional="")
+	 * @Param(name="penetrate",alias="穿透力",description="穿透力",lengthMax="11",optional="")
 	 * @Param(name="attackSpeed",alias="攻击速度",description="攻击速度",lengthMax="11",optional="")
 	 * @Param(name="userElement",alias="角色元素",description="角色元素",lengthMax="11",optional="")
 	 * @Param(name="attackElement",alias="攻击元素",description="攻击元素",lengthMax="11",optional="")
@@ -167,6 +176,9 @@ class MapMonster extends AdminBase
 		$updateData = [];
 
 		$updateData['monsterId']=$param['monsterId'] ?? $info->monsterId;
+		$updateData['mapId']=$param['mapId'] ?? $info->mapId;
+		$updateData['mapLevelMin']=$param['mapLevelMin'] ?? $info->mapLevelMin;
+		$updateData['mapLevelMax']=$param['mapLevelMax'] ?? $info->mapLevelMax;
 		$updateData['name']=$param['name'] ?? $info->name;
 		$updateData['type']=$param['type'] ?? $info->type;
 		$updateData['description']=$param['description'] ?? $info->description;
@@ -184,8 +196,8 @@ class MapMonster extends AdminBase
 		$updateData['criticalRate']=$param['criticalRate'] ?? $info->criticalRate;
 		$updateData['criticalStrikeDamage']=$param['criticalStrikeDamage'] ?? $info->criticalStrikeDamage;
 		$updateData['hitRate']=$param['hitRate'] ?? $info->hitRate;
-        $updateData['dodgeRate']=$param['dodgeRate'] ?? $info->dodgeRate;
-        $updateData['penetrate']=$param['penetrate'] ?? $info->penetrate;
+		$updateData['dodgeRate']=$param['dodgeRate'] ?? $info->dodgeRate;
+		$updateData['penetrate']=$param['penetrate'] ?? $info->penetrate;
 		$updateData['attackSpeed']=$param['attackSpeed'] ?? $info->attackSpeed;
 		$updateData['userElement']=$param['userElement'] ?? $info->userElement;
 		$updateData['attackElement']=$param['attackElement'] ?? $info->attackElement;
@@ -214,6 +226,9 @@ class MapMonster extends AdminBase
 	 * @Param(name="mapMonsterId",lengthMax="11",required="")
 	 * @ApiSuccessParam(name="result.mapMonsterId",description="")
 	 * @ApiSuccessParam(name="result.monsterId",description="怪物id")
+	 * @ApiSuccessParam(name="result.mapId",description="地图id")
+	 * @ApiSuccessParam(name="result.mapLevelMin",description="地图关卡最小")
+	 * @ApiSuccessParam(name="result.mapLevelMax",description="地图关卡最大")
 	 * @ApiSuccessParam(name="result.name",description="怪物名称")
 	 * @ApiSuccessParam(name="result.type",description="怪物类型 1小怪,2精英,3boss")
 	 * @ApiSuccessParam(name="result.description",description="怪物介绍")
@@ -231,8 +246,8 @@ class MapMonster extends AdminBase
 	 * @ApiSuccessParam(name="result.criticalRate",description="暴击率")
 	 * @ApiSuccessParam(name="result.criticalStrikeDamage",description="暴击伤害")
 	 * @ApiSuccessParam(name="result.hitRate",description="命中率")
-     * @ApiSuccessParam(name="result.dodgeRate",description="闪避率")
-     * @ApiSuccessParam(name="result.penetrate",description="穿透力")
+	 * @ApiSuccessParam(name="result.dodgeRate",description="闪避率")
+	 * @ApiSuccessParam(name="result.penetrate",description="穿透力")
 	 * @ApiSuccessParam(name="result.attackSpeed",description="攻击速度")
 	 * @ApiSuccessParam(name="result.userElement",description="角色元素")
 	 * @ApiSuccessParam(name="result.attackElement",description="攻击元素")
@@ -271,6 +286,9 @@ class MapMonster extends AdminBase
 	 * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
 	 * @ApiSuccessParam(name="result[].mapMonsterId",description="")
 	 * @ApiSuccessParam(name="result[].monsterId",description="怪物id")
+	 * @ApiSuccessParam(name="result[].mapId",description="地图id")
+	 * @ApiSuccessParam(name="result[].mapLevelMin",description="地图关卡最小")
+	 * @ApiSuccessParam(name="result[].mapLevelMax",description="地图关卡最大")
 	 * @ApiSuccessParam(name="result[].name",description="怪物名称")
 	 * @ApiSuccessParam(name="result[].type",description="怪物类型 1小怪,2精英,3boss")
 	 * @ApiSuccessParam(name="result[].description",description="怪物介绍")
@@ -288,8 +306,8 @@ class MapMonster extends AdminBase
 	 * @ApiSuccessParam(name="result[].criticalRate",description="暴击率")
 	 * @ApiSuccessParam(name="result[].criticalStrikeDamage",description="暴击伤害")
 	 * @ApiSuccessParam(name="result[].hitRate",description="命中率")
-     * @ApiSuccessParam(name="result[].dodgeRate",description="闪避率")
-     * @ApiSuccessParam(name="result[].penetrate",description="穿透力")
+	 * @ApiSuccessParam(name="result[].dodgeRate",description="闪避率")
+	 * @ApiSuccessParam(name="result[].penetrate",description="穿透力")
 	 * @ApiSuccessParam(name="result[].attackSpeed",description="攻击速度")
 	 * @ApiSuccessParam(name="result[].userElement",description="角色元素")
 	 * @ApiSuccessParam(name="result[].attackElement",description="攻击元素")
