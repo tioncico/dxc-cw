@@ -11,6 +11,7 @@ use App\Model\BaseModel;
  * @property int $goodsId // 物品id
  * @property string $name // 物品名称
  * @property string $code // 物品code值
+ * @property string $baseCode // 物品基础类型
  * @property int $type // 类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备
  * @property string $description // 介绍
  * @property int $gold // 售出金币
@@ -42,9 +43,5 @@ class GoodsModel extends BaseModel
 		];
 		return $data;
 	}
-
-	public function getInfoByCode($code){
-	    return $this->where('code',$code)->get();
-    }
 }
 

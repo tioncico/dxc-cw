@@ -1651,3 +1651,21 @@ Stack trace:
 Stack trace:
 #0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/DbManager.php(137): EasySwoole\ORM\Db\MysqliClient->query(Object(EasySwoole\Mysqli\QueryBuilder), false)
 #1 /Users/tioncico/Phpst at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
+[2021-09-10 14:24:47][debug][error]:[Uncaught EasySwoole\ORM\Exception\Exception: SQLSTATE[23000] [1062] Duplicate entry 'gift10000' for key 'code' [INSERT  INTO `goods_list` (`name`, `code`, `type`, `description`, `gold`, `isSale`, `level`, `rarityLevel`, `extraData`)  VALUES ('10级首饰箱', 'gift10000', 4, '10级首饰箱', 1, 1, 1, 1, '500')] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php:78
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/DbManager.php(137): EasySwoole\ORM\Db\MysqliClient->query(Object(EasySwoole\Mysqli\QueryBuilder), false)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(882): EasySwoole\ORM\DbManager->query(Object(EasySwoole\Mysqli\QueryBuilder), false, 'default')
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(429): EasySwoole\ORM\AbstractModel->query(Object(EasySwoole\Mysqli\QueryBuilder))
+#3 /Users/tioncico/PhpstormProjects at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
+[2021-09-10 14:25:06][debug][error]:[Uncaught EasySwoole\ORM\Exception\Exception: SQLSTATE[23000] [1062] Duplicate entry 'gift11111' for key 'code' [INSERT  INTO `goods_list` (`name`, `code`, `type`, `description`, `gold`, `isSale`, `level`, `rarityLevel`, `extraData`)  VALUES ('15级装备箱', 'gift11111', 4, '15级装备箱', 1, 1, 1, 1, '500')] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php:78
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/DbManager.php(137): EasySwoole\ORM\Db\MysqliClient->query(Object(EasySwoole\Mysqli\QueryBuilder), false)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(882): EasySwoole\ORM\DbManager->query(Object(EasySwoole\Mysqli\QueryBuilder), false, 'default')
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(429): EasySwoole\ORM\AbstractModel->query(Object(EasySwoole\Mysqli\QueryBuilder))
+#3 /Users/tioncico/PhpstormProjects at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
+[2021-09-10 14:25:38][debug][error]:[Uncaught EasySwoole\ORM\Exception\Exception: SQLSTATE[23000] [1062] Duplicate entry 'gift10000' for key 'code' [INSERT  INTO `goods_list` (`name`, `code`, `type`, `description`, `gold`, `isSale`, `level`, `rarityLevel`, `extraData`)  VALUES ('金属性宠物礼包', 'gift10000', 4, '金属性宠物礼包', 1, 1, 1, 1, '500')] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php:78
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/DbManager.php(137): EasySwoole\ORM\Db\MysqliClient->query(Object(EasySwoole\Mysqli\QueryBuilder), false)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(882): EasySwoole\ORM\DbManager->query(Object(EasySwoole\Mysqli\QueryBuilder), false, 'default')
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(429): EasySwoole\ORM\AbstractModel->query(Object(EasySwoole\Mysqli\QueryBuilder))
+#3 /Users/tioncico/Ph at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]

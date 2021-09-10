@@ -40,30 +40,32 @@ class Goods extends AdminBase
 	 * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
 	 * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
 	 * @Param(name="goodsId",alias="物品id",description="物品id",lengthMax="11",required="")
-	 * @Param(name="name",alias="物品名称",description="物品名称",lengthMax="255",required="")
-	 * @Param(name="code",alias="物品code值",description="物品code值",lengthMax="255",required="")
-	 * @Param(name="type",alias="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备",description="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备",lengthMax="255",required="")
-	 * @Param(name="description",alias="介绍",description="介绍",lengthMax="255",required="")
-	 * @Param(name="gold",alias="售出金币",description="售出金币",lengthMax="255",required="")
-	 * @Param(name="isSale",alias="是否可售出",description="是否可售出",lengthMax="255",required="")
-	 * @Param(name="level",alias="等级",description="等级",lengthMax="255",required="")
-	 * @Param(name="rarityLevel",alias="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话",lengthMax="255",required="")
-	 * @Param(name="extraData",alias="额外数据",description="额外数据",lengthMax="255",required="")
+	 * @Param(name="name",alias="物品名称",description="物品名称",lengthMax="255",optional="")
+	 * @Param(name="code",alias="物品code值",description="物品code值",lengthMax="255",optional="")
+	 * @Param(name="baseCode",alias="物品基础类型",description="物品基础类型",lengthMax="255",optional="")
+	 * @Param(name="type",alias="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备",description="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备",lengthMax="255",optional="")
+	 * @Param(name="description",alias="介绍",description="介绍",lengthMax="255",optional="")
+	 * @Param(name="gold",alias="售出金币",description="售出金币",lengthMax="255",optional="")
+	 * @Param(name="isSale",alias="是否可售出",description="是否可售出",lengthMax="255",optional="")
+	 * @Param(name="level",alias="等级",description="等级",lengthMax="255",optional="")
+	 * @Param(name="rarityLevel",alias="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话",lengthMax="255",optional="")
+	 * @Param(name="extraData",alias="额外数据",description="额外数据",lengthMax="255",optional="")
 	 */
 	public function add()
 	{
 		$param = ContextManager::getInstance()->get('param');
 		$data = [
 		    'goodsId'=>$param['goodsId'],
-		    'name'=>$param['name'],
-		    'code'=>$param['code'],
-		    'type'=>$param['type'],
-		    'description'=>$param['description'],
-		    'gold'=>$param['gold'],
-		    'isSale'=>$param['isSale'],
-		    'level'=>$param['level'],
-		    'rarityLevel'=>$param['rarityLevel'],
-		    'extraData'=>$param['extraData'],
+		    'name'=>$param['name'] ?? '',
+		    'code'=>$param['code'] ?? '',
+		    'baseCode'=>$param['baseCode'] ?? '',
+		    'type'=>$param['type'] ?? '',
+		    'description'=>$param['description'] ?? '',
+		    'gold'=>$param['gold'] ?? '',
+		    'isSale'=>$param['isSale'] ?? '',
+		    'level'=>$param['level'] ?? '',
+		    'rarityLevel'=>$param['rarityLevel'] ?? '',
+		    'extraData'=>$param['extraData'] ?? '',
 		];
 		$model = new GoodsModel($data);
 		$model->save();
@@ -84,6 +86,7 @@ class Goods extends AdminBase
 	 * @Param(name="goodsId",alias="物品id",description="物品id",lengthMax="11",required="")
 	 * @Param(name="name",alias="物品名称",description="物品名称",lengthMax="255",optional="")
 	 * @Param(name="code",alias="物品code值",description="物品code值",lengthMax="255",optional="")
+	 * @Param(name="baseCode",alias="物品基础类型",description="物品基础类型",lengthMax="255",optional="")
 	 * @Param(name="type",alias="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备",description="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备",lengthMax="255",optional="")
 	 * @Param(name="description",alias="介绍",description="介绍",lengthMax="255",optional="")
 	 * @Param(name="gold",alias="售出金币",description="售出金币",lengthMax="255",optional="")
@@ -105,6 +108,7 @@ class Goods extends AdminBase
 
 		$updateData['name']=$param['name'] ?? $info->name;
 		$updateData['code']=$param['code'] ?? $info->code;
+		$updateData['baseCode']=$param['baseCode'] ?? $info->baseCode;
 		$updateData['type']=$param['type'] ?? $info->type;
 		$updateData['description']=$param['description'] ?? $info->description;
 		$updateData['gold']=$param['gold'] ?? $info->gold;
@@ -131,6 +135,7 @@ class Goods extends AdminBase
 	 * @ApiSuccessParam(name="result.goodsId",description="物品id")
 	 * @ApiSuccessParam(name="result.name",description="物品名称")
 	 * @ApiSuccessParam(name="result.code",description="物品code值")
+	 * @ApiSuccessParam(name="result.baseCode",description="物品基础类型")
 	 * @ApiSuccessParam(name="result.type",description="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备")
 	 * @ApiSuccessParam(name="result.description",description="介绍")
 	 * @ApiSuccessParam(name="result.gold",description="售出金币")
@@ -167,6 +172,7 @@ class Goods extends AdminBase
 	 * @ApiSuccessParam(name="result[].goodsId",description="物品id")
 	 * @ApiSuccessParam(name="result[].name",description="物品名称")
 	 * @ApiSuccessParam(name="result[].code",description="物品code值")
+	 * @ApiSuccessParam(name="result[].baseCode",description="物品基础类型")
 	 * @ApiSuccessParam(name="result[].type",description="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备")
 	 * @ApiSuccessParam(name="result[].description",description="介绍")
 	 * @ApiSuccessParam(name="result[].gold",description="售出金币")
