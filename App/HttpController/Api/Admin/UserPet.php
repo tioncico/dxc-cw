@@ -43,6 +43,7 @@ class UserPet extends AdminBase
 	 * @Param(name="petId",lengthMax="11",required="")
 	 * @Param(name="name",alias="宠物名称",description="宠物名称",lengthMax="255",optional="")
 	 * @Param(name="type",alias="宠物类型 1金2木3土4水5火6光7暗",description="宠物类型 1金2木3土4水5火6光7暗",lengthMax="255",optional="")
+	 * @Param(name="isUse",alias="是否携带宠物",description="是否携带宠物",lengthMax="11",optional="")
 	 * @Param(name="description",alias="怪物介绍",description="怪物介绍",lengthMax="255",optional="")
 	 * @Param(name="level",alias="怪物等级",description="怪物等级",lengthMax="11",optional="")
 	 * @Param(name="exp",alias="怪物经验",description="怪物经验",lengthMax="11",optional="")
@@ -81,6 +82,7 @@ class UserPet extends AdminBase
 		    'petId'=>$param['petId'],
 		    'name'=>$param['name'] ?? '',
 		    'type'=>$param['type'] ?? '',
+		    'isUse'=>$param['isUse'] ?? '',
 		    'description'=>$param['description'] ?? '',
 		    'level'=>$param['level'] ?? '',
 		    'exp'=>$param['exp'] ?? '',
@@ -131,6 +133,7 @@ class UserPet extends AdminBase
 	 * @Param(name="petId",lengthMax="11",optional="")
 	 * @Param(name="name",alias="宠物名称",description="宠物名称",lengthMax="255",optional="")
 	 * @Param(name="type",alias="宠物类型 1金2木3土4水5火6光7暗",description="宠物类型 1金2木3土4水5火6光7暗",lengthMax="255",optional="")
+	 * @Param(name="isUse",alias="是否携带宠物",description="是否携带宠物",lengthMax="11",optional="")
 	 * @Param(name="description",alias="怪物介绍",description="怪物介绍",lengthMax="255",optional="")
 	 * @Param(name="level",alias="怪物等级",description="怪物等级",lengthMax="11",optional="")
 	 * @Param(name="exp",alias="怪物经验",description="怪物经验",lengthMax="11",optional="")
@@ -175,6 +178,7 @@ class UserPet extends AdminBase
 		$updateData['petId']=$param['petId'] ?? $info->petId;
 		$updateData['name']=$param['name'] ?? $info->name;
 		$updateData['type']=$param['type'] ?? $info->type;
+		$updateData['isUse']=$param['isUse'] ?? $info->isUse;
 		$updateData['description']=$param['description'] ?? $info->description;
 		$updateData['level']=$param['level'] ?? $info->level;
 		$updateData['exp']=$param['exp'] ?? $info->exp;
@@ -224,6 +228,7 @@ class UserPet extends AdminBase
 	 * @ApiSuccessParam(name="result.petId",description="")
 	 * @ApiSuccessParam(name="result.name",description="宠物名称")
 	 * @ApiSuccessParam(name="result.type",description="宠物类型 1金2木3土4水5火6光7暗")
+	 * @ApiSuccessParam(name="result.isUse",description="是否携带宠物")
 	 * @ApiSuccessParam(name="result.description",description="怪物介绍")
 	 * @ApiSuccessParam(name="result.level",description="怪物等级")
 	 * @ApiSuccessParam(name="result.exp",description="怪物经验")
@@ -283,6 +288,7 @@ class UserPet extends AdminBase
 	 * @ApiSuccessParam(name="result[].petId",description="")
 	 * @ApiSuccessParam(name="result[].name",description="宠物名称")
 	 * @ApiSuccessParam(name="result[].type",description="宠物类型 1金2木3土4水5火6光7暗")
+	 * @ApiSuccessParam(name="result[].isUse",description="是否携带宠物")
 	 * @ApiSuccessParam(name="result[].description",description="怪物介绍")
 	 * @ApiSuccessParam(name="result[].level",description="怪物等级")
 	 * @ApiSuccessParam(name="result[].exp",description="怪物经验")

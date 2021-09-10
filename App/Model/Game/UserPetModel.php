@@ -12,6 +12,7 @@ use App\Model\BaseModel;
  * @property int $petId //
  * @property string $name // 宠物名称
  * @property string $type // 宠物类型 1金2木3土4水5火6光7暗
+ * @property int $isUse // 是否携带宠物
  * @property string $description // 怪物介绍
  * @property int $level // 怪物等级
  * @property int $exp // 怪物经验
