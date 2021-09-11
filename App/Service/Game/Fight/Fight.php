@@ -40,23 +40,27 @@ class Fight
             $userAttackTimes = $user->getAttackTimes();
             if ($userAttackTimes >= 1) {
                 //攻击,命中判定
-                $userFightResult = $this->normalAttack($user,$monster);
+                $userFightResult = $this->normalAttack($user, $monster);
                 //扣除血量
                 $monster->setHp($monster->getHp() - $userFightResult->getBuckleBloodNum());
-                call_user_func($callBack,'user',$userFightResult);
+                call_user_func($callBack, 'user', $userFightResult);
             }
             $monsterAttackTimes = $monster->getAttackTimes();
             if ($monsterAttackTimes >= 1) {
                 //攻击,命中判定
-                $monsterFightResult = $this->normalAttack($monster,$user);
+                $monsterFightResult = $this->normalAttack($monster, $user);
                 //扣除血量
                 $user->setHp($user->getHp() - $monsterFightResult->getBuckleBloodNum());
-                call_user_func($callBack,'monster',$monsterFightResult);
+                call_user_func($callBack, 'monster', $monsterFightResult);
             }
             //增加攻击次数
 //            $user->setAttackTimes($user->getAttackTimes() + ($user->getAttackSpeed() * 0.1));
 //            $monster->setAttackTimes($monster->getAttackTimes() + ($monster->getAttackSpeed() * 0.1));
             //最小单位为每秒10次
+            //技能冷却
+            $this->skillCool(0.1);
+            //buff过期
+
             \co::sleep(0.1);
         }
     }
@@ -70,7 +74,8 @@ class Fight
      * @author tioncico
      * Time: 2:33 下午
      */
-    public function normalAttack($attack,$beAttack){
+    public function normalAttack($attack, $beAttack)
+    {
         //攻击,命中判定
         $fightResult = $this->attackJudgment($attack, $beAttack);
         //伤害计算
@@ -183,6 +188,28 @@ class Fight
         //扣除血量
         $beAttackAttribute->setHp($beAttackAttribute->getHp() - $fightResult->getBuckleBloodNum());
         return $fightResult;
+    }
+
+    public function skillCool($decTime)
+    {
+        //用户技能冷却
+        /**
+         * @var $skill SkillAttribute
+         */
+        foreach ($this->user->getSkillList() as $skill) {
+            if ($skill->getTickTime() > 0) {
+                $skill->incTickTime(-$decTime);
+            }
+        }
+        //怪物技能冷却
+        /**
+         * @var $skill SkillAttribute
+         */
+        foreach ($this->monster->getSkillList() as $skill) {
+            if ($skill->getTickTime() > 0) {
+                $skill->incTickTime(-$decTime);
+            }
+        }
     }
 
     /**

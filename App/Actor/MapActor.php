@@ -52,15 +52,6 @@ class MapActor extends BaseActor
     /**@var MapMonsterModel */
     protected $monster;
 
-    /**
-     * @var SkillAttribute[]
-     */
-    protected $userSkillList = [
-        0 => null,
-        1 => null,
-        2 => null,
-        3 => null,
-    ];
 
     public function __construct(Channel $mailBox, string $actorId, $arg)
     {
@@ -69,7 +60,6 @@ class MapActor extends BaseActor
         $mapId = $arg['mapId'];
         $this->user = UserModel::create()->get($userId);
         $this->map = MapModel::create()->get($mapId);
-        $this->initSkill();
     }
 
     public static function configure(ActorConfig $actorConfig)
@@ -103,7 +93,6 @@ class MapActor extends BaseActor
             'monsterAttribute' => $this->monsterAttribute,
             'monsterList'      => $this->monsterList,
             'fight'            => $this->fight,
-            'userSkillList'    => $this->userSkillList,
         ];
         MsgPushEvent::getInstance()->msgPush($this->user->userId, 'mapInfo', 200, '地图数据', $data);
     }
@@ -316,6 +305,7 @@ class MapActor extends BaseActor
             $this->userAttribute = new Attribute($userAttribute->toArray());
             $this->userAttribute->setName($this->user->nickname);
         }
+        $this->initUserSkill();
     }
 
     /**
@@ -338,8 +328,8 @@ class MapActor extends BaseActor
 
     protected function useUserSkill($param)
     {
-        $skillId = $param['skillId'];
-        $skillInfo = $this->userSkillList[$skillId];
+        $skillCode = $param['skillCode'];
+        $skillInfo = $this->userAttribute->getSkillByCode($skillCode);
         if (!$this->fight || $this->fight->getState() != 1) {
             MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 400, "战斗未开始,无法释放技能");
             return;
@@ -365,12 +355,33 @@ class MapActor extends BaseActor
      * @author tioncico
      * Time: 6:57 下午
      */
-    protected function initSkill()
+    protected function initUserSkill()
     {
         $skillList = UserSkillModel::create()->where('userId', $this->user->userId)->where('isUse', 1)->all();
         //4个技能槽
+        /**
+         * @var $skillInfo UserSkillModel
+         */
         foreach ($skillList as $skillInfo) {
-            $this->userSkillList[$skillInfo->userSkillId] = new SkillAttribute($skillInfo->toArray());
+            $this->userAttribute->addSkill(new SkillAttribute($skillInfo->toArray()));
         }
+    }
+
+    /**
+     * 初始化怪物技能
+     * initSkill
+     * @throws \EasySwoole\Mysqli\Exception\Exception
+     * @throws \EasySwoole\ORM\Exception\Exception
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 6:57 下午
+     */
+    protected function initMonsterSkill()
+    {
+//        $skillList = UserSkillModel::create()->where('userId', $this->user->userId)->where('isUse', 1)->all();
+//        4个技能槽
+//        foreach ($skillList as $skillInfo) {
+//            $this->userAttribute->addSkill(new SkillAttribute($skillInfo->toArray()));
+//        }
     }
 }

@@ -134,6 +134,6 @@ class Index extends BaseController
         $actorId = UserRelationMap::getInstance()->getUserMap($userId);
         Assert::assert(!!$actorId, '不在地图中');
 
-        MapActor::client()->send($actorId, new Command(['action' => 'useUserSkill','data'=>['skillId'=>$param['skillId']]]));
+        MapActor::client()->send($actorId, new Command(['action' => 'useUserSkill','data'=>['skillCode'=>$param['skillCode']]]));
     }
 }

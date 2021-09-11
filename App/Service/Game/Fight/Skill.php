@@ -21,6 +21,19 @@ class Skill
         $entryCode = $skillAttribute->getEntryCode();
         $actionName = 'entry' . Str::studly($entryCode);
         Skill::$actionName($attackAttribute, $beAttackAttribute, $skillAttribute, $fightResult);
+        self::coolSkill($attackAttribute, $beAttackAttribute, $skillAttribute);
+    }
+
+    /**
+     * 技能冷却
+     * coolSkill
+     * @author tioncico
+     * Time: 9:23 下午
+     */
+    public static function coolSkill(Attribute $attackAttribute, Attribute $beAttackAttribute, SkillAttribute $skillAttribute)
+    {
+        //增加冷却时间
+        $skillAttribute->setTickTime($skillAttribute->getCoolingTime());
     }
 
     /**

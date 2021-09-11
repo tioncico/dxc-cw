@@ -21,7 +21,7 @@ class SkillAttribute extends SplBean
     protected $param;//参数
     protected $qualification;//资质
     protected $manaCost;//mp消耗
-    protected $tickTime;
+    protected $tickTime = 0;//冷却时间
 
     /**
      * @return mixed
@@ -246,4 +246,10 @@ class SkillAttribute extends SplBean
     {
         $this->tickTime = $tickTime;
     }
+
+    public function incTickTime($tickTime): void
+    {
+        $this->tickTime += $tickTime;
+    }
+
 }

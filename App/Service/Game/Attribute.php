@@ -3,6 +3,7 @@
 namespace App\Service\Game;
 
 
+use App\Service\Game\Fight\Skill;
 use EasySwoole\Spl\SplBean;
 
 class Attribute extends SplBean
@@ -38,7 +39,7 @@ class Attribute extends SplBean
     protected $attackTimes = 1;//攻击次数
     protected $isDie = false;
     /**
-     * @var Buff[][]
+     * @var Buff[]
      */
     protected $buffList = [// 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发,10释放技能前触发,11释放技能后触发
         0  => [],
@@ -54,6 +55,11 @@ class Attribute extends SplBean
         10 => [],
         11 => [],
     ];
+
+    /**
+     * @var Skill[][]
+     */
+    protected $skillList = [];
 
     /**
      * @return int
@@ -611,6 +617,32 @@ class Attribute extends SplBean
         } else {
             $this->buffList[$buff->getType()][$buff->getCode()] = $buff;
         }
+    }
+
+    /**
+     * @return Fight\Skill[]
+     */
+    public function getSkillList(): array
+    {
+        return $this->skillList;
+    }
+
+    /**
+     * @param Fight\Skill[][] $skillList
+     */
+    public function setSkillList(array $skillList): void
+    {
+        $this->skillList = $skillList;
+    }
+
+
+    public function addSkill(SkillAttribute $skill)
+    {
+        $this->skillList[$skill->getEntryCode()] = $skill;
+    }
+    public function getSkillByCode($code):?SkillAttribute
+    {
+        return $this->skillList[$code];
     }
 
     public function __toString()
