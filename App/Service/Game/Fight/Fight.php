@@ -15,6 +15,7 @@ class Fight
     protected $user;
     /**@var Attribute */
     protected $monster;
+
     protected $state = 0;//0未战斗,1战斗中,2战斗结束
 
     public function __construct($user, $monster)
@@ -59,7 +60,6 @@ class Fight
             \co::sleep(0.1);
         }
     }
-
 
     /**
      * 普通攻击
@@ -160,7 +160,6 @@ class Fight
         return $buckleBlood;
     }
 
-
     /**
      * 使用主动技能
      * useSkill
@@ -175,16 +174,16 @@ class Fight
     {
         //攻击,命中判定
         $fightResult = $this->attackJudgment($attackAttribute, $beAttackAttribute);
+        //技能伤害计算
         Skill::useSkill($attackAttribute, $beAttackAttribute, $skillAttribute, $fightResult);
-        //伤害计算
-        $this->harmCount($attackAttribute, $fightResult);
         //扣血计算
         $this->buckleBloodCalculation($attackAttribute, $beAttackAttribute, $fightResult);
         //攻击次数-1
         $attackAttribute->setAttackTimes($attackAttribute->getAttackTimes() - 1);
+        //扣除血量
+        $beAttackAttribute->setHp($beAttackAttribute->getHp() - $fightResult->getBuckleBloodNum());
         return $fightResult;
     }
-
 
     /**
      * @return int

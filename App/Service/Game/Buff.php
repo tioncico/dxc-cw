@@ -9,12 +9,17 @@ use EasySwoole\Spl\SplBean;
 class Buff extends SplBean
 {
     protected $name;
+    protected $isDeBuff;
     protected $code;
-    protected $stackLayer;
+    protected $stackLayer=1;
+    protected $nowStackLayer=1;
     protected $entryCode;
     protected $param;
-    protected $type;// 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发
+    protected $type;
     protected $description;
+    protected $expireType;//1正常倒计时过期(战斗完直接失效) 2正常倒计时过期(退出地图直接失效) 3正常倒计时过期(一直有效)
+    protected $expireTime;//倒计时(秒)
+    protected $isExpire=false;//是否过期
 
     /**
      * @return mixed
@@ -30,6 +35,22 @@ class Buff extends SplBean
     public function setName($name): void
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsDeBuff()
+    {
+        return $this->isDeBuff;
+    }
+
+    /**
+     * @param mixed $isDeBuff
+     */
+    public function setIsDeBuff($isDeBuff): void
+    {
+        $this->isDeBuff = $isDeBuff;
     }
 
     /**
@@ -99,6 +120,22 @@ class Buff extends SplBean
     /**
      * @return mixed
      */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type): void
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDescription()
     {
         return $this->description;
@@ -115,17 +152,73 @@ class Buff extends SplBean
     /**
      * @return mixed
      */
-    public function getType()
+    public function getExpireType()
     {
-        return $this->type;
+        return $this->expireType;
     }
 
     /**
-     * @param mixed $type
+     * @param mixed $expireType
      */
-    public function setType($type): void
+    public function setExpireType($expireType): void
     {
-        $this->type = $type;
+        $this->expireType = $expireType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpireTime()
+    {
+        return $this->expireTime;
+    }
+
+    /**
+     * @param mixed $expireTime
+     */
+    public function setExpireTime(int $expireTime): void
+    {
+        $this->expireTime = $expireTime;
+    }
+
+    public function incExpireTime(int $expireTime){
+        $this->expireTime+=$expireTime;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNowStackLayer()
+    {
+        return $this->nowStackLayer;
+    }
+
+    /**
+     * @param mixed $nowStackLayer
+     */
+    public function setNowStackLayer($nowStackLayer): void
+    {
+        $this->nowStackLayer = $nowStackLayer;
+    }
+
+    public function incNowStackLayer(int $nowStackLayer){
+        $this->nowStackLayer += $nowStackLayer;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExpire(): bool
+    {
+        return $this->isExpire;
+    }
+
+    /**
+     * @param bool $isExpire
+     */
+    public function setIsExpire(bool $isExpire): void
+    {
+        $this->isExpire = $isExpire;
     }
 
 

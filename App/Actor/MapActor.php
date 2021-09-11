@@ -163,8 +163,12 @@ class MapActor extends BaseActor
 
     public function fightEnd()
     {
+        if ($this->fight->getState()!=1){
+            return ;
+        }
         //如果怪物死亡
         if ($this->monsterAttribute->isDie()) {
+            $this->fight->setState(2);
             MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, "战斗结束,怪物死亡");
             //计算奖励
             $reward = new Reward($this->user->userId, new UserAttributeModel($this->userAttribute->toArray()), $this->map, $this->monster);
@@ -183,6 +187,7 @@ class MapActor extends BaseActor
             return MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, $msg);
         }
         if ($this->userAttribute->isDie()) {
+            $this->fight->setState(2);
             return MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, "战斗结束,玩家死亡");
         }
     }

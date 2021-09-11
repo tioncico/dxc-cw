@@ -60,7 +60,12 @@ class WebSocket
     }
     public function useSkill()
     {
-        $data = ['action' => 'useSkill','skillId'=>3];
+        $data = ['action' => 'useSkill','skillId'=>4];
+        $this->push($data);
+    }
+    public function useSkill2()
+    {
+        $data = ['action' => 'useSkill','skillId'=>5];
         $this->push($data);
     }
 

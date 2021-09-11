@@ -41,13 +41,15 @@ class Buff extends UserBase
 	 * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
 	 * @Param(name="buffId",lengthMax="11",required="")
 	 * @Param(name="name",alias="buff名称",description="buff名称",lengthMax="255",optional="")
-	 * @Param(name="isDebuff",alias="是否为debuff",description="是否为debuff",lengthMax="1",optional="")
+	 * @Param(name="isDeBuff",alias="是否为debuff",description="是否为debuff",lengthMax="1",optional="")
 	 * @Param(name="code",alias="buffcode",description="buffcode",lengthMax="255",optional="")
-	 * @Param(name="stackLayer",alias="最大叠加层数",description="最大叠加层数",lengthMax="11",optional="")
+	 * @Param(name="stackLayer",alias="最大叠加层数",description="最大叠加层数",lengthMax="11",required="")
 	 * @Param(name="entryCode",alias="词条code",description="词条code",lengthMax="255",optional="")
 	 * @Param(name="param",alias="参数",description="参数",lengthMax="255",optional="")
 	 * @Param(name="type",alias="触发类型, 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",description="触发类型, 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",lengthMax="11",optional="")
 	 * @Param(name="description",alias="介绍",description="介绍",lengthMax="255",optional="")
+	 * @Param(name="expireType",alias="1正常倒计时过期(战斗完直接失效) 2正常倒计时过期(退出地图直接失效) 3正常倒计时过期(一直有效)",description="1正常倒计时过期(战斗完直接失效) 2正常倒计时过期(退出地图直接失效) 3正常倒计时过期(一直有效)",lengthMax="11",optional="")
+	 * @Param(name="expireTime",alias="倒计时(秒)",description="倒计时(秒)",lengthMax="11",optional="")
 	 */
 	public function add()
 	{
@@ -55,13 +57,15 @@ class Buff extends UserBase
 		$data = [
 		    'buffId'=>$param['buffId'],
 		    'name'=>$param['name'] ?? '',
-		    'isDebuff'=>$param['isDebuff'] ?? '',
+		    'isDeBuff'=>$param['isDeBuff'] ?? '',
 		    'code'=>$param['code'] ?? '',
-		    'stackLayer'=>$param['stackLayer'] ?? '',
+		    'stackLayer'=>$param['stackLayer'],
 		    'entryCode'=>$param['entryCode'] ?? '',
 		    'param'=>$param['param'] ?? '',
 		    'type'=>$param['type'] ?? '',
 		    'description'=>$param['description'] ?? '',
+		    'expireType'=>$param['expireType'] ?? '',
+		    'expireTime'=>$param['expireTime'] ?? '',
 		];
 		$model = new BuffModel($data);
 		$model->save();
@@ -81,13 +85,15 @@ class Buff extends UserBase
 	 * @ApiFail({"code":400,"result":[],"msg":"更新失败"})
 	 * @Param(name="buffId",lengthMax="11",required="")
 	 * @Param(name="name",alias="buff名称",description="buff名称",lengthMax="255",optional="")
-	 * @Param(name="isDebuff",alias="是否为debuff",description="是否为debuff",lengthMax="1",optional="")
+	 * @Param(name="isDeBuff",alias="是否为debuff",description="是否为debuff",lengthMax="1",optional="")
 	 * @Param(name="code",alias="buffcode",description="buffcode",lengthMax="255",optional="")
 	 * @Param(name="stackLayer",alias="最大叠加层数",description="最大叠加层数",lengthMax="11",optional="")
 	 * @Param(name="entryCode",alias="词条code",description="词条code",lengthMax="255",optional="")
 	 * @Param(name="param",alias="参数",description="参数",lengthMax="255",optional="")
 	 * @Param(name="type",alias="触发类型, 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",description="触发类型, 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",lengthMax="11",optional="")
 	 * @Param(name="description",alias="介绍",description="介绍",lengthMax="255",optional="")
+	 * @Param(name="expireType",alias="1正常倒计时过期(战斗完直接失效) 2正常倒计时过期(退出地图直接失效) 3正常倒计时过期(一直有效)",description="1正常倒计时过期(战斗完直接失效) 2正常倒计时过期(退出地图直接失效) 3正常倒计时过期(一直有效)",lengthMax="11",optional="")
+	 * @Param(name="expireTime",alias="倒计时(秒)",description="倒计时(秒)",lengthMax="11",optional="")
 	 */
 	public function update()
 	{
@@ -101,13 +107,15 @@ class Buff extends UserBase
 		$updateData = [];
 
 		$updateData['name']=$param['name'] ?? $info->name;
-		$updateData['isDebuff']=$param['isDebuff'] ?? $info->isDebuff;
+		$updateData['isDeBuff']=$param['isDeBuff'] ?? $info->isDeBuff;
 		$updateData['code']=$param['code'] ?? $info->code;
 		$updateData['stackLayer']=$param['stackLayer'] ?? $info->stackLayer;
 		$updateData['entryCode']=$param['entryCode'] ?? $info->entryCode;
 		$updateData['param']=$param['param'] ?? $info->param;
 		$updateData['type']=$param['type'] ?? $info->type;
 		$updateData['description']=$param['description'] ?? $info->description;
+		$updateData['expireType']=$param['expireType'] ?? $info->expireType;
+		$updateData['expireTime']=$param['expireTime'] ?? $info->expireTime;
 		$info->update($updateData);
 		$this->writeJson(Status::CODE_OK, $info, "更新数据成功");
 	}
@@ -126,13 +134,15 @@ class Buff extends UserBase
 	 * @Param(name="buffId",lengthMax="11",required="")
 	 * @ApiSuccessParam(name="result.buffId",description="")
 	 * @ApiSuccessParam(name="result.name",description="buff名称")
-	 * @ApiSuccessParam(name="result.isDebuff",description="是否为debuff")
+	 * @ApiSuccessParam(name="result.isDeBuff",description="是否为debuff")
 	 * @ApiSuccessParam(name="result.code",description="buffcode")
 	 * @ApiSuccessParam(name="result.stackLayer",description="最大叠加层数")
 	 * @ApiSuccessParam(name="result.entryCode",description="词条code")
 	 * @ApiSuccessParam(name="result.param",description="参数")
 	 * @ApiSuccessParam(name="result.type",description="触发类型, 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发")
 	 * @ApiSuccessParam(name="result.description",description="介绍")
+	 * @ApiSuccessParam(name="result.expireType",description="1正常倒计时过期(战斗完直接失效) 2正常倒计时过期(退出地图直接失效) 3正常倒计时过期(一直有效)")
+	 * @ApiSuccessParam(name="result.expireTime",description="倒计时(秒)")
 	 */
 	public function getOne()
 	{
@@ -161,13 +171,15 @@ class Buff extends UserBase
 	 * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
 	 * @ApiSuccessParam(name="result[].buffId",description="")
 	 * @ApiSuccessParam(name="result[].name",description="buff名称")
-	 * @ApiSuccessParam(name="result[].isDebuff",description="是否为debuff")
+	 * @ApiSuccessParam(name="result[].isDeBuff",description="是否为debuff")
 	 * @ApiSuccessParam(name="result[].code",description="buffcode")
 	 * @ApiSuccessParam(name="result[].stackLayer",description="最大叠加层数")
 	 * @ApiSuccessParam(name="result[].entryCode",description="词条code")
 	 * @ApiSuccessParam(name="result[].param",description="参数")
 	 * @ApiSuccessParam(name="result[].type",description="触发类型, 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发")
 	 * @ApiSuccessParam(name="result[].description",description="介绍")
+	 * @ApiSuccessParam(name="result[].expireType",description="1正常倒计时过期(战斗完直接失效) 2正常倒计时过期(退出地图直接失效) 3正常倒计时过期(一直有效)")
+	 * @ApiSuccessParam(name="result[].expireTime",description="倒计时(秒)")
 	 */
 	public function getList()
 	{

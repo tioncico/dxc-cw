@@ -35,12 +35,25 @@ class Attribute extends SplBean
     protected $light = 0; //光
     protected $dark = 0; //暗
     protected $luck = 0;//幸运
-    protected $attackTimes = 1;
+    protected $attackTimes = 1;//攻击次数
     protected $isDie = false;
     /**
-     * @var Buff[]
+     * @var Buff[][]
      */
-    protected $buffList=[];
+    protected $buffList = [// 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发,10释放技能前触发,11释放技能后触发
+        0  => [],
+        1  => [],
+        2  => [],
+        3  => [],
+        4  => [],
+        5  => [],
+        6  => [],
+        7  => [],
+        8  => [],
+        9  => [],
+        10 => [],
+        11 => [],
+    ];
 
     /**
      * @return int
@@ -89,8 +102,12 @@ class Attribute extends SplBean
     public function setAttackTimes(float $attackTimes): void
     {
         $this->attackTimes = $attackTimes;
-    }//攻击次数
+    }
 
+    public function incAttackTimes(float $attackTimes)
+    {
+        $this->attackTimes += $attackTimes;
+    }
 
     /**
      * @return mixed
@@ -111,6 +128,11 @@ class Attribute extends SplBean
         }
     }
 
+    public function incHp(int $hp)
+    {
+        $this->hp += $hp;
+    }
+
     /**
      * @return mixed
      */
@@ -125,6 +147,11 @@ class Attribute extends SplBean
     public function setMp($mp): void
     {
         $this->mp = $mp;
+    }
+
+    public function incMp(int $mp)
+    {
+        $this->mp += $mp;
     }
 
     /**
@@ -557,6 +584,34 @@ class Attribute extends SplBean
         $this->buffList = $buffList;
     }
 
+    public function getBuffByTypeAndCode(int $type, string $code)
+    {
+        if (isset($this->buffList[$type][$code])) {
+            $oldBuffInfo = $this->buffList[$type][$code];
+            if ($oldBuffInfo->getExpireTime() < time()) {
+                unset($this->buffList[$type][$code]);
+                return null;
+            }
+            return $oldBuffInfo;
+        } else {
+            return null;
+        }
+    }
+
+    public function addBuff(Buff $buff)
+    {
+        //判断是否存在该buff并且没有过期
+        if ($oldBuffInfo = $this->getBuffByTypeAndCode($buff->getType(), $buff->getCode())) {
+            //没有过期,则判断是否可以叠加层数
+            if ($oldBuffInfo->getStackLayer() > 1 && $oldBuffInfo->getNowStackLayer() < $oldBuffInfo->getStackLayer()) {
+                $oldBuffInfo->incNowStackLayer(1);
+            }
+            //刷新过期时间
+            $oldBuffInfo->setExpireTime($buff->getExpireTime());
+        } else {
+            $this->buffList[$buff->getType()][$buff->getCode()] = $buff;
+        }
+    }
 
     public function __toString()
     {
@@ -590,5 +645,6 @@ class Attribute extends SplBean
 攻击次数:{$this->attackTimes}
 ";
     }
+
 
 }
