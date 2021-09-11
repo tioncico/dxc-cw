@@ -79,7 +79,7 @@ class Game extends UserBase
     public function userInfo()
     {
         //获取用户数据
-        $userAttributeInfo = UserAttributeModel::create()->getInfo($this->who->userId);
+        $userAttributeInfo = UserAttributeModel::create()->get($this->who->userId);
         $userGoldInfo = UserBackpackModel::create()->getUseGoldInfo($this->who->userId);
         $userMoneyInfo = UserBackpackModel::create()->getUseMoneyInfo($this->who->userId);
         $data = [
