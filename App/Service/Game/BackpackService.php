@@ -33,6 +33,22 @@ class BackpackService extends BaseService
         return $userGoldInfo;
     }
 
+    public function addMoney($userId, int $moneyNum): UserBackpackModel
+    {
+        //获取用户背包金币数据
+        $userMoneyInfo = UserBackpackModel::create()->getUseMoneyInfo($userId);
+        $userMoneyInfo->update(['num' => QueryBuilder::inc($moneyNum)]);
+        return $userMoneyInfo;
+    }
+
+    public function decMoney($userId, int $moneyNum): UserBackpackModel
+    {
+        //获取用户背包金币数据
+        $userMoneyInfo = UserBackpackModel::create()->getUseMoneyInfo($userId);
+        $userMoneyInfo->update(['num' => QueryBuilder::dec($moneyNum)]);
+        return $userMoneyInfo;
+    }
+
     public function addGoods($userId, GoodsModel $goodsModel, $num)
     {
         //装备无法叠加
@@ -41,6 +57,8 @@ class BackpackService extends BaseService
             $equipmentModel = GoodsEquipmentModel::create()->get(['goodsCode' => $backpackInfo->goodsCode]);
             $this->addUserEquipmentInfo($userId, $backpackInfo, $equipmentModel);
         } elseif ($goodsModel->type == 1) {
+            $backpackInfo = $this->addGold($userId, $num);
+        } elseif ($goodsModel->type == 2) {
             $backpackInfo = $this->addGold($userId, $num);
         } else {
             $backpackInfo = UserBackpackModel::create()->getInfoByCode($userId, $goodsModel->code);
