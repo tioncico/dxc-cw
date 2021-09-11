@@ -40,7 +40,7 @@ class ApiBase extends Base
             );
             $this->response()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
             $this->response()->withHeader('Content-type', 'application/json;charset=utf-8');
-            $this->response()->withStatus($statusCode);
+            $this->response()->withStatus(200);
             return true;
         } else {
             return false;
