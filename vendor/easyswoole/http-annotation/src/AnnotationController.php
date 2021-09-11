@@ -6,16 +6,21 @@ namespace EasySwoole\HttpAnnotation;
 
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\Component\Di as IOC;
+use EasySwoole\Http\AbstractInterface\AbstractRouter;
 use EasySwoole\Http\AbstractInterface\Controller;
+use EasySwoole\Http\GlobalParam\Hook;
 use EasySwoole\HttpAnnotation\Annotation\MethodAnnotation;
 use EasySwoole\HttpAnnotation\Annotation\Parser;
 use EasySwoole\HttpAnnotation\Annotation\ParserInterface;
 use EasySwoole\HttpAnnotation\Annotation\PropertyAnnotation;
+use EasySwoole\HttpAnnotation\AnnotationTag\ApiAuth;
+use EasySwoole\HttpAnnotation\AnnotationTag\ApiGroupAuth;
 use EasySwoole\HttpAnnotation\AnnotationTag\Param;
 use EasySwoole\HttpAnnotation\Exception\Annotation\ActionTimeout;
 use EasySwoole\HttpAnnotation\Exception\Annotation\MethodNotAllow;
 use EasySwoole\HttpAnnotation\Exception\Annotation\ParamValidateError;
 use EasySwoole\HttpAnnotation\Exception\Exception;
+use EasySwoole\Session\Context;
 use EasySwoole\Validate\Validate;
 use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
@@ -30,7 +35,6 @@ class AnnotationController extends Controller
         if($parser == null){
             $parser = new Parser();
         }
-
         $this->classAnnotation = $parser->parseObject(new \ReflectionClass(static::class));
     }
 
@@ -159,24 +163,39 @@ class AnnotationController extends Controller
             $validate = new Validate();
             $validateParams = [];
             //先找全局的权限定义
+            /** @var ApiGroupAuth $param */
             foreach ($this->classAnnotation->getGroupAuthTag() as $param){
                 $validateParams[$param->name] = $param;
             }
+
+            /** @var Param $param */
+            foreach ($this->classAnnotation->getParamTag() as $param){
+                $validateParams[$param->name] = $param;
+            }
             //找出方法的apiAuth标签
+            /** @var ApiAuth $param */
             foreach ($methodAnnotation->getApiAuth() as $param){
                 $validateParams[$param->name] = $param;
             }
             //找出方法的param标签
+            /** @var Param $param */
             foreach ($methodAnnotation->getParamTag() as $param){
                 $validateParams[$param->name] = $param;
                 $methodParams[$param->name] = true;
             }
             //进行校验
+            $requestJson = null;
             /** @var Param $param */
             foreach ($validateParams as $param)
             {
-                if(in_array($methodName,$param->ignoreAction)){
+                if ($param->deprecated === true) {
                     continue;
+                }
+
+                if($param instanceof ApiGroupAuth){
+                    if(in_array($methodName,$param->ignoreAction)){
+                        continue;
+                    }
                 }
                 $paramName = $param->name;
                 if(!empty($param->from)){
@@ -221,6 +240,32 @@ class AnnotationController extends Controller
                             }
                             case 'RAW':{
                                 $value = $this->request()->getBody()->__toString();
+                                break;
+                            }
+                            case 'JSON':{
+                                if($requestJson === null){
+                                    $requestJson = json_decode($this->request()->getBody()->__toString(),true);
+                                    if(!is_array($requestJson)){
+                                        $requestJson = [];
+                                    }
+                                }
+                                if(isset($requestJson[$paramName])){
+                                    $value = $requestJson[$paramName];
+                                }
+                                break;
+                            }
+                            case 'SESSION':{
+                                $context = ContextManager::getInstance()->get(Hook::SESSION_CONTEXT);
+                                if($context instanceof Context){
+                                    $value = $context->get($paramName);
+                                }
+                                break;
+                            }
+                            case 'ROUTER_PARAMS':{
+                                $context = ContextManager::getInstance()->get(AbstractRouter::PARSE_PARAMS_CONTEXT_KEY);
+                                if(isset($context[$paramName])){
+                                    $value = $context[$paramName];
+                                }
                                 break;
                             }
                         }

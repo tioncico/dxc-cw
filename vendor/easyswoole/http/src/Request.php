@@ -159,6 +159,7 @@ class Request extends ServerRequest
     public function __destruct()
     {
         $this->getBody()->close();
+        $this->request = null;
     }
 
 }

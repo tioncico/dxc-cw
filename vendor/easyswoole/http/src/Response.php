@@ -36,6 +36,7 @@ class Response extends MessageResponse
 
     function __response():bool
     {
+        $ret = false;
         if($this->isEndResponse <= self::STATUS_REAL_END){
             $this->isEndResponse = self::STATUS_REAL_END;
             //结束处理
@@ -63,9 +64,10 @@ class Response extends MessageResponse
                 $this->response->end($write);
             }
             return true;
-        }else{
-            return false;
         }
+
+        $this->response = null;
+        return $ret;
     }
 
     function isEndResponse()
@@ -86,7 +88,7 @@ class Response extends MessageResponse
         }
     }
 
-    function redirect($url,$status = Status::CODE_MOVED_TEMPORARILY)
+    function redirect($url,$status = Status::CODE_MOVED_TEMPORARILY):bool
     {
         if(!$this->isEndResponse()){
             //仅支持header重定向  不做meta定向

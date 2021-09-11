@@ -27,9 +27,17 @@ final class Factory
 		$class = $from->isAnonymous()
 			? new ClassType
 			: new ClassType($from->getShortName(), new PhpNamespace($from->getNamespaceName()));
-		$class->setType($from->isInterface() ? $class::TYPE_INTERFACE : ($from->isTrait() ? $class::TYPE_TRAIT : $class::TYPE_CLASS));
-		$class->setFinal($from->isFinal() && $class->isClass());
-		$class->setAbstract($from->isAbstract() && $class->isClass());
+
+		if (PHP_VERSION_ID >= 80100 && $from->isEnum()) {
+			$class->setType($class::TYPE_ENUM);
+			$from = new \ReflectionEnum($from->getName());
+			$enumIface = $from->isBacked() ? \BackedEnum::class : \UnitEnum::class;
+		} else {
+			$class->setType($from->isInterface() ? $class::TYPE_INTERFACE : ($from->isTrait() ? $class::TYPE_TRAIT : $class::TYPE_CLASS));
+			$class->setFinal($from->isFinal() && $class->isClass());
+			$class->setAbstract($from->isAbstract() && $class->isClass());
+			$enumIface = null;
+		}
 
 		$ifaces = $from->getInterfaceNames();
 		foreach ($ifaces as $iface) {
@@ -37,7 +45,12 @@ final class Factory
 				return !is_subclass_of($iface, $item);
 			});
 		}
-		$class->setImplements($ifaces);
+		if ($from->isInterface()) {
+			$class->setExtends($ifaces);
+		} else {
+			$ifaces = array_diff($ifaces, [$enumIface]);
+			$class->setImplements($ifaces);
+		}
 
 		$class->setComment(Helpers::unformatDocComment((string) $from->getDocComment()));
 		$class->setAttributes(self::getAttributes($from));
@@ -45,20 +58,25 @@ final class Factory
 			$class->setExtends($from->getParentClass()->name);
 			$class->setImplements(array_diff($class->getImplements(), $from->getParentClass()->getInterfaceNames()));
 		}
-		$props = $methods = $consts = [];
+
+		$props = [];
 		foreach ($from->getProperties() as $prop) {
 			if ($prop->isDefault()
 				&& $prop->getDeclaringClass()->name === $from->name
 				&& (PHP_VERSION_ID < 80000 || !$prop->isPromoted())
+				&& !$class->isEnum()
 			) {
 				$props[] = $this->fromPropertyReflection($prop);
 			}
 		}
 		$class->setProperties($props);
 
-		$bodies = [];
+		$methods = $bodies = [];
 		foreach ($from->getMethods() as $method) {
-			if ($method->getDeclaringClass()->name === $from->name) {
+			if (
+				$method->getDeclaringClass()->name === $from->name
+				&& (!$enumIface || !method_exists($enumIface, $method->name))
+			) {
 				$methods[] = $m = $this->fromMethodReflection($method);
 				if ($withBodies) {
 					$srcMethod = Nette\Utils\Reflection::getMethodDeclaringMethod($method);
@@ -72,12 +90,16 @@ final class Factory
 		}
 		$class->setMethods($methods);
 
+		$consts = $cases = [];
 		foreach ($from->getReflectionConstants() as $const) {
-			if ($const->getDeclaringClass()->name === $from->name) {
+			if ($class->isEnum() && $from->hasCase($const->name)) {
+				$cases[] = $this->fromCaseReflection($const);
+			} elseif ($const->getDeclaringClass()->name === $from->name) {
 				$consts[] = $this->fromConstantReflection($const);
 			}
 		}
 		$class->setConstants($consts);
+		$class->setCases($cases);
 
 		return $class;
 	}
@@ -104,7 +126,10 @@ final class Factory
 		if ($from->getReturnType() instanceof \ReflectionNamedType) {
 			$method->setReturnType($from->getReturnType()->getName());
 			$method->setReturnNullable($from->getReturnType()->allowsNull());
-		} elseif ($from->getReturnType() instanceof \ReflectionUnionType) {
+		} elseif (
+			$from->getReturnType() instanceof \ReflectionUnionType
+			|| $from->getReturnType() instanceof \ReflectionIntersectionType
+		) {
 			$method->setReturnType((string) $from->getReturnType());
 		}
 		return $method;
@@ -125,7 +150,10 @@ final class Factory
 		if ($from->getReturnType() instanceof \ReflectionNamedType) {
 			$function->setReturnType($from->getReturnType()->getName());
 			$function->setReturnNullable($from->getReturnType()->allowsNull());
-		} elseif ($from->getReturnType() instanceof \ReflectionUnionType) {
+		} elseif (
+			$from->getReturnType() instanceof \ReflectionUnionType
+			|| $from->getReturnType() instanceof \ReflectionIntersectionType
+		) {
 			$function->setReturnType((string) $from->getReturnType());
 		}
 		$function->setBody($withBody ? $this->loadFunctionBody($from) : '');
@@ -152,7 +180,10 @@ final class Factory
 		if ($from->getType() instanceof \ReflectionNamedType) {
 			$param->setType($from->getType()->getName());
 			$param->setNullable($from->getType()->allowsNull());
-		} elseif ($from->getType() instanceof \ReflectionUnionType) {
+		} elseif (
+			$from->getType() instanceof \ReflectionUnionType
+			|| $from->getType() instanceof \ReflectionIntersectionType
+		) {
 			$param->setType((string) $from->getType());
 		}
 		if ($from->isDefaultValueAvailable()) {
@@ -175,6 +206,17 @@ final class Factory
 				? ClassType::VISIBILITY_PRIVATE
 				: ($from->isProtected() ? ClassType::VISIBILITY_PROTECTED : ClassType::VISIBILITY_PUBLIC)
 		);
+		$const->setFinal(PHP_VERSION_ID >= 80100 ? $from->isFinal() : false);
+		$const->setComment(Helpers::unformatDocComment((string) $from->getDocComment()));
+		$const->setAttributes(self::getAttributes($from));
+		return $const;
+	}
+
+
+	public function fromCaseReflection(\ReflectionClassConstant $from): EnumCase
+	{
+		$const = new EnumCase($from->name);
+		$const->setValue($from->getValue()->value ?? null);
 		$const->setComment(Helpers::unformatDocComment((string) $from->getDocComment()));
 		$const->setAttributes(self::getAttributes($from));
 		return $const;
@@ -196,10 +238,14 @@ final class Factory
 			if ($from->getType() instanceof \ReflectionNamedType) {
 				$prop->setType($from->getType()->getName());
 				$prop->setNullable($from->getType()->allowsNull());
-			} elseif ($from->getType() instanceof \ReflectionUnionType) {
+			} elseif (
+				$from->getType() instanceof \ReflectionUnionType
+				|| $from->getType() instanceof \ReflectionIntersectionType
+			) {
 				$prop->setType((string) $from->getType());
 			}
 			$prop->setInitialized($from->hasType() && array_key_exists($prop->getName(), $defaults));
+			$prop->setReadOnly(PHP_VERSION_ID >= 80100 ? $from->isReadOnly() : false);
 		} else {
 			$prop->setInitialized(false);
 		}

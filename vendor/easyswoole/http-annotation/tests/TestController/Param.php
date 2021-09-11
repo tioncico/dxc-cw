@@ -43,10 +43,62 @@ class Param extends AnnotationController
     }
 
     /**
+     * @\EasySwoole\HttpAnnotation\AnnotationTag\Param(name="columnA",betweenMbLen={3,5})
+     * @\EasySwoole\HttpAnnotation\AnnotationTag\Param(name="columnB",mbLength="3")
+     * @\EasySwoole\HttpAnnotation\AnnotationTag\Param(name="columnC",mbLengthMax="3")
+     * @\EasySwoole\HttpAnnotation\AnnotationTag\Param(name="columnD",mbLengthMin="1")
+     */
+    public function mbLengthWithColumn()
+    {
+
+    }
+
+    /**
      * @\EasySwoole\HttpAnnotation\AnnotationTag\Param(name="foo",greaterThanWithColumn="bar")
      */
     public function greaterThanWithColumn()
     {
+
+    }
+
+    /**
+     * @\EasySwoole\HttpAnnotation\AnnotationTag\Param(name="foo",required="",notEmpty="",deprecated=true)
+     */
+    public function deprecated()
+    {
+
+    }
+
+    /**
+     * @\EasySwoole\HttpAnnotation\AnnotationTag\Param(name="foo",required="",notEmpty="")
+     */
+    public function notDeprecated()
+    {
+
+    }
+
+    /**
+     * @\EasySwoole\HttpAnnotation\AnnotationTag\Param(name="string",type="string")
+     * @\EasySwoole\HttpAnnotation\AnnotationTag\Param(name="int",type="int")
+     * @\EasySwoole\HttpAnnotation\AnnotationTag\Param(name="float",type="float")
+     * @\EasySwoole\HttpAnnotation\AnnotationTag\Param(name="bool",type="bool")
+     * @\EasySwoole\HttpAnnotation\AnnotationTag\Param(name="json",type="json")
+     * @\EasySwoole\HttpAnnotation\AnnotationTag\Param(name="array",type="array")
+     */
+    public function paramType(string $string, int $int, float $float, bool $bool, \stdClass $json, array $array)
+    {
+        if (gettype($string) !== 'string' ||
+            gettype($int) !== 'integer' ||
+            gettype($float) !== 'double' ||
+            gettype($bool) !== 'boolean' ||
+            gettype($json) !== 'object' ||
+            gettype($array) !== 'array'
+
+        ) {
+            $this->response()->write('error');
+        } else {
+            $this->response()->write('success');
+        }
 
     }
 
@@ -55,7 +107,7 @@ class Param extends AnnotationController
         if ($throwable instanceof ParamValidateError) {
             $validate = $throwable->getValidate();
             $rule = $validate->getError()->getErrorRule();
-            if (in_array($rule, ['lessThanWithColumn', 'greaterThanWithColumn',])) {
+            if (in_array($rule, ['lessThanWithColumn', 'greaterThanWithColumn',"betweenMbLen","mbLength","mbLengthMax","mbLengthMin"])) {
                 throw new \Exception($validate->getError()->__toString());
             }
         }

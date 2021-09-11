@@ -69,8 +69,7 @@ class MapActor extends BaseActor
         $mapId = $arg['mapId'];
         $this->user = UserModel::create()->get($userId);
         $this->map = MapModel::create()->get($mapId);
-        $skillIds = $arg['skillIds'];
-        $this->initSkill($skillIds);
+        $this->initSkill();
     }
 
     public static function configure(ActorConfig $actorConfig)
@@ -150,7 +149,7 @@ class MapActor extends BaseActor
                 if ($fightResult->getIsCritical() == true) {
                     $msg .= "[暴击]";
                 }
-                $msg .= "伤害" . $fightResult->getHarmNum();
+                $msg .= "伤害" . $fightResult->getBuckleBloodNum();
             }
 
             if ($attackName == 'user') {
@@ -159,7 +158,12 @@ class MapActor extends BaseActor
                 MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fight', 200, "怪物攻击,{$msg},玩家hp:{$this->userAttribute->getHp()}");
             }
         });
-        //战斗结束
+        $this->fightEnd();
+    }
+
+    public function fightEnd()
+    {
+        //如果怪物死亡
         if ($this->monsterAttribute->isDie()) {
             MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, "战斗结束,怪物死亡");
             //计算奖励
@@ -176,10 +180,10 @@ class MapActor extends BaseActor
                     $msg .= "  {$goodsInfo->name}*{$value['num']}";
                 }
             }
-
-            MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, $msg);
-        } else {
-            MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, "战斗结束,玩家死亡");
+            return MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, $msg);
+        }
+        if ($this->userAttribute->isDie()) {
+            return MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 200, "战斗结束,玩家死亡");
         }
     }
 
@@ -236,6 +240,7 @@ class MapActor extends BaseActor
         $this->monsterList = null;
         $this->fight = null;
         $this->monster = null;
+        $this->userSkillList = null;
         $this->exit();
     }
 
@@ -283,6 +288,14 @@ class MapActor extends BaseActor
                 $monsterList[] = $elite;
             }
         }
+        //每隔10层随机一个首领
+        if ($this->mapLevel % 5 == 0) {
+            $list = $model->where('mapId', $this->map->mapId)->where('mapLevelMin', $this->mapLevel, '<=')->where('type', 3)->where('mapLevelMax', $this->mapLevel, '>=')->all();
+            $elite = Rand::randArray($list, 1);
+            if ($elite) {
+                $monsterList[] = $elite;
+            }
+        }
         //打乱数组
         shuffle($monsterList);
         $this->monsterList = $monsterList;
@@ -320,7 +333,6 @@ class MapActor extends BaseActor
 
     protected function useUserSkill($param)
     {
-        var_dump($param);
         $skillId = $param['skillId'];
         $skillInfo = $this->userSkillList[$skillId];
         if (!$this->fight || $this->fight->getState() != 1) {
@@ -328,14 +340,15 @@ class MapActor extends BaseActor
             return;
         }
         //判断冷却时间
-        if ($skillInfo->isCanUse() == false) {
+        if ($skillInfo->getTickTime() > 0) {
             MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 400, "技能未冷却");
             return;
         }
         //技能攻击
         $fightResult = $this->fight->useSkill($this->userAttribute, $this->monsterAttribute, $skillInfo);
-        var_dump(2);
-        var_dump($fightResult);
+        MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fight', 200, "玩家释放技能{$skillInfo->getSkillName()},伤害{$fightResult->getBuckleBloodNum()},怪物hp:{$this->monsterAttribute->getHp()}");
+
+        $this->fightEnd();
     }
 
     /**

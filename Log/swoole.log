@@ -1,65 +1,33 @@
-[2021-09-03 10:28:09 @73813.0]	WARNING	~Channel (ERRNO 10003): channel is destroyed, 1 consumers will be discarded
-[2021-09-03 10:28:09 $73801.0]	WARNING	swManager_check_exit_status: worker#11[pid=73813] abnormal exit, status=255, signal=0
-[2021-09-03 10:47:32 *73923.5]	ERROR	php_swoole_server_rshutdown (ERRNO 503): Fatal error: Uncaught Error: Class 'EasySwoole\RedisPool\Redis' not found in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Utility/RedisClient.php:18
+[2021-09-04 09:11:53 *20526.5]	ERROR	php_swoole_server_rshutdown (ERRNO 503): Fatal error: Uncaught Error: Undefined class constant 'SERVER_SESSION_ERROR' in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Event.php:90
 Stack trace:
-#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Cache/UserFdMap.php(125): App\Utility\RedisClient::invoke(Object(Closure))
-#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Cache/UserFdMap.php(27): App\WebSocket\Cache\UserFdMap->setFdUser(1, 13)
-#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Event.php(59): App\WebSocket\Cache\UserFdMap->bind(1, '13')
-#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Event.php(46): App\WebSocket\Event::onOpen(Object(Swoole\WebSocket\Server), Object(Swoole\Http\Request))
-#4 [internal function]: App\WebSocket\Event::App\WebSocket\{closure}(Object(Swoole\WebSocket\Server), Object(Swoole\Http\Request))
-#5 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/ServerManager.php(112): call_user_func(Object(Closure), Object in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Utility/RedisClient.php on line 18
-[2021-09-03 10:47:32 $73917.0]	WARNING	swManager_check_exit_status: worker#5[pid=73923] abnormal exit, status=255, signal=0
-[2021-09-03 14:25:59 *79960.5]	ERROR	php_swoole_server_rshutdown (ERRNO 503): Fatal error: Uncaught TypeError: Return value of App\WebSocket\WebSocketParser::encode() must be of the type string or null, array returned in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/WebSocketParser.php:83
-Stack trace:
-#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/socket/src/Dispatcher.php(116): App\WebSocket\WebSocketParser->encode(Object(EasySwoole\Socket\Bean\Response), Object(EasySwoole\Socket\Client\WebSocket))
-#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/socket/src/Dispatcher.php(97): EasySwoole\Socket\Dispatcher->response(Object(Swoole\WebSocket\Server), Object(EasySwoole\Socket\Client\WebSocket), Object(EasySwoole\Socket\Bean\Response))
-#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Event.php(42): EasySwoole\Socket\Dispatcher->dispatch(Object(Swoole\WebSocket\Server), '{"class":"Map",...', Object(Swoole\WebSocket\Frame))
-#3 [internal function]: App\WebSocket\Event::App\WebSocket\{closure}(Object(Swoole\WebSocket\Serv in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/WebSocketParser.php on line 83
-[2021-09-03 14:25:59 $79954.0]	WARNING	swManager_check_exit_status: worker#5[pid=79960] abnormal exit, status=255, signal=0
-[2021-09-03 14:33:38 *80341.5]	ERROR	php_swoole_server_rshutdown (ERRNO 503): Fatal error: Uncaught Error: Using $this when not in object context in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Event.php:36
-Stack trace:
-#0 [internal function]: App\WebSocket\Event::App\WebSocket\{closure}(Object(Swoole\WebSocket\Server), Object(App\Utility\Assert\AssertException), '{"class":"Map",...', Object(EasySwoole\Socket\Client\WebSocket), Object(EasySwoole\Socket\Bean\Response))
-#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/socket/src/Dispatcher.php(148): call_user_func(Object(Closure), Object(Swoole\WebSocket\Server), Object(App\Utility\Assert\AssertException), '{"class":"Map",...', Object(EasySwoole\Socket\Client\WebSocket), Object(EasySwoole\Socket\Bean\Response))
-#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/socket/src/Dispatcher.php(67): EasySwoole\Socket\Dispatcher->hookException(Object(Swoole\WebSocket\Server), Object(App\Utility\Assert\AssertException), '{"class":"Map",...', Object(EasySwoole\Socket\Client\WebSocket), Object(EasyS in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Event.php on line 36
-[2021-09-03 14:33:38 $80335.0]	WARNING	swManager_check_exit_status: worker#5[pid=80341] abnormal exit, status=255, signal=0
-[2021-09-03 15:08:37 @81460.0]	WARNING	~Channel (ERRNO 10003): channel is destroyed, 1 consumers will be discarded
-[2021-09-03 15:08:37 $81446.0]	WARNING	swManager_check_exit_status: worker#11[pid=81460] abnormal exit, status=255, signal=0
-[2021-09-03 15:09:59 @81540.0]	WARNING	~Channel (ERRNO 10003): channel is destroyed, 1 consumers will be discarded
-[2021-09-03 15:09:59 $81528.0]	WARNING	swManager_check_exit_status: worker#11[pid=81540] abnormal exit, status=255, signal=0
-[2021-09-03 15:10:21 @81594.0]	WARNING	~Channel (ERRNO 10003): channel is destroyed, 1 consumers will be discarded
-[2021-09-03 15:10:21 $81582.0]	WARNING	swManager_check_exit_status: worker#11[pid=81594] abnormal exit, status=255, signal=0
-[2021-09-03 15:11:15 @81674.0]	WARNING	~Channel (ERRNO 10003): channel is destroyed, 1 consumers will be discarded
-[2021-09-03 15:11:15 $81662.0]	WARNING	swManager_check_exit_status: worker#11[pid=81674] abnormal exit, status=255, signal=0
-[2021-09-03 15:11:35 @81716.0]	WARNING	~Channel (ERRNO 10003): channel is destroyed, 1 consumers will be discarded
-[2021-09-03 15:11:35 $81703.0]	WARNING	swManager_check_exit_status: worker#11[pid=81716] abnormal exit, status=255, signal=0
-[2021-09-03 15:12:08 @81751.0]	WARNING	~Channel (ERRNO 10003): channel is destroyed, 1 consumers will be discarded
-[2021-09-03 15:12:08 $81739.0]	WARNING	swManager_check_exit_status: worker#11[pid=81751] abnormal exit, status=255, signal=0
-[2021-09-03 15:12:54 @81789.0]	WARNING	~Channel (ERRNO 10003): channel is destroyed, 1 consumers will be discarded
-[2021-09-03 15:12:54 $81777.0]	WARNING	swManager_check_exit_status: worker#11[pid=81789] abnormal exit, status=255, signal=0
-[2021-09-03 15:13:32 @81830.0]	WARNING	~Channel (ERRNO 10003): channel is destroyed, 1 consumers will be discarded
-[2021-09-03 15:13:32 $81818.0]	WARNING	swManager_check_exit_status: worker#11[pid=81830] abnormal exit, status=255, signal=0
-[2021-09-03 15:13:54 @81863.0]	WARNING	~Channel (ERRNO 10003): channel is destroyed, 1 consumers will be discarded
-[2021-09-03 15:13:54 $81851.0]	WARNING	swManager_check_exit_status: worker#11[pid=81863] abnormal exit, status=255, signal=0
-[2021-09-06 09:08:19 $85430.0]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
-[2021-09-06 09:08:19 $85430.0]	WARNING	swManager_check_exit_status: worker#18[pid=85449] abnormal exit, status=0, signal=1
-[2021-09-06 09:08:19 *85438.7]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
-[2021-09-06 09:08:19 #85429.8]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
-[2021-09-06 09:08:19 *85436.5]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
-[2021-09-06 09:08:19 *85434.3]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
-[2021-09-06 09:08:19 *85432.1]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
-[2021-09-06 09:08:19 *85431.0]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
-[2021-09-06 09:08:19 *85433.2]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
-[2021-09-06 09:08:19 *85437.6]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
-[2021-09-06 09:08:19 *85435.4]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
-[2021-09-06 09:08:19 $85430.0]	WARNING	swManager_check_exit_status: worker#17[pid=85448] abnormal exit, status=0, signal=1
-[2021-09-06 09:08:19 $85430.0]	WARNING	swManager_check_exit_status: worker#16[pid=85447] abnormal exit, status=0, signal=1
-[2021-09-06 09:08:19 $85430.0]	WARNING	swManager_check_exit_status: worker#15[pid=85446] abnormal exit, status=0, signal=1
-[2021-09-06 09:08:19 $85430.0]	WARNING	swManager_check_exit_status: worker#14[pid=85445] abnormal exit, status=0, signal=1
-[2021-09-06 09:08:19 $85430.0]	WARNING	swManager_check_exit_status: worker#13[pid=85444] abnormal exit, status=0, signal=1
-[2021-09-06 09:08:19 $85430.0]	WARNING	swManager_check_exit_status: worker#12[pid=85443] abnormal exit, status=0, signal=1
-[2021-09-06 09:08:19 $85430.0]	WARNING	swManager_check_exit_status: worker#11[pid=85442] abnormal exit, status=0, signal=1
-[2021-09-06 09:08:19 $85430.0]	WARNING	swManager_check_exit_status: worker#10[pid=85441] abnormal exit, status=0, signal=1
-[2021-09-06 09:08:19 $85430.0]	WARNING	swManager_check_exit_status: worker#9[pid=85440] abnormal exit, status=0, signal=1
-[2021-09-06 09:08:19 $85430.0]	WARNING	swManager_check_exit_status: worker#8[pid=85439] abnormal exit, status=0, signal=1
-[2021-09-10 17:03:05 @22165.0]	WARNING	~Channel (ERRNO 10003): channel is destroyed, 1 consumers will be discarded
-[2021-09-10 17:03:05 $22153.0]	WARNING	swManager_check_exit_status: worker#11[pid=22165] abnormal exit, status=255, signal=0
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Event.php(71): App\WebSocket\Event::pushSessionError(1)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Event.php(56): App\WebSocket\Event::onOpen(Object(Swoole\WebSocket\Server), Object(Swoole\Http\Request))
+#2 [internal function]: App\WebSocket\Event::App\WebSocket\{closure}(Object(Swoole\WebSocket\Server), Object(Swoole\Http\Request))
+#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/ServerManager.php(112): call_user_func(Object(Closure), Object(Swoole\WebSocket\Server), Object(Swoole\Http\Request))
+#4 {main}
+  thrown in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/WebSocket/Event.php on line 90
+[2021-09-04 09:11:53 $20520.0]	WARNING	check_worker_exit_status: worker#5[pid=20526] abnormal exit, status=255, signal=0
+[2021-09-04 16:55:49 @24313.0]	WARNING	~Channel (ERRNO 10003): channel is destroyed, 1 consumers will be discarded
+[2021-09-04 16:55:49 $24301.0]	WARNING	check_worker_exit_status: worker#11[pid=24313] abnormal exit, status=255, signal=0
+[2021-09-05 18:20:34 #31099.8]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
+[2021-09-05 18:20:34 $31100.0]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
+[2021-09-05 18:20:34 *31104.3]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
+[2021-09-05 18:20:34 *31102.1]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
+[2021-09-05 18:20:34 *31106.5]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
+[2021-09-05 18:20:34 *31105.4]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
+[2021-09-05 18:20:34 $31100.0]	WARNING	check_worker_exit_status: worker#18[pid=31119] abnormal exit, status=0, signal=1
+[2021-09-05 18:20:34 *31103.2]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
+[2021-09-05 18:20:34 *31107.6]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
+[2021-09-05 18:20:34 *31101.0]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
+[2021-09-05 18:20:34 *31108.7]	WARNING	swSignal_callback (ERRNO 707): Unable to find callback function for signal Hangup: 1
+[2021-09-05 18:20:34 $31100.0]	WARNING	check_worker_exit_status: worker#17[pid=31118] abnormal exit, status=0, signal=1
+[2021-09-05 18:20:34 $31100.0]	WARNING	check_worker_exit_status: worker#16[pid=31117] abnormal exit, status=0, signal=1
+[2021-09-05 18:20:34 $31100.0]	WARNING	check_worker_exit_status: worker#15[pid=31116] abnormal exit, status=0, signal=1
+[2021-09-05 18:20:34 $31100.0]	WARNING	check_worker_exit_status: worker#14[pid=31115] abnormal exit, status=0, signal=1
+[2021-09-05 18:20:34 $31100.0]	WARNING	check_worker_exit_status: worker#13[pid=31114] abnormal exit, status=0, signal=1
+[2021-09-05 18:20:34 $31100.0]	WARNING	check_worker_exit_status: worker#12[pid=31113] abnormal exit, status=0, signal=1
+[2021-09-05 18:20:34 $31100.0]	WARNING	check_worker_exit_status: worker#11[pid=31112] abnormal exit, status=0, signal=1
+[2021-09-05 18:20:34 $31100.0]	WARNING	check_worker_exit_status: worker#10[pid=31111] abnormal exit, status=0, signal=1
+[2021-09-05 18:20:34 $31100.0]	WARNING	check_worker_exit_status: worker#9[pid=31110] abnormal exit, status=0, signal=1
+[2021-09-05 18:20:34 $31100.0]	WARNING	check_worker_exit_status: worker#8[pid=31109] abnormal exit, status=0, signal=1
+[2021-09-05 18:21:53 #31099.8]	INFO	Server is shutdown now

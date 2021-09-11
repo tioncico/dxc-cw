@@ -60,7 +60,7 @@ class WebSocket
     }
     public function useSkill()
     {
-        $data = ['action' => 'useSkill','skillId'=>0];
+        $data = ['action' => 'useSkill','skillId'=>3];
         $this->push($data);
     }
 
@@ -84,7 +84,6 @@ class WebSocket
 
     public function push($data)
     {
-
         $this->wsClient->push(json_encode($data));
     }
 
@@ -92,8 +91,11 @@ class WebSocket
     {
         go(function () {
             while (1) {
-                $data = $this->wsClient->recv(0);
-                echo $data . PHP_EOL;
+                $response  = $this->wsClient->recv(0);
+                if ($response){
+
+                    echo json_encode(json_decode($response->data,true),JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES). PHP_EOL;
+                }
             }
             \co::sleep(0.1);
         });

@@ -30,10 +30,10 @@ use EasySwoole\Utility\Random;
 
 class Auth extends UserBase
 {
-    protected $noneAuthAction = ['login'];
+    protected $noneAuthAction = ['login', 'register'];
 
     /**
-     * @Api(name="login",path="/Api/User/Auth/login")
+     * @Api(name="登陆游戏",path="/Api/User/Auth/login")
      * @ApiDescription("用户登录")
      * @Param(name="account",required="",description="密码")
      * @Param(name="password",required="",description="账号")
@@ -48,7 +48,7 @@ class Auth extends UserBase
         Assert::assert(!!$userInfo, "账号或密码错误");
         $session = Random::character(32);
         $userInfo->update([
-            'session'       => $session
+            'session' => $session
         ]);
         $userInfo = $userInfo->toArray();
         $this->response()->setCookie(self::USER_TOKEN_NAME, $session, time() + 86400 * 7, '/');
@@ -56,7 +56,7 @@ class Auth extends UserBase
     }
 
     /**
-     * @Api(name="register",path="/Api/User/Auth/register")
+     * @Api(name="注册",path="/Api/User/Auth/register")
      * @Param(name="account",required="",lengthMin="6",lengthMax="18")
      * @Param(name="password",required="",lengthMin="8",lengthMax="30")
      * @ApiSuccess({"code":200,"result":null,"msg":"注册成功"})
@@ -75,20 +75,13 @@ class Auth extends UserBase
             'createTime' => time(),
         ]);
         $userInfo = $model->get(['account' => $param['account']]);
-        Assert::assert(!$userInfo, '账号已存在', UserError::ERROR_ACCOUNT_EXIST);
+        Assert::assert(!$userInfo, '账号已存在');
         try {
-            BaseModel::transaction(function ()use($model){
-                $model->save();
-                //新增一条游戏数据
-                UserBaseAttributeModel::create()->addData($model->userId);
-                UserAttributeModel::create()->addData($model->userId);
-                //新增玩家初始地图权限
-                UserMapModel::create()->addData($model->userId,1);
-            });
+            $model->save();
             $this->writeJson(Status::CODE_OK, null, '注册成功');
         } catch (\Throwable $throwable) {
             Trigger::getInstance()->throwable($throwable);
-            $this->writeJson(UserError::ERROR_SYSTEM_REGISTER_ERROR, '系统原因,注册失败');
+            $this->writeJson(Status::CODE_BAD_REQUEST, '系统原因,注册失败');
         }
     }
 

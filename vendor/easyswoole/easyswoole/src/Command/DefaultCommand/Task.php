@@ -8,10 +8,8 @@ use EasySwoole\Bridge\Package;
 use EasySwoole\Command\AbstractInterface\CommandHelpInterface;
 use EasySwoole\Command\AbstractInterface\CommandInterface;
 use EasySwoole\Command\CommandManager;
-use EasySwoole\Component\Di;
 use EasySwoole\EasySwoole\Command\Utility;
 use EasySwoole\EasySwoole\Core;
-use EasySwoole\EasySwoole\SysConst;
 use EasySwoole\Utility\ArrayToTextTable;
 use Swoole\Coroutine\Scheduler;
 
@@ -36,8 +34,6 @@ class Task implements CommandInterface
     public function exec(): ?string
     {
         $action = CommandManager::getInstance()->getArg(0);
-        $exe = "{$this->commandName()}.{$action}";
-        Di::getInstance()->set(SysConst::EXECUTE_COMMAND,$exe);
         Core::getInstance()->initialize();
         $run = new Scheduler();
         $run->add(function () use (&$result, $action) {
@@ -54,9 +50,17 @@ class Task implements CommandInterface
 
     protected function status()
     {
-        return Utility::bridgeCall($this->commandName(), function (Package $package) {
-            return new ArrayToTextTable($package->getArgs());
-        }, 'info');
+        return Utility::bridgeCall('status', function (Package $package) {
+            $data = $package->getArgs();
+            if(empty($data)){
+                return 'pelase check config item for task worker num';
+            }
+            foreach ($data as $key => &$datum){
+                $datum['workerIndex'] = $key;
+                $datum['startUpTime'] = date('Y-m-d H:i:s',$datum['startUpTime']);
+            }
+            return new ArrayToTextTable($data);
+        }, 'task');
     }
 }
 

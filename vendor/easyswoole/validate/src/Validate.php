@@ -1,41 +1,143 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yf
- * Date: 2018/7/6
- * Time: 上午12:41
- */
 
 namespace EasySwoole\Validate;
 
-
 use EasySwoole\Spl\SplArray;
-use Psr\Http\Message\UploadedFileInterface;
+use EasySwoole\Validate\Exception\Runtime;
+use EasySwoole\Validate\Functions\AbstractValidateFunction;
+use EasySwoole\Validate\Functions\ActiveUrl;
+use EasySwoole\Validate\Functions\AllDigital;
+use EasySwoole\Validate\Functions\AllowFile;
+use EasySwoole\Validate\Functions\AllowFileType;
+use EasySwoole\Validate\Functions\Alpha;
+use EasySwoole\Validate\Functions\AlphaDash;
+use EasySwoole\Validate\Functions\AlphaNum;
+use EasySwoole\Validate\Functions\Between;
+use EasySwoole\Validate\Functions\BetweenLen;
+use EasySwoole\Validate\Functions\BetweenMbLen;
+use EasySwoole\Validate\Functions\DateAfter;
+use EasySwoole\Validate\Functions\DateBefore;
+use EasySwoole\Validate\Functions\Decimal;
+use EasySwoole\Validate\Functions\Different;
+use EasySwoole\Validate\Functions\DifferentWithColumn;
+use EasySwoole\Validate\Functions\Equal;
+use EasySwoole\Validate\Functions\EqualWithColumn;
+use EasySwoole\Validate\Functions\Func;
+use EasySwoole\Validate\Functions\GreaterThanWithColumn;
+use EasySwoole\Validate\Functions\InArray;
+use EasySwoole\Validate\Functions\Integer;
+use EasySwoole\Validate\Functions\IsArray;
+use EasySwoole\Validate\Functions\IsBool;
+use EasySwoole\Validate\Functions\IsFloat;
+use EasySwoole\Validate\Functions\IsIp;
+use EasySwoole\Validate\Functions\Length;
+use EasySwoole\Validate\Functions\LengthMax;
+use EasySwoole\Validate\Functions\LengthMin;
+use EasySwoole\Validate\Functions\LessThanWithColumn;
+use EasySwoole\Validate\Functions\Max;
+use EasySwoole\Validate\Functions\Min;
+use EasySwoole\Validate\Functions\Money;
+use EasySwoole\Validate\Functions\MbLength;
+use EasySwoole\Validate\Functions\MbLengthMax;
+use EasySwoole\Validate\Functions\MbLengthMin;
+use EasySwoole\Validate\Functions\NotEmpty;
+use EasySwoole\Validate\Functions\NotInArray;
+use EasySwoole\Validate\Functions\Numeric;
+use EasySwoole\Validate\Functions\Optional;
+use EasySwoole\Validate\Functions\Regex;
+use EasySwoole\Validate\Functions\Required;
+use EasySwoole\Validate\Functions\Timestamp;
+use EasySwoole\Validate\Functions\TimestampAfter;
+use EasySwoole\Validate\Functions\TimestampAfterDate;
+use EasySwoole\Validate\Functions\TimestampBefore;
+use EasySwoole\Validate\Functions\TimestampBeforeDate;
+use EasySwoole\Validate\Functions\Url;
 
 /**
  * 数据验证器
  * Class Validate
- * @package EasySwoole\Validate
  */
 class Validate
 {
     protected $columns = [];
 
+    /** @var null|Error */
     protected $error;
 
     protected $verifiedData = [];
 
-    function getError(): ?Error
+    /** @var null|SplArray */
+    protected $verifyData;
+
+    protected $functions = [];
+
+    /**
+     * Validate constructor.
+     * @throws Runtime
+     */
+    public function __construct()
+    {
+        $this->addFunction(new ActiveUrl());
+        $this->addFunction(new AllDigital());
+        $this->addFunction(new AllowFile());
+        $this->addFunction(new AllowFileType());
+        $this->addFunction(new Alpha());
+        $this->addFunction(new AlphaNum());
+        $this->addFunction(new AlphaDash());
+        $this->addFunction(new Between());
+        $this->addFunction(new BetweenLen());
+        $this->addFunction(new BetweenMbLen());
+        $this->addFunction(new DateAfter());
+        $this->addFunction(new DateBefore());
+        $this->addFunction(new Decimal());
+        $this->addFunction(new Different());
+        $this->addFunction(new DifferentWithColumn());
+        $this->addFunction(new Equal());
+        $this->addFunction(new EqualWithColumn());
+        $this->addFunction(new Func());
+        $this->addFunction(new GreaterThanWithColumn());
+        $this->addFunction(new InArray());
+        $this->addFunction(new Integer());
+        $this->addFunction(new IsArray());
+        $this->addFunction(new IsBool());
+        $this->addFunction(new IsFloat());
+        $this->addFunction(new IsIp());
+        $this->addFunction(new Length());
+        $this->addFunction(new LengthMax());
+        $this->addFunction(new LengthMin());
+        $this->addFunction(new LessThanWithColumn());
+        $this->addFunction(new Max());
+        $this->addFunction(new Min());
+        $this->addFunction(new Money());
+        $this->addFunction(new MbLength());
+        $this->addFunction(new MbLengthMax());
+        $this->addFunction(new MbLengthMin());
+        $this->addFunction(new NotEmpty());
+        $this->addFunction(new NotInArray());
+        $this->addFunction(new Numeric());
+        $this->addFunction(new Optional());
+        $this->addFunction(new Regex());
+        $this->addFunction(new Required());
+        $this->addFunction(new Timestamp());
+        $this->addFunction(new TimestampAfter());
+        $this->addFunction(new TimestampAfterDate());
+        $this->addFunction(new TimestampBefore());
+        $this->addFunction(new TimestampBeforeDate());
+        $this->addFunction(new Url());
+    }
+
+    public function getError(): ?Error
     {
         return $this->error;
     }
 
+    public function getVerifyData(): ?SplArray
+    {
+        return $this->verifyData;
+    }
+
     /**
      * 添加一个待验证字段
-     * @param string $name
-     * @param null|string $alias
-     * @param bool $reset
-     * @return Rule
      */
     public function addColumn(string $name, ?string $alias = null, bool $reset = false): Rule
     {
@@ -43,15 +145,15 @@ class Validate
             $rule = new Rule();
             $this->columns[$name] = [
                 'alias' => $alias,
-                'rule' => $rule
+                'rule' => $rule,
             ];
         }
+
         return $this->columns[$name]['rule'];
     }
 
     /**
      * 删除一个待验证字段
-     * @param string $name
      */
     public function delColumn(string $name)
     {
@@ -60,935 +162,179 @@ class Validate
         }
     }
 
+    /**
+     * 获取一个待验证字段
+     */
     public function getColumn(string $name): array
     {
         return $this->columns[$name] ?? [];
     }
 
-    /**
-     * 获取所有要验证的字段
-     * @return array
-     */
-    public function getColumns(): array
+    public static function make(array $rules = [], array $message = [], array $alias = []): self
     {
-        return array_keys($this->columns);
+        $errMsgMap = [];
+        // eg: msgMap[field][rule] => msg
+
+        foreach ($message as $field => $msg) {
+            // eg: field.required
+
+            $pos = strrpos($field, '.');
+            if ($pos === false) {
+                // No validation rules will reset all error messages
+                $errMsgMap[$field] = $msg;
+                continue;
+            }
+
+            $fieldName = substr($field, 0, $pos);
+            $fieldRule = substr($field, $pos + 1);
+
+            if (!$fieldName) {
+                throw new Runtime(sprintf('Error message[%s] does not specify a field', $msg));
+            }
+
+            if ($fieldRule) {
+                $errMsgMap[$fieldName][$fieldRule] = $msg;
+                continue;
+            }
+
+            // No validation rules will reset all error messages
+            $errMsgMap[$fieldName] = $msg;
+        }
+
+        $instance = new static();
+        foreach ($rules as $key => $rule) {
+            if (!$key) {
+                throw new Runtime('The verified field is empty');
+            }
+
+            /** @var Rule $validateRule */
+            $validateRule = $instance->addColumn($key, $alias[$key] ?? null);
+            // eg: rule 'required|max:25|between:1,100'
+            $rule = explode('|', $rule);
+            foreach ($rule as $action) {
+                $actionArgs = [];
+
+                if (strpos($action, ':')) {
+                    // eg max:25
+                    list($action, $arg) = explode(':', $action, 2);
+
+                    if (!strpos($arg, ',')) {
+                        $actionArgs[] = $arg;
+                    } else {
+                        // eg between:1,100
+                        $arg = explode(',', $arg);
+                        $actionArgs = array_merge($actionArgs, $arg);
+//                        $actionArgs[] = $arg;
+                    }
+                }
+
+                $errMsg = $errMsgMap[$key] ?? null;
+                if (is_array($errMsg)) {
+                    $errMsg = $errMsg[$action] ?? null;
+                }
+
+                $actionArgs[] = $errMsg;
+                $validateRule->{$action}(...$actionArgs);
+            }
+        }
+
+        return $instance;
     }
 
     /**
      * 验证字段是否合法
      * @param array $data
      * @return bool
+     * @throws Runtime
      */
-    function validate(array $data)
+    public function validate(array $data): bool
     {
         $this->verifiedData = [];
         $spl = new SplArray($data);
+        $this->verifyData = $spl;
 
         foreach ($this->columns as $column => $item) {
-            /** @var Rule $rule */
-            $rule = $item['rule'];
-            $rules = $rule->getRuleMap();
-            /*
-             * 优先检测是否带有optional选项
-             * 如果设置了optional又不存在对应字段，则跳过该字段检测
-             * 额外的如果这个字段是空字符串一样会认为不存在该字段
-             */
-            if (isset($rules['optional']) && (!isset($data[$column]) || $data[$column] === '')) {
-                $this->verifiedData[$column] = $spl->get($column);
-                continue;
-            }
-            foreach ($rules as $rule => $ruleInfo) {
-                //自定义验证类处理
-                if (!method_exists($this, $rule)) {
-                    /** @var ValidateInterface $userRule */
-                    $userRule = $ruleInfo['userRule'];
-                    $msg = $userRule->validate($spl, $column, ...$ruleInfo['arg']);
-                    if ($msg !== null) {
-                        $msg = $ruleInfo['msg'] ?: $msg;
-                        $this->error = new Error($column, $spl->get($column), $item['alias'], $rule, $msg, $ruleInfo['arg'], $this);
+            $columnData = $spl->get($column);
+            $ruleMap = $item['rule']->getRuleMap();
+            //多维数组
+            if (strpos($column, '*') !== false && is_array($columnData)) {
+                foreach ($columnData as $datum) {
+                    if ($this->runRule($datum, $ruleMap, $column)) {
                         return false;
                     }
-                } else if ($rule === 'func') {
-                    // 如果当前是一个Func 那么可以直接Call这个Func进行判断
-                    $result = call_user_func($ruleInfo['arg'], $spl, $column);
-                    if ($result !== true) {  // 不全等 true 则为验证失败
-                        $this->error = new Error($column, $spl->get($column), $item['alias'], $rule, $ruleInfo['msg'], $ruleInfo['arg'], $this);
-                        return false;
-                    }
-                } else if (!call_user_func([$this, $rule], $spl, $column, $ruleInfo['arg'])) {
-                    $this->error = new Error($column, $spl->get($column), $item['alias'], $rule, $ruleInfo['msg'], $ruleInfo['arg'], $this);
+                }
+            } else {
+                if ($this->runRule($columnData, $ruleMap, $column)) {
                     return false;
                 }
             }
-            $this->verifiedData[$column] = $spl->get($column);
+            $this->verifiedData[$column] = $columnData;
         }
+
         return true;
     }
 
     /**
+     * @param $itemData
+     * @param $rules
+     * @param $column
+     * @return null|Error
+     * @throws Runtime
+     */
+    private function runRule($itemData, $rules, $column): ?Error
+    {
+        if (isset($rules['optional']) && ($itemData === null || $itemData === '')) {
+            return null;
+        }
+        foreach ($rules as $rule => $ruleConf) {
+            $check = strtolower($rule);
+
+            if (!isset($this->functions[$check])) {
+                throw new Runtime("unsupport rule {$rule}");
+            }
+
+            /** @var AbstractValidateFunction $func */
+            $func = $this->functions[$check];
+            if ($func->validate($itemData, $ruleConf['arg'], $column, $this) === false) {
+                $this->error = new Error(
+                    $column,
+                    $itemData,
+                    $this->columns[$column]['alias'],
+                    $rule,
+                    $ruleConf['msg'],
+                    $ruleConf['arg'],
+                    $this
+                );
+
+                return $this->error;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * 获取验证成功后的数据
-     * @return array
      */
     public function getVerifiedData(): array
     {
         return $this->verifiedData;
     }
 
-
     /**
-     * 给定的URL是否可以成功通讯
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
+     * @param AbstractValidateFunction $function
+     * @param bool $overlay 是否允许覆盖
+     * @return $this
+     * @throws Runtime
      */
-    private function activeUrl(SplArray $splArray, string $column, $arg): bool
+    public function addFunction(AbstractValidateFunction $function, bool $overlay = false): Validate
     {
-        $data = $splArray->get($column);
-        if (is_string($data)) {
-            if (!filter_var($data, FILTER_VALIDATE_URL)) {
-                return false;
-            }
-            return checkdnsrr(parse_url($data, PHP_URL_HOST));
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 给定的参数是否是字母 即[a-zA-Z]
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function alpha(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if (is_string($data)) {
-            return preg_match('/^[a-zA-Z]+$/', $data);
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 给定的参数是否是字母和数字组成 即[a-zA-Z0-9]
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function alphaNum(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if (is_string($data)) {
-            return preg_match('/^[a-zA-Z0-9]+$/', $data);
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 给定的参数是否是字母和数字下划线破折号组成 即[a-zA-Z0-9\-\_]
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function alphaDash(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if (is_string($data)) {
-            return preg_match('/^[a-zA-Z0-9\-\_]+$/', $data);
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 给定的参数是否在 $min $max 之间
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $args
-     * @return bool
-     */
-    private function between(SplArray $splArray, string $column, $args): bool
-    {
-        $data = $splArray->get($column);
-        $min = array_shift($args);
-        $max = array_shift($args);
-        if (is_numeric($data) || is_string($data)) {
-            if ($data <= $max && $data >= $min) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 给定参数是否为布尔值
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function bool(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if ($data === 1 || $data === true || $data === 0 || $data === false) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 给定参数是否合法的小数
-     * @param SplArray $splArray
-     * @param string $column
-     * @param null|integer $arg
-     * @return bool
-     */
-    private function decimal(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = strval($splArray->get($column));
-        if (is_null($arg)) {
-            return filter_var($data, FILTER_VALIDATE_FLOAT) !== false;
-        } elseif (intval($arg) === 0) {
-            // 容错处理 如果小数点后设置0位 则验整数
-            return filter_var($data, FILTER_VALIDATE_INT) !== false;
-        } else {
-            $regex = '/^(0|[1-9]+[0-9]*)(.[0-9]{1,' . $arg . '})?$/';
-            return preg_match($regex, $data);
-        }
-    }
-
-    /**
-     * 给定参数是否在某日期之前
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function dateBefore(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if (empty($arg)) {
-            $arg = date('ymd');
-        }
-        $beforeUnixTime = strtotime($arg);
-        if (is_string($data)) {
-            $unixTime = strtotime($data);
-            if (is_bool($beforeUnixTime) || is_bool($unixTime)) {
-                return false;
-            }
-            if ($unixTime < $beforeUnixTime) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 给定参数是否在某日期之后
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function dateAfter(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if (empty($arg)) {
-            $arg = date('ymd');
-        }
-        $afterUnixTime = strtotime($arg);
-        if (is_string($data)) {
-            $unixTime = strtotime($data);
-            if (is_bool($afterUnixTime) || is_bool($unixTime)) {
-                return false;
-            }
-            if ($unixTime > $afterUnixTime) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 验证值是否相等
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $args
-     * @return bool
-     */
-    private function equal(SplArray $splArray, string $column, $args): bool
-    {
-        $data = $splArray->get($column);
-        $value = array_shift($args);
-        $strict = array_shift($args);
-        if ($strict) {
-            if ($data !== $value) {
-                return false;
-            }
-        } else {
-            if ($data != $value) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * 验证值是否不相等
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $args
-     * @return bool
-     */
-    private function different(SplArray $splArray, string $column, $args): bool
-    {
-        $data = $splArray->get($column);
-        $value = array_shift($args);
-        $strict = array_shift($args);
-        if ($strict) {
-            if ($data === $value) {
-                return false;
-            }
-        } else {
-            if ($data == $value) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * 验证值是否相等
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $args
-     * @return bool
-     */
-    private function equalWithColumn(SplArray $splArray, string $column, $args): bool
-    {
-        $data = $splArray->get($column);
-        $fieldName = array_shift($args);
-        $strict = array_shift($args);
-        $value = $splArray->get($fieldName);
-        if ($strict) {
-            if ($data !== $value) {
-                return false;
-            }
-        } else {
-            if ($data != $value) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * 验证值是否不相等
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $args
-     * @return bool
-     */
-    private function differentWithColumn(SplArray $splArray, string $column, $args): bool
-    {
-        $data = $splArray->get($column);
-        $fieldName = array_shift($args);
-        $strict = array_shift($args);
-        $value = $splArray->get($fieldName);
-        if ($strict) {
-            if ($data === $value) {
-                return false;
-            }
-        } else {
-            if ($data == $value) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * bar字段必须小于foo字段
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $args
-     * @return bool
-     */
-    private function lessThanWithColumn(SplArray $splArray, string $column, $args): bool
-    {
-        if (!$this->numeric($splArray, $column, null)) {
-            return false;
+        if (isset($this->functions[strtolower($function->name())]) && $overlay === false) {
+            throw new Runtime(sprintf('This validate function [%s] already exists', $function->name()));
         }
 
-        if (!$this->numeric($splArray, $args, null)) {
-            return false;
-        }
+        $this->functions[strtolower($function->name())] = $function;
 
-        if ($splArray->get($column) < $splArray->get($args)) {
-            return true;
-        }
-
-        return false;
+        return $this;
     }
-
-    /**
-     * bar字段必须大于foo字段
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $args
-     * @return bool
-     */
-    private function greaterThanWithColumn(SplArray $splArray, string $column, $args): bool
-    {
-        if (!$this->numeric($splArray, $column, null)) {
-            return false;
-        }
-
-        if (!$this->numeric($splArray, $args, null)) {
-            return false;
-        }
-
-        if ($splArray->get($column) > $splArray->get($args)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * 验证值是否一个浮点数
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function float(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        return filter_var($data, FILTER_VALIDATE_FLOAT) !== false;
-    }
-
-    /**
-     * 调用自定义的闭包验证
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function func(SplArray $splArray, string $column, $arg): bool
-    {
-        return call_user_func($arg, $splArray, $column);
-    }
-
-    /**
-     * 值是否在数组中
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function inArray(SplArray $splArray, string $column, $args): bool
-    {
-        $data = $splArray->get($column);
-        $array = array_shift($args);
-        $isStrict = array_shift($args);
-        return in_array($data, $array, $isStrict);
-    }
-
-    /**
-     * 是否一个整数值
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function integer(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        return filter_var($data, FILTER_VALIDATE_INT) !== false;
-    }
-
-    /**
-     * 是否一个有效的IP
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function isIp(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        return filter_var($data, FILTER_VALIDATE_IP);
-    }
-
-    /**
-     * 是否不为空
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function notEmpty(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if ($data === 0 || $data === '0') {
-            return true;
-        } else {
-            return !empty($data);
-        }
-    }
-
-    /**
-     * 是否一个数字值
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function numeric(SplArray $splArray, string $column, $arg): bool
-    {
-        return is_numeric($splArray->get($column));
-    }
-
-    /**
-     * 不在数组中
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function notInArray(SplArray $splArray, string $column, $args): bool
-    {
-        $data = $splArray->get($column);
-        $array = array_shift($args);
-        $isStrict = array_shift($args);
-        return !in_array($data, $array, $isStrict);
-    }
-
-    /**
-     * 验证数组或字符串或者文件的大小
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function length(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if (is_numeric($data) || is_string($data)) {
-            $result = false;
-            if (function_exists('mb_strlen') && (mb_strlen($data, mb_internal_encoding()) == $arg)) {
-                $result = true;
-            } else {
-                if (strlen($data) == $arg) {
-                    $result = true;
-                }
-            }
-            return $result;
-        } else if (is_array($data) && (count($data) == $arg)) {
-            return true;
-        } else if (($data instanceof UploadedFileInterface) && ($data->getSize() == $arg)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 验证数组或字符串的长度或文件的大小是否超出
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function lengthMax(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if (is_numeric($data) || is_string($data)) {
-            $result = false;
-            if (function_exists('mb_strlen') && (mb_strlen($data, mb_internal_encoding()) <= $arg)) {
-                $result = true;
-            } else {
-                if (strlen($data) <= $arg) {
-                    $result = true;
-                }
-            }
-            return $result;
-        } else if (is_array($data) && (count($data) <= $arg)) {
-            return true;
-        } else if (($data instanceof UploadedFileInterface) && ($data->getSize() <= $arg)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 验证数组或字符串的长度或文件的大小是否达到
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function lengthMin(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if (is_numeric($data) || is_string($data)) {
-            $result = false;
-            if (function_exists('mb_strlen') && (mb_strlen($data, mb_internal_encoding()) >= $arg)) {
-                $result = true;
-            } else {
-                if (strlen($data) >= $arg) {
-                    $result = true;
-                }
-            }
-            return $result;
-        } else if (is_array($data) && (count($data) >= $arg)) {
-            return true;
-        } else if (($data instanceof UploadedFileInterface) && ($data->getSize() >= $arg)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 验证数组或字符串的长度或文件的大小是否在一个区间里面
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $args
-     * @return bool
-     */
-    private function betweenLen(SplArray $splArray, string $column, $args): bool
-    {
-        $data = $splArray->get($column);
-        $min = array_shift($args);
-        $max = array_shift($args);
-        if (is_numeric($data) || is_string($data)) {
-            if (strlen($data) >= $min && strlen($data) <= $max) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if (is_array($data)) {
-            if (count($data) >= $min && count($data) <= $max) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if ($data instanceof UploadedFileInterface) {
-            $size = $data->getSize();
-            if ($size >= $min && $size <= $max) {
-                return true;
-            }
-            return false;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 验证值不大于(相等视为通过)
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function max(SplArray $splArray, string $column, $arg): bool
-    {
-        if (!$this->numeric($splArray, $column, $arg)) {
-            return false;
-        }
-        $data = $splArray->get($column) * 1;
-        if ($data > $arg) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * 给定值是否一个合法的金额
-     * @param SplArray $splArray
-     * @param string $column
-     * @param          $arg
-     * @return false|int
-     */
-    private function money(SplArray $splArray, string $column, $arg)
-    {
-        if (is_null($arg)) $arg = '';
-        $data = $splArray->get($column);
-        $regex = '/^(0|[1-9]+[0-9]*)(.[0-9]{1,' . $arg . '})?$/';
-        return preg_match($regex, $data);
-    }
-
-    /**
-     * 验证值不小于(相等视为通过)
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function min(SplArray $splArray, string $column, $arg): bool
-    {
-        if (!$this->numeric($splArray, $column, $arg)) {
-            return false;
-        }
-        $data = $splArray->get($column) * 1;
-        if ($data < $arg) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * 设置值为可选参数
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function optional(SplArray $splArray, string $column, $arg)
-    {
-        return true;
-    }
-
-    /**
-     * 正则表达式验证
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function regex(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if (is_numeric($data) || is_string($data)) {
-            return preg_match($arg, $data);
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 验证字符串是否由数字构成
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function allDigital(SplArray $splArray, string $column): bool
-    {
-        return $this->regex($splArray, $column, '/^\d+$/');
-    }
-
-    /**
-     * 必须存在值
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function required(SplArray $splArray, string $column, $arg): bool
-    {
-        return isset($splArray[$column]);
-    }
-
-    /**
-     * 值是一个合法的时间戳
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function timestamp(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if (is_numeric($data)) {
-            if (strtotime(date("d-m-Y H:i:s", $data)) === (int)$data) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 时间戳在某指定日期之前
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function timestampBeforeDate(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if (is_numeric($data)) {
-            $time = strtotime($arg);
-            if ($time !== false && $time > 0 && $time > $data) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 时间戳在某指定日期之后
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function timestampAfterDate(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if (is_numeric($data)) {
-            $time = strtotime($arg);
-            if ($time !== false && $time > 0 && $time < $data) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 时间戳是否在某时间戳之前
-     * @param SplArray $splArray
-     * @param string $column
-     * @param          $arg
-     * @return bool
-     */
-    private function timestampBefore(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if (is_numeric($data) && is_numeric($arg)) {
-            return intval($data) < intval($arg);
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 时间戳是否在某时间戳之后
-     * @param SplArray $splArray
-     * @param string $column
-     * @param          $arg
-     * @return bool
-     */
-    private function timestampAfter(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        if (is_numeric($data) && is_numeric($arg)) {
-            return intval($data) > intval($arg);
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 值是一个合法的链接
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $arg
-     * @return bool
-     */
-    private function url(SplArray $splArray, string $column, $arg): bool
-    {
-        $data = $splArray->get($column);
-        return filter_var($data, FILTER_VALIDATE_URL);
-    }
-
-
-    /**
-     * 判断文件扩展名
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $args
-     * @return bool
-     */
-    private function allowFile(SplArray $splArray, string $column, $args): bool
-    {
-        $data = $splArray->get($column);
-        if (!$data instanceof UploadedFileInterface) {
-            return false;
-        }
-
-        $array = array_shift($args);
-        $isStrict = array_shift($args);
-
-        $filename = $data->getClientFilename();
-        if (!$filename) {
-            return false;
-        }
-
-        $extension = pathinfo($filename)['extension'] ?? '';
-
-        if (!in_array($extension, $array, $isStrict)) {
-            return false;
-        }
-
-        return true;
-    }
-
-
-    /**
-     * 判断文件类型
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $args
-     * @return bool
-     */
-    private function allowFileType(SplArray $splArray, string $column, $args): bool
-    {
-        $data = $splArray->get($column);
-        if (!$data instanceof UploadedFileInterface) {
-            return false;
-        }
-
-        $array = array_shift($args);
-        $isStrict = array_shift($args);
-
-        if (!in_array($data->getClientMediaType(), $array, $isStrict)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 是否为数组
-     * @param SplArray $splArray
-     * @param string $column
-     * @param $args
-     * @return bool
-     */
-    private function isArray(SplArray $splArray, string $column, $args): bool
-    {
-        $data = $splArray->get($column);
-        return is_array($data);
-    }
-
 }

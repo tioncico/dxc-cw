@@ -1,0 +1,1 @@
+{"version":1,"defects":{"UnitTest\\Common\\ServerTest::testGetList":3,"UnitTest\\User\\GameTest::testAdd":3},"times":{"UnitTest\\Common\\ServerTest::testGetList":0.426,"UnitTest\\User\\GameTest::testAdd":1.166,"UnitTest\\User\\GameTest::testGetOne":0.669}}

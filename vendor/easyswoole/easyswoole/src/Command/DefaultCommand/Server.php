@@ -12,11 +12,11 @@ use EasySwoole\Command\AbstractInterface\CommandHelpInterface;
 use EasySwoole\Command\AbstractInterface\CommandInterface;
 use EasySwoole\Command\Color;
 use EasySwoole\Command\CommandManager;
-use EasySwoole\Component\Di;
 use EasySwoole\EasySwoole\Command\Utility;
 use EasySwoole\EasySwoole\Config;
 use EasySwoole\EasySwoole\Core;
 use EasySwoole\EasySwoole\SysConst;
+use EasySwoole\Utility\ArrayToTextTable;
 use Swoole\Coroutine\Scheduler;
 
 class Server implements CommandInterface
@@ -47,8 +47,6 @@ class Server implements CommandInterface
     public function exec(): ?string
     {
         $action = CommandManager::getInstance()->getArg(0);
-        $exe = "{$this->commandName()}.{$action}";
-        Di::getInstance()->set(SysConst::EXECUTE_COMMAND,$exe);
         if (method_exists($this, $action) && $action != 'help') {
             Core::getInstance()->initialize();
             return $this->$action();
@@ -59,8 +57,8 @@ class Server implements CommandInterface
 
     protected function start()
     {
+        defined('EASYSWOOLE_RUNNING') or define('EASYSWOOLE_RUNNING', true);
         $conf = Config::getInstance();
-
         // php easyswoole server start -d
         $daemonize = CommandManager::getInstance()->issetOpt('d');
 
@@ -188,12 +186,17 @@ class Server implements CommandInterface
             $result = Utility::bridgeCall('status', function (Package $package) {
                 $data = $package->getArgs();
                 $data['start_time'] = date('Y-m-d H:i:s', $data['start_time']);
-                $msg = '';
-                foreach ($data as $key => $val) {
-                    $msg .= Utility::displayItem($key, $val) . "\n";
+
+                $final = [];
+
+                foreach ($data as $key => $val){
+                    $final[] = [
+                        'item'=>$key,
+                        'value'=>$val
+                    ];
                 }
-                return $msg;
-            }, 'info');
+                return new ArrayToTextTable($final);
+            }, 'server');
         });
         $run->start();
         return $result;

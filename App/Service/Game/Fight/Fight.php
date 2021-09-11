@@ -36,7 +36,6 @@ class Fight
             if ($this->checkDie() == true) {
                 break;
             }
-
             $userAttackTimes = $user->getAttackTimes();
             if ($userAttackTimes >= 1) {
                 //攻击,命中判定
@@ -53,10 +52,9 @@ class Fight
                 $user->setHp($user->getHp() - $monsterFightResult->getBuckleBloodNum());
                 call_user_func($callBack,'monster',$monsterFightResult);
             }
-
             //增加攻击次数
-            $user->setAttackTimes($user->getAttackTimes() + ($user->getAttackSpeed() * 0.1));
-            $monster->setAttackTimes($monster->getAttackTimes() + ($monster->getAttackSpeed() * 0.1));
+//            $user->setAttackTimes($user->getAttackTimes() + ($user->getAttackSpeed() * 0.1));
+//            $monster->setAttackTimes($monster->getAttackTimes() + ($monster->getAttackSpeed() * 0.1));
             //最小单位为每秒10次
             \co::sleep(0.1);
         }
@@ -177,9 +175,7 @@ class Fight
     {
         //攻击,命中判定
         $fightResult = $this->attackJudgment($attackAttribute, $beAttackAttribute);
-        $entryCode = $skillAttribute->getEntryCode();
-        $actionName = 'entry' . Str::studly($entryCode);
-        $this->$actionName($attackAttribute, $beAttackAttribute, $skillAttribute, $fightResult);
+        Skill::useSkill($attackAttribute, $beAttackAttribute, $skillAttribute, $fightResult);
         //伤害计算
         $this->harmCount($attackAttribute, $fightResult);
         //扣血计算

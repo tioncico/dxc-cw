@@ -25,11 +25,8 @@ use EasySwoole\Http\Request;
 use EasySwoole\Http\Response;
 use EasySwoole\Log\LoggerInterface;
 use EasySwoole\Trigger\Location;
-use EasySwoole\Trigger\TriggerInterface;
 use EasySwoole\Utility\File;
 use EasySwoole\Log\Logger as DefaultLogger;
-use EasySwoole\Trigger\Trigger as DefaultTrigger;
-use EasySwoole\Task\Config as TaskConfig;
 use Swoole\Server;
 use Swoole\Timer;
 use Swoole\Http\Request as SwooleRequest;
@@ -119,9 +116,8 @@ class Core
     {
         //给主进程也命名
         $serverName = Config::getInstance()->getConf('SERVER_NAME');
-        if (!in_array(PHP_OS, ['Darwin', 'CYGWIN', 'WINNT'])) {
-            cli_set_process_title($serverName);
-        }
+        $this->setProcessName($serverName);
+
         //启动
         ServerManager::getInstance()->start();
     }
@@ -141,10 +137,10 @@ class Core
         }
         defined('EASYSWOOLE_TEMP_DIR') or define('EASYSWOOLE_TEMP_DIR', $tempDir);
 
-        $logDir = Config::getInstance()->getConf('LOG_DIR');
+        $logDir = Config::getInstance()->getConf('LOG.dir');
         if (empty($logDir)) {
             $logDir = EASYSWOOLE_ROOT . '/Log';
-            Config::getInstance()->setConf('LOG_DIR', $logDir);
+            Config::getInstance()->setConf('LOG.dir', $logDir);
         } else {
             $logDir = rtrim($logDir, '/');
         }
@@ -174,15 +170,25 @@ class Core
         //初始化配置Logger
         $logger = Di::getInstance()->get(SysConst::LOGGER_HANDLER);
         if (!$logger instanceof LoggerInterface) {
+            $logger = Config::getInstance()->getConf('LOG.handler');
+        }
+        if (!$logger instanceof LoggerInterface) {
             $logger = new DefaultLogger(EASYSWOOLE_LOG_DIR);
         }
-        Logger::getInstance($logger);
+        $level = intval(Config::getInstance()->getConf('LOG.level'));
+        Logger::getInstance($logger)->logLevel($level);
+
+        $logConsole = Config::getInstance()->getConf('LOG.logConsole');
+        Logger::getInstance()->logConsole($logConsole);
+
+        $ignoreCategory = Config::getInstance()->getConf('LOG.ignoreCategory');
+        Logger::getInstance()->ignoreCategory($ignoreCategory);
+
+        $displayConsole = Config::getInstance()->getConf('LOG.displayConsole');
+        Logger::getInstance()->displayConsole($displayConsole);
 
         //初始化追追踪器
         $trigger = Di::getInstance()->get(SysConst::TRIGGER_HANDLER);
-        if (!$trigger instanceof TriggerInterface) {
-            $trigger = new DefaultTrigger(Logger::getInstance());
-        }
         Trigger::getInstance($trigger);
 
         //在没有配置自定义错误处理器的情况下，转化为trigger处理
@@ -212,7 +218,7 @@ class Core
         register_shutdown_function($func);
     }
 
-    private function registerDefaultCallBack(\Swoole\Server $server, int $serverType)
+    private function registerDefaultCallBack(Server $server, int $serverType)
     {
         /*
          * 注册默认回调
@@ -281,9 +287,7 @@ class Core
                 $type = 'Worker';
             }
             $processName = "{$serverName}.{$type}.{$workerId}";
-            if (!in_array(PHP_OS, ['Darwin', 'CYGWIN', 'WINNT'])) {
-                cli_set_process_title($processName);
-            }
+            $this->setProcessName($processName);
             $table = Manager::getInstance()->getProcessTable();
             $pid = getmypid();
             $table->set($pid, [
@@ -298,10 +302,13 @@ class Core
                     'memoryPeakUsage' => memory_get_peak_usage(true)
                 ]);
             });
+            register_shutdown_function(function ()use($pid){
+                $table = Manager::getInstance()->getProcessTable();
+                $table->del($pid);
+            });
         });
-
+        //onWorkerStop,onWorkerExit,register_shutdown_function冗余清理
         EventHelper::registerWithAdd($register, $register::onWorkerStop, function () {
-            //onWorkerStop与onWorkerExit冗余清理
             $table = Manager::getInstance()->getProcessTable();
             $pid = getmypid();
             $table->del($pid);
@@ -313,12 +320,16 @@ class Core
          * 开启reload async的时候，清理事件
          */
         EventHelper::registerWithAdd($register, $register::onWorkerExit, function () {
-            //onWorkerStop与onWorkerExit冗余清理
             $table = Manager::getInstance()->getProcessTable();
             $pid = getmypid();
             $table->del($pid);
             Timer::clearAll();
             SwooleEvent::exit();
+        });
+
+        EventHelper::registerWithAdd($register, EventRegister::onManagerStart, function (Server $server) {
+            $serverName = Config::getInstance()->getConf('SERVER_NAME');
+            $this->setProcessName($serverName . '.Manager');
         });
     }
 
@@ -355,5 +366,21 @@ class Core
         Manager::getInstance()->attachToServer($server);
         //初始化Bridge
         Bridge::getInstance()->attachServer($server, $serverName);
+    }
+
+    /**
+     * 设置进程名
+     * @param string $processName
+     */
+    protected function setProcessName(string $processName = ''): void
+    {
+        if (empty($processName) || in_array(PHP_OS, ['Darwin', 'CYGWIN', 'WINNT'])) {
+            return;
+        }
+        if (function_exists('cli_set_process_title')) {
+            cli_set_process_title($processName);
+        } else if (function_exists('swoole_set_process_name')) {
+            swoole_set_process_name($processName);
+        }
     }
 }

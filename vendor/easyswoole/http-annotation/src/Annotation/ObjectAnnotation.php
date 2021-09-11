@@ -5,6 +5,7 @@ namespace EasySwoole\HttpAnnotation\Annotation;
 
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiGroup;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiGroupDescription;
+use EasySwoole\HttpAnnotation\AnnotationTag\Controller;
 
 class ObjectAnnotation extends AnnotationBean
 {
@@ -12,8 +13,12 @@ class ObjectAnnotation extends AnnotationBean
     protected $apiGroup;
     /** @var ApiGroupDescription|null */
     protected $apiGroupDescription;
+    /** @var Controller|null */
+    protected $controller;
 
     protected $apiGroupAuth = [];
+
+    protected $param = [];
 
     protected $__methods = [];
 
@@ -32,7 +37,17 @@ class ObjectAnnotation extends AnnotationBean
         }
     }
 
-
+    public function getParamTag(?string $paramName = null)
+    {
+        if($paramName){
+            if(isset($this->param[$paramName])){
+                return $this->param[$paramName];
+            }
+            return null;
+        }else{
+            return $this->param;
+        }
+    }
 
     function addProperty(PropertyAnnotation $annotation)
     {
@@ -84,6 +99,14 @@ class ObjectAnnotation extends AnnotationBean
     public function getApiGroupDescriptionTag(): ?ApiGroupDescription
     {
         return $this->apiGroupDescription;
+    }
+
+    /**
+     * @return Controller|null
+     */
+    public function getController(): ?Controller
+    {
+        return $this->controller;
     }
 }
 

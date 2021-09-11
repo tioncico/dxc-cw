@@ -4,6 +4,7 @@
 namespace EasySwoole\HttpAnnotation\AnnotationTag;
 
 use EasySwoole\Annotation\AbstractAnnotationTag;
+
 /**
  * Class Param
  * @package EasySwoole\HttpAnnotation\AnnotationTag
@@ -32,10 +33,6 @@ class Param extends AbstractAnnotationTag
      */
     public $from = [];
 
-    /**
-     * @var array
-     */
-    public $ignoreAction = [];
 
     public $defaultValue = null;
 
@@ -45,20 +42,26 @@ class Param extends AbstractAnnotationTag
     public $alias = null;
 
     /**
+     * @var bool
+     */
+    public $deprecated;
+
+    /**
      * 以下为校验规则
      */
 
     public $validateRuleList = [];
 
     private $allowValidateRule = [
+        'required', 'notEmpty', 'optional',
         'activeUrl', 'alpha', 'alphaNum', 'alphaDash', 'between', 'bool',
         'decimal', 'dateBefore', 'dateAfter', 'equal', 'different',
         'equalWithColumn', 'differentWithColumn', 'lessThanWithColumn', 'greaterThanWithColumn',
-        'float', 'func', 'inArray', 'integer', 'isIp',
-        'notEmpty', 'numeric', 'notInArray', 'length', 'lengthMax', 'lengthMin',
-        'betweenLen', 'money', 'max', 'min', 'regex', 'allDigital',
-        'required', 'timestamp', 'timestampBeforeDate', 'timestampAfterDate',
-        'timestampBefore', 'timestampAfter', 'url','optional','allowFile','allowFileType'
+        'func', 'inArray', 'notInArray', 'isIp',
+        'integer', 'numeric', 'float', 'length', 'lengthMax', 'lengthMin', 'mbLength', 'mbLengthMax', 'mbLengthMin',
+        'betweenLen', 'betweenMbLen', 'money', 'max', 'min', 'regex', 'allDigital',
+        'timestamp', 'timestampBeforeDate', 'timestampAfterDate',
+        'timestampBefore', 'timestampAfter', 'url', 'allowFile', 'allowFileType'
     ];
 
     /**
@@ -160,15 +163,31 @@ class Param extends AbstractAnnotationTag
     /**
      * @var string
      */
+    public $mbLength;
+    /**
+     * @var string
+     */
     public $lengthMax;
+    /**
+     * @var string
+     */
+    public $mbLengthMax;
     /**
      * @var string
      */
     public $lengthMin;
     /**
+     * @var string
+     */
+    public $mbLengthMin;
+    /**
      * @var array
      */
     public $betweenLen;
+    /**
+     * @var array
+     */
+    public $betweenMbLen;
     /**
      * @var string
      */
@@ -240,12 +259,12 @@ class Param extends AbstractAnnotationTag
 
     function __onParser()
     {
-        foreach ($this->allowValidateRule as $ruleName){
-            if($this->$ruleName !== null){
+        foreach ($this->allowValidateRule as $ruleName) {
+            if ($this->$ruleName !== null) {
                 $this->validateRuleList[$ruleName] = $this->$ruleName;
                 //对inArray 做特殊处理
-                if(in_array($ruleName,['inArray','notInArray','allowFile','allowFileType'])){
-                    if(!is_array($this->$ruleName[0])){
+                if (in_array($ruleName, ['inArray', 'notInArray', 'allowFile', 'allowFileType'])) {
+                    if (!is_array($this->$ruleName[0])) {
                         $this->$ruleName = [$this->$ruleName];
                     }
                 }
@@ -255,29 +274,35 @@ class Param extends AbstractAnnotationTag
 
     public function typeCast($val)
     {
-        switch ($this->type)
-        {
-            case 'string':{
+        switch ($this->type) {
+            case 'string':
+            {
                 return (string)$val;
             }
-            case 'int':{
+            case 'int':
+            {
                 return (int)$val;
             }
             case 'double':
             case 'real':
-            case 'float':{
+            case 'float':
+            {
                 return (float)$val;
             }
-            case 'bool':{
+            case 'bool':
+            {
                 return (bool)$val;
             }
-            case 'object':{
+            case 'json':
+            {
                 return json_decode($val);
             }
-            case 'array':{
-                return json_encode($val);
+            case 'array':
+            {
+                return (array)$val;
             }
-            default:{
+            default:
+            {
                 return $val;
             }
         }

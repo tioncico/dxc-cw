@@ -22,8 +22,9 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-    $mapInfo = MapModel::create()->get();
-
+    $mapInfo = MapModel::create()->get(3);
+    $monsterInfo = MonsterModel::create()->get(5);
+    \App\Model\Game\MapMonsterModel::create()->addData($mapInfo,$monsterInfo,10,10);
 
 
     \Swoole\Timer::clearAll();

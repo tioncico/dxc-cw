@@ -33,6 +33,7 @@ Installation
 composer require nette/php-generator
 ```
 
+- PhpGenerator 3.6 is compatible with PHP 7.2 to 8.1
 - PhpGenerator 3.2 – 3.5 is compatible with PHP 7.1 to 8.0
 - PhpGenerator 3.1 is compatible with PHP 7.1 to 7.3
 - PhpGenerator 3.0 is compatible with PHP 7.0 to 7.3
@@ -86,7 +87,8 @@ We can add constants ([Constant](https://api.nette.org/3.0/Nette/PhpGenerator/Co
 
 ```php
 $class->addConstant('ID', 123)
-	->setPrivate(); // constant visiblity
+	->setProtected() // constant visiblity
+	->setFinal();
 
 $class->addProperty('items', [1, 2, 3])
 	->setPrivate() // or setVisibility('private')
@@ -102,7 +104,7 @@ $class->addProperty('list')
 It generates:
 
 ```php
-private const ID = 123;
+final protected const ID = 123;
 
 /** @var int[] */
 private static $items = [1, 2, 3];
@@ -159,7 +161,11 @@ public function __construct(
 }
 ```
 
-If the property, constant, method or parameter already exist, it will be overwritten.
+Readonly properties introduced by PHP 8.1 can be marked via `setReadOnly()`.
+
+------
+
+If the added property, constant, method or parameter already exist, it will be overwritten.
 
 Members can be removed using `removeProperty()`, `removeConstant()`, `removeMethod()` or `removeParameter()`.
 
@@ -187,14 +193,14 @@ $class->addMember($methodRecount);
 Types
 -----
 
-Each type or union type can be passed as a string, you can also use predefined constants for native types:
+Each type or union/intersection type can be passed as a string, you can also use predefined constants for native types:
 
 ```php
 use Nette\PhpGenerator\Type;
 
-$member->setType('array');
-$member->setType(Type::ARRAY);
-$member->setType('array|string');
+$member->setType('array'); // or Type::ARRAY;
+$member->setType('array|string'); // or Type::union('array', 'string')
+$member->setType('Foo&Bar'); // or Type::intersection(Foo::class, Bar::class)
 $member->setType(null); // removes type
 ```
 
@@ -218,18 +224,55 @@ echo $printer->printClass($class); // 4 spaces indentation
 Interface or Trait
 ------------------
 
-You can create interfaces and traits in a similar way, just change the type:
+You can create interfaces and traits:
 
 ```php
-$class = new Nette\PhpGenerator\ClassType('DemoInterface');
-$class->setInterface();
-// or $class->setTrait();
+$interface = Nette\PhpGenerator\ClassType::interface('MyInterface');
+$trait = Nette\PhpGenerator\ClassType::trait('MyTrait');
+// in a similar way $class = Nette\PhpGenerator\ClassType::class('MyClass');
 ```
+
+Enums
+-----
+
+You can easily create the enums that PHP 8.1 brings:
+
+```php
+$enum = Nette\PhpGenerator\ClassType::enum('Suit');
+$enum->addCase('Clubs');
+$enum->addCase('Diamonds');
+$enum->addCase('Hearts');
+$enum->addCase('Spades');
+
+echo $enum;
+```
+
+Result:
+
+```php
+enum Suit
+{
+        case Clubs;
+        case Diamonds;
+        case Hearts;
+        case Spades;
+}
+```
+
+You can also define scalar equivalents for cases to create a backed enum:
+
+```php
+$enum->addCase('Clubs', '♣');
+$enum->addCase('Diamonds', '♦');
+```
+
+It is possible to add a comment or [attributes](#attributes) to each case using `addComment()` or `addAttribute()`.
+
 
 Literals
 --------
 
-You can pass any PHP code to property or parameter default values via `Literal`:
+With `Literal` you can pass arbitrary PHP code to, for example, default property or parameter values etc:
 
 ```php
 use Nette\PhpGenerator\Literal;
@@ -256,6 +299,15 @@ class Demo
 	}
 }
 ```
+
+You can also pass parameters to `Literal` and have it formatted into valid PHP code using [special placeholders](#method-and-function-body-generator):
+
+```php
+new Literal('substr(?, ?)', [$a, $b]);
+// generates, for example: substr('hello', 5);
+```
+
+
 
 Using Traits
 ------------

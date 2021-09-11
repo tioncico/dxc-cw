@@ -81,15 +81,15 @@ class Index extends BaseController
         $userAttribute = UserAttributeModel::create()->get($userId);
         $decPhysicalStrengthNum = 10;
         //每次进入地下城扣除10体力
-        Assert::assert($userAttribute->physicalStrength>=$decPhysicalStrengthNum,'体力不足10点,无法进入地下城');
+//        Assert::assert($userAttribute->physicalStrength>=$decPhysicalStrengthNum,'体力不足10点,无法进入地下城');
         //扣除10点体力
-        $userAttribute->update(['physicalStrength'=>QueryBuilder::dec($decPhysicalStrengthNum)]);
+//        $userAttribute->update(['physicalStrength'=>QueryBuilder::dec($decPhysicalStrengthNum)]);
 
         //获取地图actorId
         $actorId = UserRelationMap::getInstance()->getUserMap($userId);
         Assert::assert(!$actorId, '你已进入地图');
         //创建地图actor
-        $actorId = MapActor::client()->create(['userId' => $userId, 'mapId' => $mapId,'skillIds'=>$param['skillIds']]);   // 00101000000000000000001
+        $actorId = MapActor::client()->create(['userId' => $userId, 'mapId' => $mapId]);   // 00101000000000000000001
         //创建关联关系
         UserRelationMap::getInstance()->addUserMap($userId, $actorId);
         MapActor::client()->send($actorId, new Command(['action' => 'mapInfo']));

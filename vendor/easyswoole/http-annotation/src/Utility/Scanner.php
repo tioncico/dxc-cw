@@ -4,73 +4,94 @@
 namespace EasySwoole\HttpAnnotation\Utility;
 
 
+use EasySwoole\Http\Message\Status;
+use EasySwoole\Http\Request;
+use EasySwoole\Http\Response;
 use EasySwoole\Http\UrlParser;
 use EasySwoole\HttpAnnotation\Annotation\MethodAnnotation;
 use EasySwoole\HttpAnnotation\Annotation\ObjectAnnotation;
 use EasySwoole\HttpAnnotation\Annotation\Parser;
 use EasySwoole\HttpAnnotation\Annotation\ParserInterface;
+use EasySwoole\HttpAnnotation\AnnotationTag\Api;
+use EasySwoole\HttpAnnotation\AnnotationTag\Controller;
 use EasySwoole\Utility\File;
 use FastRoute\RouteCollector;
 
 class Scanner
 {
+    /** @var Parser|ParserInterface|null */
     protected $parser;
 
     function __construct(?ParserInterface $parser = null)
     {
-        if(!$parser){
+        if (!$parser) {
             $parser = new Parser();
         }
         $this->parser = $parser;
     }
 
-    function getObjectAnnotation(string $class):ObjectAnnotation
+    /**
+     * @return Parser|ParserInterface|null
+     */
+    public function getParser()
+    {
+        return $this->parser;
+    }
+
+    function getObjectAnnotation(string $class): ObjectAnnotation
     {
         $ref = new \ReflectionClass($class);
         return $this->parser->parseObject($ref);
     }
 
-    function mappingRouter(RouteCollector $routeCollector,string $controllerPath,string $controllerNameSpace = 'App\\HttpController\\')
+    function mappingRouter(RouteCollector $routeCollector, string $controllerPath, string $controllerNameSpace = 'App\\HttpController\\')
     {
         //用于psr规范去除命名空间
-        $prefixLen = strlen(trim($controllerNameSpace,'\\'));
+        $prefixLen = strlen(trim($controllerNameSpace, '\\'));
         $annotations = $this->scanAnnotations($controllerPath);
         /**
          * @var string $class
          * @var ObjectAnnotation $classAnnotation
          */
-        foreach ($annotations as $class => $classAnnotation){
+        foreach ($annotations as $class => $classAnnotation) {
+            $controllerAnnotation = $classAnnotation->getController();
             /**
              * @var  $methodName
              * @var MethodAnnotation $method
              */
-            foreach ($classAnnotation->getMethod() as $methodName => $method){
+            foreach ($classAnnotation->getMethod() as $methodName => $method) {
                 $apiTag = $method->getApiTag();
-                if($apiTag && !empty($apiTag->path)){
+                if ($apiTag && !empty($apiTag->path)) {
                     $allow = $method->getMethodTag();
-                    if(!empty($allow->allow)){
+                    if (!empty($allow->allow)) {
                         $allow = $allow->allow;
-                    }else{
-                        $allow = ['POST','GET','PUT','PATCH','DELETE','HEAD','OPTIONS'];
+                    } else {
+                        $allow = ['POST', 'GET', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
                     }
-                    $realPath = '/'.substr($class,$prefixLen + 1).'/'.$methodName;
-                    $routeCollector->addRoute($allow,UrlParser::pathInfo($apiTag->path),$realPath);
+                    if ($apiTag->deprecated !== true) {
+                        $handler = '/' . substr($class, $prefixLen + 1) . '/' . $methodName;
+                    } else {
+                        $handler = function (Request $request, Response $response) {
+                            $response->withStatus(Status::CODE_LOCKED);
+                            return false;
+                        };
+                    }
+                    $routeCollector->addRoute($allow, UrlParser::pathInfo(self::getRoutePath($controllerAnnotation, $apiTag)), $handler);
                 }
             }
         }
     }
 
-    function scanAnnotations(string $dirOrFile):array
+    function scanAnnotations(string $dirOrFile): array
     {
         $ret = [];
         $files = [];
-        if(!is_dir($dirOrFile)){
+        if (!is_dir($dirOrFile)) {
             $files[] = $dirOrFile;
-        }else{
+        } else {
             $files = File::scanDirectory($dirOrFile)['files'];
         }
-        foreach ($files as $file)
-        {
+        foreach ($files as $file) {
             $fileExtension = pathinfo($file)['extension'] ?? '';
 
             if (!$fileExtension || $fileExtension !== 'php') {
@@ -87,7 +108,30 @@ class Scanner
         return $ret;
     }
 
-    public static function getFileDeclaredClass(string $file):?string
+    public static function getRoutePath(?Controller $controller = null, ?Api $api = null): ?string
+    {
+        $prefix = $controller ? $controller->prefix : null;
+        $path = $api ? $api->path : null;
+        if (!$prefix && !$path) {
+            return '';
+        }
+
+        if ($prefix && !$path) {
+            return $prefix;
+        }
+
+        if (!$prefix && $path) {
+            return $path;
+        }
+
+        if ($api->ignorePrefix === true) {
+            return $path;
+        }
+
+        return $prefix . $path;
+    }
+
+    public static function getFileDeclaredClass(string $file): ?string
     {
         $namespace = '';
         $class = NULL;
@@ -110,7 +154,7 @@ class Scanner
                         break;
                     }
                 }
-            }elseif ($class){
+            } elseif ($class) {
                 break;
             }
         }

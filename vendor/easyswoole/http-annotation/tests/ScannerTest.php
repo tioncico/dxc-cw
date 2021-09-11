@@ -23,7 +23,7 @@ class ScannerTest extends TestCase
     {
         $scan = new Scanner();
         $array = $scan->scanAnnotations(__DIR__ . '/TestController');
-        $this->assertEquals(5, count($array));
+        $this->assertEquals(7, count($array));
     }
 
     function testRouter()
@@ -32,5 +32,13 @@ class ScannerTest extends TestCase
         $col = new RouteCollector(new Std(), new GroupCountBased());
         $scan->mappingRouter($col, __DIR__ . '/TestController', 'EasySwoole\HttpAnnotation\Tests\TestController');
         $this->assertEquals('/NoneAnnotation/exception', $col->getData()[0]['GET']['/testR']);
+    }
+
+    function testDeprecated()
+    {
+        $scan = new Scanner();
+        $col = new RouteCollector(new Std(), new GroupCountBased());
+        $scan->mappingRouter($col, __DIR__ . '/TestController', 'EasySwoole\HttpAnnotation\Tests\TestController');
+        $this->assertArrayNotHasKey('/deprecated', $col->getData()[0]['GET']);
     }
 }

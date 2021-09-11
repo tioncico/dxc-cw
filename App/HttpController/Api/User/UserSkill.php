@@ -30,60 +30,6 @@ use EasySwoole\Validate\Validate;
 class UserSkill extends UserBase
 {
 	/**
-	 * @Api(name="add",path="/Api/User/UserSkill/add")
-	 * @ApiDescription("新增数据")
-	 * @Method(allow={GET,POST})
-	 * @InjectParamsContext(key="param")
-	 * @ApiSuccessParam(name="code",description="状态码")
-	 * @ApiSuccessParam(name="result",description="api请求结果")
-	 * @ApiSuccessParam(name="msg",description="api提示信息")
-	 * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
-	 * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
-	 * @Param(name="userSkillId",alias="玩家技能id",description="玩家技能id",lengthMax="11",required="")
-	 * @Param(name="userId",alias="玩家id",description="玩家id",lengthMax="11",optional="")
-	 * @Param(name="skillId",alias="技能id",description="技能id",lengthMax="11",optional="")
-	 * @Param(name="skillName",alias="技能名",description="技能名",lengthMax="255",optional="")
-	 * @Param(name="isUse",alias="是否穿戴",description="是否穿戴",lengthMax="1",optional="")
-	 * @Param(name="level",alias="技能等级",description="技能等级",lengthMax="255",optional="")
-	 * @Param(name="type",alias=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",lengthMax="1",optional="")
-	 * @Param(name="rarityLevel",alias="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话",lengthMax="255",optional="")
-	 * @Param(name="maxLevel",alias="最大等级",description="最大等级",lengthMax="255",optional="")
-	 * @Param(name="coolingTime",alias="冷却时间",description="冷却时间",lengthMax="11",optional="")
-	 * @Param(name="manaCostQualification",alias="耗蓝资质",description="耗蓝资质",lengthMax="11",optional="")
-	 * @Param(name="entryCode",alias="词条code",description="词条code",lengthMax="255",optional="")
-	 * @Param(name="description",alias="介绍",description="介绍",lengthMax="255",optional="")
-	 * @Param(name="param",alias="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字",description="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字",lengthMax="255",optional="")
-	 * @Param(name="qualification",alias="技能资质,json数组,例如词条为:攻击力增加1,那每升一级攻击力+参数",description="技能资质,json数组,例如词条为:攻击力增加1,那每升一级攻击力+参数",lengthMax="255",optional="")
-	 * @Param(name="manaCost",alias="耗蓝",description="耗蓝",lengthMax="255",optional="")
-	 */
-	public function add()
-	{
-		$param = ContextManager::getInstance()->get('param');
-		$data = [
-		    'userSkillId'=>$param['userSkillId'],
-		    'userId'=>$param['userId'] ?? '',
-		    'skillId'=>$param['skillId'] ?? '',
-		    'skillName'=>$param['skillName'] ?? '',
-		    'isUse'=>$param['isUse'] ?? '',
-		    'level'=>$param['level'] ?? '',
-		    'type'=>$param['type'] ?? '',
-		    'rarityLevel'=>$param['rarityLevel'] ?? '',
-		    'maxLevel'=>$param['maxLevel'] ?? '',
-		    'coolingTime'=>$param['coolingTime'] ?? '',
-		    'manaCostQualification'=>$param['manaCostQualification'] ?? '',
-		    'entryCode'=>$param['entryCode'] ?? '',
-		    'description'=>$param['description'] ?? '',
-		    'param'=>$param['param'] ?? '',
-		    'qualification'=>$param['qualification'] ?? '',
-		    'manaCost'=>$param['manaCost'] ?? '',
-		];
-		$model = new UserSkillModel($data);
-		$model->save();
-		$this->writeJson(Status::CODE_OK, $model->toArray(), "新增成功");
-	}
-
-
-	/**
 	 * @Api(name="update",path="/Api/User/UserSkill/update")
 	 * @ApiDescription("更新数据")
 	 * @Method(allow={GET,POST})
@@ -106,9 +52,6 @@ class UserSkill extends UserBase
 	 * @Param(name="manaCostQualification",alias="耗蓝资质",description="耗蓝资质",lengthMax="11",optional="")
 	 * @Param(name="entryCode",alias="词条code",description="词条code",lengthMax="255",optional="")
 	 * @Param(name="description",alias="介绍",description="介绍",lengthMax="255",optional="")
-	 * @Param(name="param",alias="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字",description="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字",lengthMax="255",optional="")
-	 * @Param(name="qualification",alias="技能资质,json数组,例如词条为:攻击力增加1,那每升一级攻击力+参数",description="技能资质,json数组,例如词条为:攻击力增加1,那每升一级攻击力+参数",lengthMax="255",optional="")
-	 * @Param(name="manaCost",alias="耗蓝",description="耗蓝",lengthMax="255",optional="")
 	 */
 	public function update()
 	{
@@ -165,7 +108,7 @@ class UserSkill extends UserBase
 	 * @ApiSuccessParam(name="result.manaCostQualification",description="耗蓝资质")
 	 * @ApiSuccessParam(name="result.entryCode",description="词条code")
 	 * @ApiSuccessParam(name="result.description",description="介绍")
-	 * @ApiSuccessParam(name="result.param",description="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字")
+	 * @ApiSuccessParam(name="result.param",description="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字")
 	 * @ApiSuccessParam(name="result.qualification",description="技能资质,json数组,例如词条为:攻击力增加1,那每升一级攻击力+参数")
 	 * @ApiSuccessParam(name="result.manaCost",description="耗蓝")
 	 */
@@ -207,7 +150,7 @@ class UserSkill extends UserBase
 	 * @ApiSuccessParam(name="result[].manaCostQualification",description="耗蓝资质")
 	 * @ApiSuccessParam(name="result[].entryCode",description="词条code")
 	 * @ApiSuccessParam(name="result[].description",description="介绍")
-	 * @ApiSuccessParam(name="result[].param",description="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字")
+	 * @ApiSuccessParam(name="result[].param",description="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字")
 	 * @ApiSuccessParam(name="result[].qualification",description="技能资质,json数组,例如词条为:攻击力增加1,那每升一级攻击力+参数")
 	 * @ApiSuccessParam(name="result[].manaCost",description="耗蓝")
 	 */

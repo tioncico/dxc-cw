@@ -17,7 +17,10 @@ Co::set(['hook_flags'=> SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 go(function () {
     $ws = new \UnitTest\WebSocket();
     $ws->intoMap();
-//    $ws->fight();
+    co::sleep(1);
+    $ws->fight();
+    co::sleep(1);
+    $ws->useSkill();
     $ws->console();
 
 

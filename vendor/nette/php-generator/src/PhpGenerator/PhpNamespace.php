@@ -29,7 +29,7 @@ final class PhpNamespace
 	private const KEYWORDS = [
 		'string' => 1, 'int' => 1, 'float' => 1, 'bool' => 1, 'array' => 1, 'object' => 1,
 		'callable' => 1, 'iterable' => 1, 'void' => 1, 'self' => 1, 'parent' => 1, 'static' => 1,
-		'mixed' => 1, 'null' => 1, 'false' => 1,
+		'mixed' => 1, 'null' => 1, 'false' => 1, 'never' => 1,
 	];
 
 	/** @var string */
@@ -126,9 +126,9 @@ final class PhpNamespace
 	}
 
 
-	public function unresolveUnionType(string $type): string
+	public function unresolveType(string $type): string
 	{
-		return implode('|', array_map([$this, 'unresolveName'], explode('|', $type)));
+		return preg_replace_callback('~[^|&?]+~', function ($m) { return $this->unresolveName($m[0]); }, $type);
 	}
 
 
@@ -179,13 +179,19 @@ final class PhpNamespace
 
 	public function addInterface(string $name): ClassType
 	{
-		return $this->addClass($name)->setInterface();
+		return $this->addClass($name)->setType(ClassType::TYPE_INTERFACE);
 	}
 
 
 	public function addTrait(string $name): ClassType
 	{
-		return $this->addClass($name)->setTrait();
+		return $this->addClass($name)->setType(ClassType::TYPE_TRAIT);
+	}
+
+
+	public function addEnum(string $name): ClassType
+	{
+		return $this->addClass($name)->setType(ClassType::TYPE_ENUM);
 	}
 
 

@@ -1,4 +1,7 @@
 <?php
+
+use EasySwoole\Log\LoggerInterface;
+
 return [
     'SERVER_NAME' => "EasySwoole",
     'MAIN_SERVER' => [
@@ -10,14 +13,21 @@ return [
         'SETTING' => [
             'worker_num' => 8,
             'reload_async' => true,
-            'max_wait_time'=>3
+            'max_wait_time' => 3
         ],
-        'TASK'=>[
-            'workerNum'=>4,
-            'maxRunningNum'=>128,
-            'timeout'=>15
+        'TASK' => [
+            'workerNum' => 4,
+            'maxRunningNum' => 128,
+            'timeout' => 15
         ]
     ],
-    'TEMP_DIR' => null,
-    'LOG_DIR' => null
+    "LOG" => [
+        'dir' => null,
+        'level' => LoggerInterface::LOG_LEVEL_DEBUG,
+        'handler' => null,
+        'logConsole' => true,
+        'displayConsole' => true,
+        'ignoreCategory' => []
+    ],
+    'TEMP_DIR' => null
 ];

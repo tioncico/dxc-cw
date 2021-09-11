@@ -20,11 +20,17 @@
         "php": ">=7.1.0",
         "easyswoole/spl": "^1.0",
         "psr/http-message": "^1.0",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-mbstring": "*"
     },
     "autoload": {
         "psr-4": {
             "EasySwoole\\Validate\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "EasySwoole\\Validate\\tests\\": "tests/"
         }
     },
     "require-dev": {

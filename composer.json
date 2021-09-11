@@ -3,7 +3,6 @@
     "easyswoole/easyswoole": "3.4.x",
     "easyswoole/orm": "^1.4",
     "easyswoole/swoole-ide-helper": "^1.3",
-    "easyswoole/http-annotation": "^1.4",
     "easyswoole/phpunit": "^1.0",
     "easyswoole/verifycode": "3.x",
     "easyswoole/ddl": "^1.0",

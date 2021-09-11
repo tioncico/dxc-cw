@@ -119,7 +119,7 @@ class Printer
 	{
 		$class->validate();
 		$resolver = $this->resolveTypes && $namespace
-			? [$namespace, 'unresolveUnionType']
+			? [$namespace, 'unresolveType']
 			: function ($s) { return $s; };
 
 		$traits = [];
@@ -128,9 +128,24 @@ class Printer
 				. ($resolutions ? " {\n" . $this->indentation . implode(";\n" . $this->indentation, $resolutions) . ";\n}\n" : ";\n");
 		}
 
+		$cases = [];
+		foreach ($class->getCases() as $case) {
+			$cases[] = Helpers::formatDocComment((string) $case->getComment())
+				. self::printAttributes($case->getAttributes(), $namespace)
+				. 'case ' . $case->getName()
+				. ($case->getValue() === null ? '' : ' = ' . $this->dump($case->getValue()))
+				. ";\n";
+		}
+		$enumType = isset($case) && $case->getValue() !== null
+			? $this->returnTypeColon . Type::getType($case->getValue())
+			: '';
+
 		$consts = [];
 		foreach ($class->getConstants() as $const) {
-			$def = ($const->getVisibility() ? $const->getVisibility() . ' ' : '') . 'const ' . $const->getName() . ' = ';
+			$def = ($const->isFinal() ? 'final ' : '')
+				. ($const->getVisibility() ? $const->getVisibility() . ' ' : '')
+				. 'const ' . $const->getName() . ' = ';
+
 			$consts[] = Helpers::formatDocComment((string) $const->getComment())
 				. self::printAttributes($const->getAttributes(), $namespace)
 				. $def
@@ -140,7 +155,10 @@ class Printer
 		$properties = [];
 		foreach ($class->getProperties() as $property) {
 			$type = $property->getType();
-			$def = (($property->getVisibility() ?: 'public') . ($property->isStatic() ? ' static' : '') . ' '
+			$def = (($property->getVisibility() ?: 'public')
+				. ($property->isStatic() ? ' static' : '')
+				. ($property->isReadOnly() && $type ? ' readonly' : '')
+				. ' '
 				. ltrim($this->printType($type, $property->isNullable(), $namespace) . ' ')
 				. '$' . $property->getName());
 
@@ -158,6 +176,7 @@ class Printer
 
 		$members = array_filter([
 			implode('', $traits),
+			$this->joinProperties($cases),
 			$this->joinProperties($consts),
 			$this->joinProperties($properties),
 			($methods && $properties ? str_repeat("\n", $this->linesBetweenMethods - 1) : '')
@@ -169,7 +188,7 @@ class Printer
 			. self::printAttributes($class->getAttributes(), $namespace)
 			. ($class->isAbstract() ? 'abstract ' : '')
 			. ($class->isFinal() ? 'final ' : '')
-			. ($class->getName() ? $class->getType() . ' ' . $class->getName() . ' ' : '')
+			. ($class->getName() ? $class->getType() . ' ' . $class->getName() . $enumType . ' ' : '')
 			. ($class->getExtends() ? 'extends ' . implode(', ', array_map($resolver, (array) $class->getExtends())) . ' ' : '')
 			. ($class->getImplements() ? 'implements ' . implode(', ', array_map($resolver, $class->getImplements())) . ' ' : '')
 			. ($class->getName() ? "\n" : '') . "{\n"
@@ -273,7 +292,10 @@ class Printer
 			$params[] =
 				($promoted ? Helpers::formatDocComment((string) $promoted->getComment()) : '')
 				. ($attrs = self::printAttributes($param->getAttributes(), $namespace, true))
-				. ($promoted ? ($promoted->getVisibility() ?: 'public') . ' ' : '')
+				. ($promoted ?
+					($promoted->getVisibility() ?: 'public')
+					. ($promoted->isReadOnly() && $type ? ' readonly' : '')
+					. ' ' : '')
 				. ltrim($this->printType($type, $param->isNullable(), $namespace) . ' ')
 				. ($param->isReference() ? '&' : '')
 				. ($variadic ? '...' : '')
@@ -297,7 +319,7 @@ class Printer
 			return '';
 		}
 		if ($this->resolveTypes && $namespace) {
-			$type = $namespace->unresolveUnionType($type);
+			$type = $namespace->unresolveType($type);
 		}
 		if ($nullable && strcasecmp($type, 'mixed')) {
 			$type = strpos($type, '|') === false

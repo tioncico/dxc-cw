@@ -137,7 +137,6 @@ class UserEquipmentBackpack extends UserBase
      * @Param(name="userEquipmentBackpackId",alias="主键",description="主键",lengthMax="11",required="")
      * @Param(name="backpackId",alias="背包id",description="背包id",lengthMax="11",optional="")
      * @Param(name="userId",alias="用户id",description="用户id",lengthMax="11",optional="")
-     * @Param(name="userId",alias="用户id",description="用户id",lenisUse="11",optiona")
      * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="255",optional="")
      * @Param(name="equipmentType",alias="装备类型",description="装备类型",lengthMax="1",optional="")
      * @Param(name="suitCode",alias="套装code",description="套装code",lengthMax="255",optional="")
