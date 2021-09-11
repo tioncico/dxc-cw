@@ -75,11 +75,10 @@ class UserBackpackTest extends UserBaseTestCase
 
 	public function testGetList()
 	{
-		$model = new UserBackpackModel();
 		$data = [];
 		$response = $this->request('getList',$data);
 
-		//var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
+		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
 	}
 
 
