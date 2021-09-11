@@ -25,6 +25,14 @@ use EasySwoole\HttpAnnotation\AnnotationTag\InjectParamsContext;
 use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\Param;
 
+/**
+ * RealNameAuthentication
+ * Class RealNameAuthentication
+ * Create With ClassGeneration
+ * @ApiGroup(groupName="游戏")
+ * @ApiGroupAuth(name="")
+ * @ApiGroupDescription("")
+ */
 class Game extends UserBase
 {
     /**
