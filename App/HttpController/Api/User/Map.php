@@ -155,6 +155,22 @@ class Map extends UserBase
 		$param = ContextManager::getInstance()->get('param');
 		//获取地图环境信息
         $mapEnvironmentList = MapEnvironmentModel::create()->with(['mapList'=>$this->who->userId],false)->order('`order`','ASC')->where('isInstanceZone',$param['isInstanceZone'])->all();
+        $list = [];
+        /**
+         * @var $mapEnvironment MapEnvironmentModel
+         */
+        foreach ($mapEnvironmentList as $mapEnvironment){
+            $value = $mapEnvironment->toArray(null,false);
+            $value['isUserOpen'] = 0;
+            foreach ($value['mapList'] as $map){
+                if ($map['mapIsOpen']==1){
+                    $value['isUserOpen'] = 1;
+                }
+            }
+            if ($value['isUserOpen']==1){
+                $list[] = $value;
+            }
+        }
 
 		$this->writeJson(Status::CODE_OK, $mapEnvironmentList, '获取列表成功');
 	}

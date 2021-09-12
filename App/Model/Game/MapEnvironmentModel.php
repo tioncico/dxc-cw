@@ -15,6 +15,8 @@ use EasySwoole\Mysqli\QueryBuilder;
  * @property string $recommendedLevelValue // 建议等级
  * @property int    $isInstanceZone // 是否为副本
  * @property int    $order // 排序
+ *
+ * @property MapModel[] $mapList;
  */
 class MapEnvironmentModel extends BaseModel
 {
