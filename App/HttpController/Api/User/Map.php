@@ -125,7 +125,7 @@ class Map extends UserBase
 	 * @ApiSuccessParam(name="code",description="状态码")
 	 * @ApiSuccessParam(name="result",description="api请求结果")
 	 * @ApiSuccessParam(name="msg",description="api提示信息")
-	 * @ApiSuccess({"code":200,"result":[{"mapEnvironmentId":1,"name":"一号洞穴","description":"一号洞穴作为最外围的探险区域,相对比较安全....","recommendedLevelValue":"1-25","isInstanceZone":0,"order":null,"mapList":[{"mapId":1,"name":"试炼地图","mapEnvironmentId":1,"difficultyLevel":1,"description":"所有勇者都需要从这开始冒险之地~","recommendedLevel":1,"isInstanceZone":0,"maxLevel":10,"monsterNum":5,"exp":10,"gold":10,"material":5,"equipment":100,"pet":5,"prop":5,"order":1,"mapIsOpen":1},{"mapId":3,"name":"哥布林部落","mapEnvironmentId":1,"difficultyLevel":1,"description":"哥布林部落","recommendedLevel":1,"isInstanceZone":0,"maxLevel":10,"monsterNum":5,"exp":100,"gold":100,"material":10,"equipment":10,"pet":10,"prop":10,"order":1,"mapIsOpen":1},{"mapId":1,"name":"试炼地图","mapEnvironmentId":1,"difficultyLevel":1,"description":"所有勇者都需要从这开始冒险之地~","recommendedLevel":1,"isInstanceZone":0,"maxLevel":10,"monsterNum":5,"exp":10,"gold":10,"material":5,"equipment":100,"pet":5,"prop":5,"order":1,"mapIsOpen":1}]}],"msg":"获取列表成功","requestId":null})
+	 * @ApiSuccess({"code":200,"result":[{"mapEnvironmentId":1,"name":"一号洞穴","description":"一号洞穴作为最外围的探险区域,相对比较安全....","recommendedLevelValue":"1-25","isInstanceZone":0,"order":null,"mapList":[{"mapId":3,"name":"变异村庄","mapEnvironmentId":1,"difficultyLevel":1,"description":"变异村庄","recommendedLevel":10,"isInstanceZone":0,"maxLevel":10,"monsterNum":5,"exp":1000,"gold":1000,"material":10,"equipment":10,"pet":10,"prop":10,"order":1,"mapIsOpen":0},{"mapId":4,"name":"一号深处","mapEnvironmentId":1,"difficultyLevel":1,"description":"一号深处","recommendedLevel":15,"isInstanceZone":0,"maxLevel":10,"monsterNum":5,"exp":2000,"gold":2000,"material":10,"equipment":10,"pet":10,"prop":10,"order":1,"mapIsOpen":0},{"mapId":1,"name":"哥布林部落","mapEnvironmentId":1,"difficultyLevel":1,"description":"哥布林部落","recommendedLevel":1,"isInstanceZone":0,"maxLevel":10,"monsterNum":5,"exp":100,"gold":100,"material":10,"equipment":10,"pet":10,"prop":10,"order":1,"mapIsOpen":1},{"mapId":2,"name":"矮人洞穴","mapEnvironmentId":1,"difficultyLevel":1,"description":"矮人洞穴","recommendedLevel":5,"isInstanceZone":0,"maxLevel":10,"monsterNum":5,"exp":500,"gold":500,"material":10,"equipment":10,"pet":10,"prop":10,"order":1,"mapIsOpen":0}]}],"msg":"获取列表成功","requestId":null})
 	 * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
 	 * @Param(name="isInstanceZone", from={GET,POST}, alias="是否为副本",inArray={0,1}, required="")
 	 * @Param(name="page", from={GET,POST}, alias="页数", optional="")
@@ -148,7 +148,7 @@ class Map extends UserBase
 	 * @ApiSuccessParam(name="result[].mapList.[].pet",description="宠物基数")
 	 * @ApiSuccessParam(name="result[].mapList.[].prop",description="道具基数")
 	 * @ApiSuccessParam(name="result[].mapList.[].order",description="排序")
-	 * @ApiSuccessParam(name="result[].mapList.[].isUserOpen",description="是否对玩家开放")
+	 * @ApiSuccessParam(name="result[].mapList.[].mapIsOpen",description="是否对玩家开放")
 	 */
 	public function getList()
 	{

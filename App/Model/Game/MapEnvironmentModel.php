@@ -43,12 +43,11 @@ class MapEnvironmentModel extends BaseModel
     public function mapList($userId)
     {
         return $this->hasMany(MapModel::class, function (QueryBuilder $query)use($userId) {
-            $query->join('user_map_list', 'user_map_list.mapId =map_list.mapId');
-            $query->where('user_map_list.userId',$userId);
+            $query->join('user_map_list', 'user_map_list.mapId = map_list.mapId and user_map_list.userId = '.$userId,'left');
             $query->orderBy('`order`','ASC');
             $query->fields([
                 "map_list.*",
-                'if(user_map_list.userMapId=null,0,1) as mapIsOpen'
+                'if(user_map_list.userMapId is null,0,1) as mapIsOpen'
             ]);
             return $query;
         }, 'mapEnvironmentId', 'mapEnvironmentId');
