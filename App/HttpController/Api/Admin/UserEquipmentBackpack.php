@@ -2,7 +2,7 @@
 
 namespace App\HttpController\Api\Admin;
 
-use App\Model\Game\UserEquipmentBackpackModel;
+use App\Model\UserEquipmentBackpackModel;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiDescription;
@@ -42,6 +42,8 @@ class UserEquipmentBackpack extends AdminBase
 	 * @Param(name="userEquipmentBackpackId",alias="主键",description="主键",lengthMax="11",required="")
 	 * @Param(name="backpackId",alias="背包id",description="背包id",lengthMax="11",optional="")
 	 * @Param(name="userId",alias="用户id",description="用户id",lengthMax="11",optional="")
+	 * @Param(name="isUse",alias="是否使用",description="是否使用",lengthMax="1",optional="")
+	 * @Param(name="strengthenLevel",alias="强化等级",description="强化等级",lengthMax="11",optional="")
 	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="255",optional="")
 	 * @Param(name="equipmentType",alias="装备类型",description="装备类型",lengthMax="1",optional="")
 	 * @Param(name="suitCode",alias="套装code",description="套装code",lengthMax="255",optional="")
@@ -60,8 +62,8 @@ class UserEquipmentBackpack extends AdminBase
 	 * @Param(name="criticalRate",alias="暴击率",description="暴击率",lengthMax="11",optional="")
 	 * @Param(name="criticalStrikeDamage",alias="暴击伤害",description="暴击伤害",lengthMax="11",optional="")
 	 * @Param(name="hitRate",alias="命中率",description="命中率",lengthMax="11",optional="")
-     * @Param(name="dodgeRate",alias="闪避率",description="闪避率",lengthMax="11",optional="")
-     * @Param(name="penetrate",alias="穿透",description="穿透",lengthMax="11",optional="")
+	 * @Param(name="dodgeRate",alias="闪避率",description="闪避率",lengthMax="11",optional="")
+	 * @Param(name="penetrate",alias="穿透",description="穿透",lengthMax="11",optional="")
 	 * @Param(name="attackSpeed",alias="攻击速度",description="攻击速度",lengthMax="11",optional="")
 	 * @Param(name="userElement",alias="角色元素",description="角色元素",lengthMax="11",optional="")
 	 * @Param(name="attackElement",alias="攻击元素",description="攻击元素",lengthMax="11",optional="")
@@ -82,6 +84,8 @@ class UserEquipmentBackpack extends AdminBase
 		    'userEquipmentBackpackId'=>$param['userEquipmentBackpackId'],
 		    'backpackId'=>$param['backpackId'] ?? '',
 		    'userId'=>$param['userId'] ?? '',
+		    'isUse'=>$param['isUse'] ?? '',
+		    'strengthenLevel'=>$param['strengthenLevel'] ?? '',
 		    'goodsCode'=>$param['goodsCode'] ?? '',
 		    'equipmentType'=>$param['equipmentType'] ?? '',
 		    'suitCode'=>$param['suitCode'] ?? '',
@@ -100,8 +104,8 @@ class UserEquipmentBackpack extends AdminBase
 		    'criticalRate'=>$param['criticalRate'] ?? '',
 		    'criticalStrikeDamage'=>$param['criticalStrikeDamage'] ?? '',
 		    'hitRate'=>$param['hitRate'] ?? '',
-            'dodgeRate'=>$param['dodgeRate'],
-            'penetrate'=>$param['penetrate'] ?? '',
+		    'dodgeRate'=>$param['dodgeRate'] ?? '',
+		    'penetrate'=>$param['penetrate'] ?? '',
 		    'attackSpeed'=>$param['attackSpeed'] ?? '',
 		    'userElement'=>$param['userElement'] ?? '',
 		    'attackElement'=>$param['attackElement'] ?? '',
@@ -134,6 +138,8 @@ class UserEquipmentBackpack extends AdminBase
 	 * @Param(name="userEquipmentBackpackId",alias="主键",description="主键",lengthMax="11",required="")
 	 * @Param(name="backpackId",alias="背包id",description="背包id",lengthMax="11",optional="")
 	 * @Param(name="userId",alias="用户id",description="用户id",lengthMax="11",optional="")
+	 * @Param(name="isUse",alias="是否使用",description="是否使用",lengthMax="1",optional="")
+	 * @Param(name="strengthenLevel",alias="强化等级",description="强化等级",lengthMax="11",optional="")
 	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="255",optional="")
 	 * @Param(name="equipmentType",alias="装备类型",description="装备类型",lengthMax="1",optional="")
 	 * @Param(name="suitCode",alias="套装code",description="套装code",lengthMax="255",optional="")
@@ -152,8 +158,8 @@ class UserEquipmentBackpack extends AdminBase
 	 * @Param(name="criticalRate",alias="暴击率",description="暴击率",lengthMax="11",optional="")
 	 * @Param(name="criticalStrikeDamage",alias="暴击伤害",description="暴击伤害",lengthMax="11",optional="")
 	 * @Param(name="hitRate",alias="命中率",description="命中率",lengthMax="11",optional="")
-     * @Param(name="dodgeRate",alias="闪避率",description="闪避率",lengthMax="11",optional="")
-     * @Param(name="penetrate",alias="穿透",description="穿透",lengthMax="11",optional="")
+	 * @Param(name="dodgeRate",alias="闪避率",description="闪避率",lengthMax="11",optional="")
+	 * @Param(name="penetrate",alias="穿透",description="穿透",lengthMax="11",optional="")
 	 * @Param(name="attackSpeed",alias="攻击速度",description="攻击速度",lengthMax="11",optional="")
 	 * @Param(name="userElement",alias="角色元素",description="角色元素",lengthMax="11",optional="")
 	 * @Param(name="attackElement",alias="攻击元素",description="攻击元素",lengthMax="11",optional="")
@@ -180,6 +186,8 @@ class UserEquipmentBackpack extends AdminBase
 
 		$updateData['backpackId']=$param['backpackId'] ?? $info->backpackId;
 		$updateData['userId']=$param['userId'] ?? $info->userId;
+		$updateData['isUse']=$param['isUse'] ?? $info->isUse;
+		$updateData['strengthenLevel']=$param['strengthenLevel'] ?? $info->strengthenLevel;
 		$updateData['goodsCode']=$param['goodsCode'] ?? $info->goodsCode;
 		$updateData['equipmentType']=$param['equipmentType'] ?? $info->equipmentType;
 		$updateData['suitCode']=$param['suitCode'] ?? $info->suitCode;
@@ -198,8 +206,8 @@ class UserEquipmentBackpack extends AdminBase
 		$updateData['criticalRate']=$param['criticalRate'] ?? $info->criticalRate;
 		$updateData['criticalStrikeDamage']=$param['criticalStrikeDamage'] ?? $info->criticalStrikeDamage;
 		$updateData['hitRate']=$param['hitRate'] ?? $info->hitRate;
-        $updateData['dodgeRate']=$param['dodgeRate'] ?? $info->dodgeRate;
-        $updateData['penetrate']=$param['penetrate'] ?? $info->penetrate;
+		$updateData['dodgeRate']=$param['dodgeRate'] ?? $info->dodgeRate;
+		$updateData['penetrate']=$param['penetrate'] ?? $info->penetrate;
 		$updateData['attackSpeed']=$param['attackSpeed'] ?? $info->attackSpeed;
 		$updateData['userElement']=$param['userElement'] ?? $info->userElement;
 		$updateData['attackElement']=$param['attackElement'] ?? $info->attackElement;
@@ -231,6 +239,8 @@ class UserEquipmentBackpack extends AdminBase
 	 * @ApiSuccessParam(name="result.userEquipmentBackpackId",description="主键")
 	 * @ApiSuccessParam(name="result.backpackId",description="背包id")
 	 * @ApiSuccessParam(name="result.userId",description="用户id")
+	 * @ApiSuccessParam(name="result.isUse",description="是否使用")
+	 * @ApiSuccessParam(name="result.strengthenLevel",description="强化等级")
 	 * @ApiSuccessParam(name="result.goodsCode",description="物品code")
 	 * @ApiSuccessParam(name="result.equipmentType",description="装备类型")
 	 * @ApiSuccessParam(name="result.suitCode",description="套装code")
@@ -249,8 +259,8 @@ class UserEquipmentBackpack extends AdminBase
 	 * @ApiSuccessParam(name="result.criticalRate",description="暴击率")
 	 * @ApiSuccessParam(name="result.criticalStrikeDamage",description="暴击伤害")
 	 * @ApiSuccessParam(name="result.hitRate",description="命中率")
-     * @ApiSuccessParam(name="result.dodgeRate",description="闪避率")
-     * @ApiSuccessParam(name="result.penetrate",description="穿透")
+	 * @ApiSuccessParam(name="result.dodgeRate",description="闪避率")
+	 * @ApiSuccessParam(name="result.penetrate",description="穿透")
 	 * @ApiSuccessParam(name="result.attackSpeed",description="攻击速度")
 	 * @ApiSuccessParam(name="result.userElement",description="角色元素")
 	 * @ApiSuccessParam(name="result.attackElement",description="攻击元素")
@@ -292,6 +302,8 @@ class UserEquipmentBackpack extends AdminBase
 	 * @ApiSuccessParam(name="result[].userEquipmentBackpackId",description="主键")
 	 * @ApiSuccessParam(name="result[].backpackId",description="背包id")
 	 * @ApiSuccessParam(name="result[].userId",description="用户id")
+	 * @ApiSuccessParam(name="result[].isUse",description="是否使用")
+	 * @ApiSuccessParam(name="result[].strengthenLevel",description="强化等级")
 	 * @ApiSuccessParam(name="result[].goodsCode",description="物品code")
 	 * @ApiSuccessParam(name="result[].equipmentType",description="装备类型")
 	 * @ApiSuccessParam(name="result[].suitCode",description="套装code")
@@ -310,8 +322,8 @@ class UserEquipmentBackpack extends AdminBase
 	 * @ApiSuccessParam(name="result[].criticalRate",description="暴击率")
 	 * @ApiSuccessParam(name="result[].criticalStrikeDamage",description="暴击伤害")
 	 * @ApiSuccessParam(name="result[].hitRate",description="命中率")
-     * @ApiSuccessParam(name="result[].dodgeRate",description="闪避率")
-     * @ApiSuccessParam(name="result[].penetrate",description="穿透")
+	 * @ApiSuccessParam(name="result[].dodgeRate",description="闪避率")
+	 * @ApiSuccessParam(name="result[].penetrate",description="穿透")
 	 * @ApiSuccessParam(name="result[].attackSpeed",description="攻击速度")
 	 * @ApiSuccessParam(name="result[].userElement",description="角色元素")
 	 * @ApiSuccessParam(name="result[].attackElement",description="攻击元素")
