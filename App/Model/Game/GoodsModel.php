@@ -43,5 +43,9 @@ class GoodsModel extends BaseModel
 		];
 		return $data;
 	}
+
+	public function getInfoByCode($code){
+	    return $this->where('code',$code)->get();
+    }
 }
 

@@ -3,6 +3,7 @@
 namespace App\HttpController\Api\User;
 
 use App\Model\BaseModel;
+use App\Model\Game\GoodsModel;
 use App\Model\Game\SignRewardModel;
 use App\Model\Game\UserSignModel;
 use App\Service\Game\BackpackService;
@@ -41,11 +42,22 @@ class Sign extends UserBase
      * @ApiSuccessParam(name="code",description="状态码")
      * @ApiSuccessParam(name="result",description="api请求结果")
      * @ApiSuccessParam(name="msg",description="api提示信息")
-     * @ApiSuccess({"code":200,"result":{"signRewardList":[{"id":1,"signNum":1,"money":10},{"id":2,"signNum":2,"money":20},{"id":3,"signNum":3,"money":30},{"id":4,"signNum":4,"money":40},{"id":5,"signNum":5,"money":50},{"id":6,"signNum":6,"money":60},{"id":7,"signNum":7,"money":70}],"signNum":0},"msg":"查询成功","requestId":null})
+     * @ApiSuccess({"code":200,"result":{"signRewardList":[{"goodsInfo":{"goodsId":2,"name":"钻石","code":"money","baseCode":null,"type":2,"description":"钻石,高级游戏货币","gold":0,"isSale":0,"level":1,"rarityLevel":5,"extraData":null},"num":10},{"goodsInfo":{"goodsId":2,"name":"钻石","code":"money","baseCode":null,"type":2,"description":"钻石,高级游戏货币","gold":0,"isSale":0,"level":1,"rarityLevel":5,"extraData":null},"num":20},{"goodsInfo":{"goodsId":2,"name":"钻石","code":"money","baseCode":null,"type":2,"description":"钻石,高级游戏货币","gold":0,"isSale":0,"level":1,"rarityLevel":5,"extraData":null},"num":30},{"goodsInfo":{"goodsId":2,"name":"钻石","code":"money","baseCode":null,"type":2,"description":"钻石,高级游戏货币","gold":0,"isSale":0,"level":1,"rarityLevel":5,"extraData":null},"num":40},{"goodsInfo":{"goodsId":2,"name":"钻石","code":"money","baseCode":null,"type":2,"description":"钻石,高级游戏货币","gold":0,"isSale":0,"level":1,"rarityLevel":5,"extraData":null},"num":50},{"goodsInfo":{"goodsId":2,"name":"钻石","code":"money","baseCode":null,"type":2,"description":"钻石,高级游戏货币","gold":0,"isSale":0,"level":1,"rarityLevel":5,"extraData":null},"num":60},{"goodsInfo":{"goodsId":2,"name":"钻石","code":"money","baseCode":null,"type":2,"description":"钻石,高级游戏货币","gold":0,"isSale":0,"level":1,"rarityLevel":5,"extraData":null},"num":70}],"signNum":1},"msg":"查询成功","requestId":null})
      * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
      * @ApiSuccessParam(name="result.signNum",description="签到天数")
      * @ApiSuccessParam(name="result.signRewardList.[].signNum",description="签到奖励的天数")
-     * @ApiSuccessParam(name="result.signRewardList.[].money",description="签到奖励钻石")
+     * @ApiSuccessParam(name="result.signRewardList.[].num",description="奖励的物品数量")
+     * @ApiSuccessParam(name="result.signReward.[].goodsInfo.goodsId",description="物品id")
+     * @ApiSuccessParam(name="result.signReward.[].goodsInfo.name",description="物品名称")
+     * @ApiSuccessParam(name="result.signReward.[].goodsInfo.code",description="物品code值")
+     * @ApiSuccessParam(name="result.signReward.[].goodsInfo.baseCode",description="物品基础类型")
+     * @ApiSuccessParam(name="result.signReward.[].goodsInfo.type",description="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备")
+     * @ApiSuccessParam(name="result.signReward.[].goodsInfo.description",description="介绍")
+     * @ApiSuccessParam(name="result.signReward.[].goodsInfo.gold",description="售出金币")
+     * @ApiSuccessParam(name="result.signReward.[].goodsInfo.isSale",description="是否可售出")
+     * @ApiSuccessParam(name="result.signReward.[].goodsInfo.level",description="等级")
+     * @ApiSuccessParam(name="result.signReward.[].goodsInfo.rarityLevel",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
+     * @ApiSuccessParam(name="result.signReward.[].goodsInfo.extraData",description="额外数据")
      */
     public function getInfo()
     {
@@ -57,8 +69,16 @@ class Sign extends UserBase
         if ($signInfo->lastUpdateTime < strtotime(date('Y-m-d', time() - 86400))) {
             $signNum = 0;
         }
+        //获取money信息
+        $moneyInfo = GoodsModel::create()->getInfoByCode('money');
+        $list = [];
+        foreach ($signList as $key=>$sign){
+            $list[$key]['goodsInfo'] = $moneyInfo;
+            $list[$key]['num'] = $sign['money'];
+        }
+
         $data = [
-            'signRewardList' => $signList,
+            'signRewardList' => $list,
             'signNum'        => $signNum
         ];
 
