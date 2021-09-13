@@ -199,7 +199,7 @@ class Mail extends UserBase
 
 
     /**
-     * @Api(name="getList",path="/Api/User/Mail/getList")
+     * @Api(name="获取邮件列表",path="/Api/User/Mail/getList")
      * @ApiDescription("获取数据列表")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
