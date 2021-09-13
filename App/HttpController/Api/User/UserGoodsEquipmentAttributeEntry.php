@@ -46,7 +46,7 @@ class UserGoodsEquipmentAttributeEntry extends UserBase
 	 * @Param(name="name",alias="词条名",description="词条名",lengthMax="255",optional="")
 	 * @Param(name="level",alias="词条等级",description="词条等级",lengthMax="255",optional="")
 	 * @Param(name="description",alias="介绍",description="介绍",lengthMax="255",optional="")
-	 * @Param(name="param",alias="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字",description="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字",lengthMax="255",optional="")
+	 * @Param(name="param",alias="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字",description="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字",lengthMax="255",optional="")
 	 */
 	public function add()
 	{
@@ -84,7 +84,7 @@ class UserGoodsEquipmentAttributeEntry extends UserBase
 	 * @Param(name="name",alias="词条名",description="词条名",lengthMax="255",optional="")
 	 * @Param(name="level",alias="词条等级",description="词条等级",lengthMax="255",optional="")
 	 * @Param(name="description",alias="介绍",description="介绍",lengthMax="255",optional="")
-	 * @Param(name="param",alias="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字",description="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字",lengthMax="255",optional="")
+	 * @Param(name="param",alias="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字",description="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字",lengthMax="255",optional="")
 	 */
 	public function update()
 	{
@@ -127,7 +127,7 @@ class UserGoodsEquipmentAttributeEntry extends UserBase
 	 * @ApiSuccessParam(name="result.name",description="词条名")
 	 * @ApiSuccessParam(name="result.level",description="词条等级")
 	 * @ApiSuccessParam(name="result.description",description="介绍")
-	 * @ApiSuccessParam(name="result.param",description="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字")
+	 * @ApiSuccessParam(name="result.param",description="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字")
 	 */
 	public function getOne()
 	{
@@ -161,7 +161,7 @@ class UserGoodsEquipmentAttributeEntry extends UserBase
 	 * @ApiSuccessParam(name="result[].name",description="词条名")
 	 * @ApiSuccessParam(name="result[].level",description="词条等级")
 	 * @ApiSuccessParam(name="result[].description",description="介绍")
-	 * @ApiSuccessParam(name="result[].param",description="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字")
+	 * @ApiSuccessParam(name="result[].param",description="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字")
 	 */
 	public function getList()
 	{
