@@ -69,5 +69,6 @@ class UserEquipmentBackpackModel extends BaseModel
 		];
 		return $data;
 	}
+
 }
 
