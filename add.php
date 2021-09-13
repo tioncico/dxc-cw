@@ -23,32 +23,11 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-    $arr = [
-            1 => 1,
-            2 => 2,
-            3 => 3,
-            4 => 4,
-            5 => 5,
-    ];
-    $i=42;
-
-    foreach ($arr as $key=>$value) {
-        $data = [
-            'code'               => str_pad($i, 3, "0", STR_PAD_LEFT),
-            'name'               => "attack",
-            'equipmentEntryType' => 3,
-            'baseCode'           => '0002',
-            'level'              => $key,
-            'description'        => "+{$key}% 暴击率",
-            'odds'               => 0,
-            'param'              => json_encode([
-                'attribute' => 'criticalRate',
-                'num'       => $value
-            ]),
-        ];
-        $model = new GoodsEquipmentAttributeEntryModel($data);
-        $model->save();
-        $i++;
-    }
+    \App\Service\Game\MailService::getInstance()->sendMail(1,'测试','测试',[
+        [
+            'num'=>1,
+            'code'=>'pet00031'
+        ]
+    ]);
     \Swoole\Timer::clearAll();
 });

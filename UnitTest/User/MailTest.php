@@ -83,11 +83,20 @@ class MailTest extends UserBaseTestCase
 
 	public function testGetList()
 	{
-		$model = new MailModel();
 		$data = [];
 		$response = $this->request('getList',$data);
 
-		//var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
+		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
+	}
+
+	public function testReceive()
+	{
+		$data = [
+		    'id'=>2
+        ];
+		$response = $this->request('receive',$data);
+
+		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
 	}
 
 

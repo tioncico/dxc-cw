@@ -13,6 +13,8 @@ use EasySwoole\Mysqli\QueryBuilder;
  * @property int $mailId // 邮件id
  * @property string $goodsCode // 物品id
  * @property int $num // 数量
+ *
+ * @property GoodsModel $goodsInfo
  */
 class MailGoodsModel extends BaseModel
 {
@@ -37,6 +39,17 @@ class MailGoodsModel extends BaseModel
 		];
 		return $data;
 	}
+
+	public function addData($mailId,$goodsCode,$num){
+        $data = [
+            'mailId'=>$mailId,
+            'goodsCode'=>$goodsCode,
+            'num'=>$num,
+        ];
+        $model = new MailGoodsModel($data);
+        $model->save();
+        return $model;
+    }
 
 
     public function goodsInfo()

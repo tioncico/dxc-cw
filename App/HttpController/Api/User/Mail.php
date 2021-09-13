@@ -115,16 +115,30 @@ class Mail extends UserBase
     }
 
     /**
-     * @Api(name="receive",path="/Api/User/Mail/receive")
+     * @Api(name="领取邮件物品",path="/Api/User/Mail/receive")
      * @ApiDescription("领取")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
      * @ApiSuccessParam(name="code",description="状态码")
      * @ApiSuccessParam(name="result",description="api请求结果")
      * @ApiSuccessParam(name="msg",description="api提示信息")
-     * @ApiSuccess({"code":200,"result":[],"msg":"更新成功"})
+     * @ApiSuccess({"code":200,"result":[{"id":1,"mailId":2,"goodsCode":"pet00031","num":1,"goodsInfo":{"goodsId":158,"name":"宠物蛋·光之子","code":"pet00031","baseCode":null,"type":6,"description":"宠物蛋·光之子","gold":1,"isSale":1,"level":1,"rarityLevel":1,"extraData":"500"}}],"msg":"领取成功","requestId":null})
      * @ApiFail({"code":400,"result":[],"msg":"更新失败"})
      * @Param(name="id",lengthMax="11",required="")
+     * @ApiSuccessParam(name="result.[].id",description="")
+     * @ApiSuccessParam(name="result.[].mailId",description="邮件id")
+     * @ApiSuccessParam(name="result.[].goodsId",description="物品id")
+     * @ApiSuccessParam(name="result.[].num",description="数量")	 * @ApiSuccessParam(name="result.goodsId",description="物品id")
+     * @ApiSuccessParam(name="result.[].goodsInfo.name",description="物品名称")
+     * @ApiSuccessParam(name="result.[].goodsInfo.code",description="物品code值")
+     * @ApiSuccessParam(name="result.[].goodsInfo.baseCode",description="物品基础类型")
+     * @ApiSuccessParam(name="result.[].goodsInfo.type",description="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备")
+     * @ApiSuccessParam(name="result.[].goodsInfo.description",description="介绍")
+     * @ApiSuccessParam(name="result.[].goodsInfo.gold",description="售出金币")
+     * @ApiSuccessParam(name="result.[].goodsInfo.isSale",description="是否可售出")
+     * @ApiSuccessParam(name="result.[].goodsInfo.level",description="等级")
+     * @ApiSuccessParam(name="result.[].goodsInfo.rarityLevel",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
+     * @ApiSuccessParam(name="result.[].goodsInfo.extraData",description="额外数据")
      */
     public function receive()
     {
@@ -142,9 +156,6 @@ class Mail extends UserBase
              * @var $goods MailGoodsModel
              */
             foreach ($goodsList as $goods) {
-                /**
-                 * @var $goodsInfo GoodsModel
-                 */
                 $goodsInfo = $goods->goodsInfo;
                 BackpackService::getInstance()->addGoods($this->who->userId, $goodsInfo, $goods->num);
             }
@@ -195,7 +206,7 @@ class Mail extends UserBase
      * @ApiSuccessParam(name="code",description="状态码")
      * @ApiSuccessParam(name="result",description="api请求结果")
      * @ApiSuccessParam(name="msg",description="api提示信息")
-     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiSuccess({"code":200,"result":{"page":1,"pageSize":20,"list":[{"id":2,"userId":1,"name":"测试","msg":"测试","addTime":1631538619,"isRead":0,"isReceive":0,"isDelete":0,"goodsList":[{"goodsId":158,"name":"宠物蛋·光之子","code":"pet00031","baseCode":null,"type":6,"description":"宠物蛋·光之子","gold":1,"isSale":1,"level":1,"rarityLevel":1,"extraData":"500","id":1,"mailId":2,"goodsCode":"pet00031","num":1}]},{"id":1,"userId":1,"name":"测试","msg":"测试","addTime":1631538577,"isRead":0,"isReceive":1,"isDelete":0}],"total":2,"pageCount":1},"msg":"获取列表成功","requestId":null})
      * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
      * @Param(name="page", from={GET,POST}, alias="页数", optional="")
      * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
@@ -206,7 +217,17 @@ class Mail extends UserBase
      * @ApiSuccessParam(name="result[].addTime",description="发送时间")
      * @ApiSuccessParam(name="result[].isRead",description="是否已读")
      * @ApiSuccessParam(name="result[].isReceive",description="是否已接收")
-     * @ApiSuccessParam(name="result[].isDelete",description="是否删除")
+     * @ApiSuccessParam(name="result[].goodsList.goodsId",description="物品id")
+     * @ApiSuccessParam(name="result[].goodsList.name",description="物品名称")
+     * @ApiSuccessParam(name="result[].goodsList.code",description="物品code值")
+     * @ApiSuccessParam(name="result[].goodsList.baseCode",description="物品基础类型")
+     * @ApiSuccessParam(name="result[].goodsList.type",description="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备")
+     * @ApiSuccessParam(name="result[].goodsList.description",description="介绍")
+     * @ApiSuccessParam(name="result[].goodsList.gold",description="售出金币")
+     * @ApiSuccessParam(name="result[].goodsList.isSale",description="是否可售出")
+     * @ApiSuccessParam(name="result[].goodsList.level",description="等级")
+     * @ApiSuccessParam(name="result[].goodsList.rarityLevel",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
+     * @ApiSuccessParam(name="result[].goodsList.extraData",description="额外数据")
      */
     public function getList()
     {
@@ -214,13 +235,13 @@ class Mail extends UserBase
         $page = (int)($param['page'] ?? 1);
         $pageSize = (int)($param['pageSize'] ?? 20);
         $model = new MailModel();
-        $data = $model->getList($page, $pageSize);
+        $data = $model->with(['goodsList'],false)->where('userId',$this->who->userId)->where('isDelete',0)->getList($page, $pageSize);
         $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
     }
 
 
     /**
-     * @Api(name="delete",path="/Api/User/Mail/delete")
+     * @Api(name="删除邮件",path="/Api/User/Mail/delete")
      * @ApiDescription("删除数据")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -229,18 +250,13 @@ class Mail extends UserBase
      * @ApiSuccessParam(name="msg",description="api提示信息")
      * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
      * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
-     * @Param(name="id",lengthMax="11",required="")
+     * @Param(name="id",lengthMax="11",description="删除id,不传则删除所有已领取邮件",optional="")
      */
     public function delete()
     {
         $param = ContextManager::getInstance()->get('param');
         $model = new MailModel();
-        $info = $model->get(['id' => $param['id']]);
-        if (!$info) {
-            $this->writeJson(Status::CODE_OK, $info, "数据不存在.");
-        }
-
-        $info->destroy();
+        $model->where('userId',$this->who->userId)->where('isReceive',1)->where('id',$param['id'])->update(['isDelete'=>1]);
         $this->writeJson(Status::CODE_OK, [], "删除成功.");
     }
 }
