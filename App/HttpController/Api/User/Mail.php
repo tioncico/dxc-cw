@@ -29,7 +29,7 @@ use EasySwoole\Validate\Validate;
  * Mail
  * Class Mail
  * Create With ClassGeneration
- * @ApiGroup(groupName="/Api/User.Mail")
+ * @ApiGroup(groupName="邮件功能")
  * @ApiGroupAuth(name="")
  * @ApiGroupDescription("")
  */
