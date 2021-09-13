@@ -8,10 +8,11 @@ use App\Model\BaseModel;
  * GoodsEquipmentModel
  * Class GoodsEquipmentModel
  * Create With ClassGeneration
- * @property int $goodsEquipmentId //
  * @property string $goodsCode // 物品code
- * @property int $equipmentType // 装备类型
+ * @property int $equipmentType // 装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指
+ * @property string $goodsName // 装备名
  * @property string $suitCode // 套装code
+ * @property int $strengthenLevel // 强化等级
  * @property int $rarityLevel // 稀有度
  * @property int $level // 装备等级
  * @property int $hp // 血量
@@ -44,6 +45,16 @@ use App\Model\BaseModel;
 class GoodsEquipmentModel extends BaseModel
 {
 	protected $tableName = 'goods_equipment_list';
+
+    const TYPE_WEAPON = 1;//1武器
+    const TYPE_HAT = 2;//2帽子
+    const TYPE_CLOTHE = 3;//3衣服
+    const TYPE_PANT = 4;//4裤子
+    const TYPE_SHOE = 5;//5鞋子
+    const TYPE_CAPE = 6;//6披风
+    const TYPE_TITLE = 7;//7称号
+    const TYPE_NECKLACE = 8;//8项链
+    const TYPE_RING = 9;//9戒指
 
 
 	public function getList(int $page = 1, int $pageSize = 10, string $field = '*'): array

@@ -54,8 +54,7 @@ class BackpackService extends BaseService
         //装备无法叠加
         if ($goodsModel->type == 7) {
             $backpackInfo = UserBackpackModel::create()->addData($userId, $goodsModel, 1);
-            $equipmentModel = GoodsEquipmentModel::create()->get(['goodsCode' => $backpackInfo->goodsCode]);
-            $this->addUserEquipmentInfo($userId, $backpackInfo, $equipmentModel);
+//            $this->addUserEquipmentInfo($userId, $backpackInfo, $equipmentModel);
         } elseif ($goodsModel->type == 1) {
             $backpackInfo = $this->addGold($userId, $num);
         } elseif ($goodsModel->type == 2) {

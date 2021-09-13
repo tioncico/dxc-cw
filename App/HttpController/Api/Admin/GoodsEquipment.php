@@ -2,7 +2,7 @@
 
 namespace App\HttpController\Api\Admin;
 
-use App\Model\GoodsEquipmentModel;
+use App\Model\Game\GoodsEquipmentModel;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiDescription;
@@ -39,9 +39,9 @@ class GoodsEquipment extends AdminBase
 	 * @ApiSuccessParam(name="msg",description="api提示信息")
 	 * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
 	 * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
-	 * @Param(name="goodsEquipmentId",lengthMax="11",required="")
-	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="32",optional="")
-	 * @Param(name="equipmentType",alias="装备类型",description="装备类型",lengthMax="1",optional="")
+	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="32",required="")
+	 * @Param(name="equipmentType",alias="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指",description="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指",lengthMax="1",optional="")
+	 * @Param(name="goodsName",alias="装备名",description="装备名",lengthMax="32",optional="")
 	 * @Param(name="suitCode",alias="套装code",description="套装code",lengthMax="255",optional="")
 	 * @Param(name="strengthenLevel",alias="强化等级",description="强化等级",lengthMax="11",optional="")
 	 * @Param(name="rarityLevel",alias="稀有度",description="稀有度",lengthMax="11",optional="")
@@ -77,9 +77,9 @@ class GoodsEquipment extends AdminBase
 	{
 		$param = ContextManager::getInstance()->get('param');
 		$data = [
-		    'goodsEquipmentId'=>$param['goodsEquipmentId'],
-		    'goodsCode'=>$param['goodsCode'] ?? '',
+		    'goodsCode'=>$param['goodsCode'],
 		    'equipmentType'=>$param['equipmentType'] ?? '',
+		    'goodsName'=>$param['goodsName'] ?? '',
 		    'suitCode'=>$param['suitCode'] ?? '',
 		    'strengthenLevel'=>$param['strengthenLevel'] ?? '',
 		    'rarityLevel'=>$param['rarityLevel'] ?? '',
@@ -127,9 +127,9 @@ class GoodsEquipment extends AdminBase
 	 * @ApiSuccessParam(name="msg",description="api提示信息")
 	 * @ApiSuccess({"code":200,"result":[],"msg":"更新成功"})
 	 * @ApiFail({"code":400,"result":[],"msg":"更新失败"})
-	 * @Param(name="goodsEquipmentId",lengthMax="11",required="")
-	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="32",optional="")
-	 * @Param(name="equipmentType",alias="装备类型",description="装备类型",lengthMax="1",optional="")
+	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="32",required="")
+	 * @Param(name="equipmentType",alias="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指",description="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指",lengthMax="1",optional="")
+	 * @Param(name="goodsName",alias="装备名",description="装备名",lengthMax="32",optional="")
 	 * @Param(name="suitCode",alias="套装code",description="套装code",lengthMax="255",optional="")
 	 * @Param(name="strengthenLevel",alias="强化等级",description="强化等级",lengthMax="11",optional="")
 	 * @Param(name="rarityLevel",alias="稀有度",description="稀有度",lengthMax="11",optional="")
@@ -165,15 +165,15 @@ class GoodsEquipment extends AdminBase
 	{
 		$param = ContextManager::getInstance()->get('param');
 		$model = new GoodsEquipmentModel();
-		$info = $model->get(['goodsEquipmentId' => $param['goodsEquipmentId']]);
+		$info = $model->get(['goodsCode' => $param['goodsCode']]);
 		if (empty($info)) {
 		    $this->writeJson(Status::CODE_BAD_REQUEST, [], '该数据不存在');
 		    return false;
 		}
 		$updateData = [];
 
-		$updateData['goodsCode']=$param['goodsCode'] ?? $info->goodsCode;
 		$updateData['equipmentType']=$param['equipmentType'] ?? $info->equipmentType;
+		$updateData['goodsName']=$param['goodsName'] ?? $info->goodsName;
 		$updateData['suitCode']=$param['suitCode'] ?? $info->suitCode;
 		$updateData['strengthenLevel']=$param['strengthenLevel'] ?? $info->strengthenLevel;
 		$updateData['rarityLevel']=$param['rarityLevel'] ?? $info->rarityLevel;
@@ -219,10 +219,10 @@ class GoodsEquipment extends AdminBase
 	 * @ApiSuccessParam(name="msg",description="api提示信息")
 	 * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
 	 * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
-	 * @Param(name="goodsEquipmentId",lengthMax="11",required="")
-	 * @ApiSuccessParam(name="result.goodsEquipmentId",description="")
+	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="32",required="")
 	 * @ApiSuccessParam(name="result.goodsCode",description="物品code")
-	 * @ApiSuccessParam(name="result.equipmentType",description="装备类型")
+	 * @ApiSuccessParam(name="result.equipmentType",description="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指")
+	 * @ApiSuccessParam(name="result.goodsName",description="装备名")
 	 * @ApiSuccessParam(name="result.suitCode",description="套装code")
 	 * @ApiSuccessParam(name="result.strengthenLevel",description="强化等级")
 	 * @ApiSuccessParam(name="result.rarityLevel",description="稀有度")
@@ -258,7 +258,7 @@ class GoodsEquipment extends AdminBase
 	{
 		$param = ContextManager::getInstance()->get('param');
 		$model = new GoodsEquipmentModel();
-		$info = $model->get(['goodsEquipmentId' => $param['goodsEquipmentId']]);
+		$info = $model->get(['goodsCode' => $param['goodsCode']]);
 		if ($info) {
 		    $this->writeJson(Status::CODE_OK, $info, "获取数据成功.");
 		} else {
@@ -279,9 +279,9 @@ class GoodsEquipment extends AdminBase
 	 * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
 	 * @Param(name="page", from={GET,POST}, alias="页数", optional="")
 	 * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
-	 * @ApiSuccessParam(name="result[].goodsEquipmentId",description="")
 	 * @ApiSuccessParam(name="result[].goodsCode",description="物品code")
-	 * @ApiSuccessParam(name="result[].equipmentType",description="装备类型")
+	 * @ApiSuccessParam(name="result[].equipmentType",description="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指")
+	 * @ApiSuccessParam(name="result[].goodsName",description="装备名")
 	 * @ApiSuccessParam(name="result[].suitCode",description="套装code")
 	 * @ApiSuccessParam(name="result[].strengthenLevel",description="强化等级")
 	 * @ApiSuccessParam(name="result[].rarityLevel",description="稀有度")
@@ -334,13 +334,13 @@ class GoodsEquipment extends AdminBase
 	 * @ApiSuccessParam(name="msg",description="api提示信息")
 	 * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
 	 * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
-	 * @Param(name="goodsEquipmentId",lengthMax="11",required="")
+	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="32",required="")
 	 */
 	public function delete()
 	{
 		$param = ContextManager::getInstance()->get('param');
 		$model = new GoodsEquipmentModel();
-		$info = $model->get(['goodsEquipmentId' => $param['goodsEquipmentId']]);
+		$info = $model->get(['goodsCode' => $param['goodsCode']]);
 		if (!$info) {
 		    $this->writeJson(Status::CODE_OK, $info, "数据不存在.");
 		}

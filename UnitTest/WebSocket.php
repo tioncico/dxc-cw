@@ -24,7 +24,7 @@ class WebSocket
     {
         $data = [
             'action' => 'intoMap',
-            'mapId'  => 3,
+            'mapId'  => 1,
         ];
         $this->push($data);
     }

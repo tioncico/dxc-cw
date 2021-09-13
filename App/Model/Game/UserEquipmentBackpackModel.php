@@ -8,11 +8,12 @@ use App\Model\BaseModel;
  * UserEquipmentBackpackModel
  * Class UserEquipmentBackpackModel
  * Create With ClassGeneration
- * @property int $userEquipmentBackpackId // 主键
  * @property int $backpackId // 背包id
  * @property int $userId // 用户id
  * @property int $isUse // 是否使用
+ * @property int $strengthenLevel // 强化等级
  * @property string $goodsCode // 物品code
+ * @property string $goodsName // 物品名
  * @property int $equipmentType // 装备类型
  * @property string $suitCode // 套装code
  * @property int $rarityLevel // 稀有度

@@ -2,7 +2,7 @@
 
 namespace App\HttpController\Api\Admin;
 
-use App\Model\UserEquipmentBackpackModel;
+use App\Model\Game\UserEquipmentBackpackModel;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiDescription;
@@ -39,12 +39,12 @@ class UserEquipmentBackpack extends AdminBase
 	 * @ApiSuccessParam(name="msg",description="api提示信息")
 	 * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
 	 * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
-	 * @Param(name="userEquipmentBackpackId",alias="主键",description="主键",lengthMax="11",required="")
-	 * @Param(name="backpackId",alias="背包id",description="背包id",lengthMax="11",optional="")
+	 * @Param(name="backpackId",alias="背包id",description="背包id",lengthMax="11",required="")
 	 * @Param(name="userId",alias="用户id",description="用户id",lengthMax="11",optional="")
-	 * @Param(name="isUse",alias="是否使用",description="是否使用",lengthMax="1",optional="")
+	 * @Param(name="isUse",alias="是否使用",description="是否使用",lengthMax="1",optional="",defaultValue="0")
 	 * @Param(name="strengthenLevel",alias="强化等级",description="强化等级",lengthMax="11",optional="")
 	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="255",optional="")
+	 * @Param(name="goodsName",alias="物品名",description="物品名",lengthMax="255",optional="")
 	 * @Param(name="equipmentType",alias="装备类型",description="装备类型",lengthMax="1",optional="")
 	 * @Param(name="suitCode",alias="套装code",description="套装code",lengthMax="255",optional="")
 	 * @Param(name="rarityLevel",alias="稀有度",description="稀有度",lengthMax="11",optional="")
@@ -81,12 +81,12 @@ class UserEquipmentBackpack extends AdminBase
 	{
 		$param = ContextManager::getInstance()->get('param');
 		$data = [
-		    'userEquipmentBackpackId'=>$param['userEquipmentBackpackId'],
-		    'backpackId'=>$param['backpackId'] ?? '',
+		    'backpackId'=>$param['backpackId'],
 		    'userId'=>$param['userId'] ?? '',
 		    'isUse'=>$param['isUse'] ?? '',
 		    'strengthenLevel'=>$param['strengthenLevel'] ?? '',
 		    'goodsCode'=>$param['goodsCode'] ?? '',
+		    'goodsName'=>$param['goodsName'] ?? '',
 		    'equipmentType'=>$param['equipmentType'] ?? '',
 		    'suitCode'=>$param['suitCode'] ?? '',
 		    'rarityLevel'=>$param['rarityLevel'] ?? '',
@@ -135,12 +135,12 @@ class UserEquipmentBackpack extends AdminBase
 	 * @ApiSuccessParam(name="msg",description="api提示信息")
 	 * @ApiSuccess({"code":200,"result":[],"msg":"更新成功"})
 	 * @ApiFail({"code":400,"result":[],"msg":"更新失败"})
-	 * @Param(name="userEquipmentBackpackId",alias="主键",description="主键",lengthMax="11",required="")
-	 * @Param(name="backpackId",alias="背包id",description="背包id",lengthMax="11",optional="")
+	 * @Param(name="backpackId",alias="背包id",description="背包id",lengthMax="11",required="")
 	 * @Param(name="userId",alias="用户id",description="用户id",lengthMax="11",optional="")
-	 * @Param(name="isUse",alias="是否使用",description="是否使用",lengthMax="1",optional="")
+	 * @Param(name="isUse",alias="是否使用",description="是否使用",lengthMax="1",optional="",defaultValue="0")
 	 * @Param(name="strengthenLevel",alias="强化等级",description="强化等级",lengthMax="11",optional="")
 	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="255",optional="")
+	 * @Param(name="goodsName",alias="物品名",description="物品名",lengthMax="255",optional="")
 	 * @Param(name="equipmentType",alias="装备类型",description="装备类型",lengthMax="1",optional="")
 	 * @Param(name="suitCode",alias="套装code",description="套装code",lengthMax="255",optional="")
 	 * @Param(name="rarityLevel",alias="稀有度",description="稀有度",lengthMax="11",optional="")
@@ -177,18 +177,18 @@ class UserEquipmentBackpack extends AdminBase
 	{
 		$param = ContextManager::getInstance()->get('param');
 		$model = new UserEquipmentBackpackModel();
-		$info = $model->get(['userEquipmentBackpackId' => $param['userEquipmentBackpackId']]);
+		$info = $model->get(['backpackId' => $param['backpackId']]);
 		if (empty($info)) {
 		    $this->writeJson(Status::CODE_BAD_REQUEST, [], '该数据不存在');
 		    return false;
 		}
 		$updateData = [];
 
-		$updateData['backpackId']=$param['backpackId'] ?? $info->backpackId;
 		$updateData['userId']=$param['userId'] ?? $info->userId;
 		$updateData['isUse']=$param['isUse'] ?? $info->isUse;
 		$updateData['strengthenLevel']=$param['strengthenLevel'] ?? $info->strengthenLevel;
 		$updateData['goodsCode']=$param['goodsCode'] ?? $info->goodsCode;
+		$updateData['goodsName']=$param['goodsName'] ?? $info->goodsName;
 		$updateData['equipmentType']=$param['equipmentType'] ?? $info->equipmentType;
 		$updateData['suitCode']=$param['suitCode'] ?? $info->suitCode;
 		$updateData['rarityLevel']=$param['rarityLevel'] ?? $info->rarityLevel;
@@ -235,13 +235,13 @@ class UserEquipmentBackpack extends AdminBase
 	 * @ApiSuccessParam(name="msg",description="api提示信息")
 	 * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
 	 * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
-	 * @Param(name="userEquipmentBackpackId",alias="主键",description="主键",lengthMax="11",required="")
-	 * @ApiSuccessParam(name="result.userEquipmentBackpackId",description="主键")
+	 * @Param(name="backpackId",alias="背包id",description="背包id",lengthMax="11",required="")
 	 * @ApiSuccessParam(name="result.backpackId",description="背包id")
 	 * @ApiSuccessParam(name="result.userId",description="用户id")
 	 * @ApiSuccessParam(name="result.isUse",description="是否使用")
 	 * @ApiSuccessParam(name="result.strengthenLevel",description="强化等级")
 	 * @ApiSuccessParam(name="result.goodsCode",description="物品code")
+	 * @ApiSuccessParam(name="result.goodsName",description="物品名")
 	 * @ApiSuccessParam(name="result.equipmentType",description="装备类型")
 	 * @ApiSuccessParam(name="result.suitCode",description="套装code")
 	 * @ApiSuccessParam(name="result.rarityLevel",description="稀有度")
@@ -278,7 +278,7 @@ class UserEquipmentBackpack extends AdminBase
 	{
 		$param = ContextManager::getInstance()->get('param');
 		$model = new UserEquipmentBackpackModel();
-		$info = $model->get(['userEquipmentBackpackId' => $param['userEquipmentBackpackId']]);
+		$info = $model->get(['backpackId' => $param['backpackId']]);
 		if ($info) {
 		    $this->writeJson(Status::CODE_OK, $info, "获取数据成功.");
 		} else {
@@ -299,12 +299,12 @@ class UserEquipmentBackpack extends AdminBase
 	 * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
 	 * @Param(name="page", from={GET,POST}, alias="页数", optional="")
 	 * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
-	 * @ApiSuccessParam(name="result[].userEquipmentBackpackId",description="主键")
 	 * @ApiSuccessParam(name="result[].backpackId",description="背包id")
 	 * @ApiSuccessParam(name="result[].userId",description="用户id")
 	 * @ApiSuccessParam(name="result[].isUse",description="是否使用")
 	 * @ApiSuccessParam(name="result[].strengthenLevel",description="强化等级")
 	 * @ApiSuccessParam(name="result[].goodsCode",description="物品code")
+	 * @ApiSuccessParam(name="result[].goodsName",description="物品名")
 	 * @ApiSuccessParam(name="result[].equipmentType",description="装备类型")
 	 * @ApiSuccessParam(name="result[].suitCode",description="套装code")
 	 * @ApiSuccessParam(name="result[].rarityLevel",description="稀有度")
@@ -358,13 +358,13 @@ class UserEquipmentBackpack extends AdminBase
 	 * @ApiSuccessParam(name="msg",description="api提示信息")
 	 * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
 	 * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
-	 * @Param(name="userEquipmentBackpackId",alias="主键",description="主键",lengthMax="11",required="")
+	 * @Param(name="backpackId",alias="背包id",description="背包id",lengthMax="11",required="")
 	 */
 	public function delete()
 	{
 		$param = ContextManager::getInstance()->get('param');
 		$model = new UserEquipmentBackpackModel();
-		$info = $model->get(['userEquipmentBackpackId' => $param['userEquipmentBackpackId']]);
+		$info = $model->get(['backpackId' => $param['backpackId']]);
 		if (!$info) {
 		    $this->writeJson(Status::CODE_OK, $info, "数据不存在.");
 		}
