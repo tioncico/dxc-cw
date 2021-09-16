@@ -90,7 +90,7 @@ class Sign extends UserBase
     }
 
     /**
-     * @Api(name="用户签到",path="/Api/User/UserSign/userSign")
+     * @Api(name="用户签到",path="/Api/User/Sign/userSign")
      * @ApiDescription("用户签到")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")

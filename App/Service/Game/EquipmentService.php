@@ -51,7 +51,19 @@ class EquipmentService extends BaseService
         });
     }
 
-    public function addUserEquipmentBackpack($userId,UserBackpackModel $backpackInfo, GoodsEquipmentModel $equipmentInfo)
+    /**
+     * 装备信息插入
+     * addUserEquipmentBackpack
+     * @param                     $userId
+     * @param UserBackpackModel   $backpackInfo
+     * @param GoodsEquipmentModel $equipmentInfo
+     * @return UserEquipmentBackpackModel
+     * @throws \EasySwoole\ORM\Exception\Exception
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 9:45 下午
+     */
+    protected function addUserEquipmentBackpack($userId,UserBackpackModel $backpackInfo, GoodsEquipmentModel $equipmentInfo)
     {
 
         $data = [
@@ -101,7 +113,18 @@ class EquipmentService extends BaseService
         return $model;
     }
 
-    public function addUserEquipmentEntry(UserBackpackModel $backpackInfo, GoodsEquipmentModel $equipmentInfo)
+    /**
+     * 装备属性插入
+     * addUserEquipmentEntry
+     * @param UserBackpackModel   $backpackInfo
+     * @param GoodsEquipmentModel $equipmentInfo
+     * @return array
+     * @throws \EasySwoole\ORM\Exception\Exception
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 9:45 下午
+     */
+    protected function addUserEquipmentEntry(UserBackpackModel $backpackInfo, GoodsEquipmentModel $equipmentInfo)
     {
         if ($equipmentInfo->rarityLevel == 1) {
             return [];
@@ -180,7 +203,17 @@ class EquipmentService extends BaseService
         return $returnArr;
     }
 
-    public function updateEquipmentAttributeEntryDescription(UserEquipmentBackpackModel $userEquipmentBackpackInfo, array $goodsEquipmentAttributeEntryInfoArr)
+    /**
+     * updateEquipmentAttributeEntryDescription
+     * @param UserEquipmentBackpackModel $userEquipmentBackpackInfo
+     * @param array                      $goodsEquipmentAttributeEntryInfoArr
+     * @throws \EasySwoole\Mysqli\Exception\Exception
+     * @throws \EasySwoole\ORM\Exception\Exception
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 9:46 下午
+     */
+    protected function updateEquipmentAttributeEntryDescription(UserEquipmentBackpackModel $userEquipmentBackpackInfo, array $goodsEquipmentAttributeEntryInfoArr)
     {
         /**
          * @var GoodsEquipmentAttributeEntryModel[] $goodsEquipmentAttributeEntryInfoArr
@@ -195,7 +228,7 @@ class EquipmentService extends BaseService
         ]);
     }
 
-    public function updateEquipmentAttributeDescription(UserEquipmentBackpackModel $userEquipmentBackpackInfo)
+    protected function updateEquipmentAttributeDescription(UserEquipmentBackpackModel $userEquipmentBackpackInfo)
     {
         $description = '';
         foreach ($this->getAttributeName() as $key=>$name){
