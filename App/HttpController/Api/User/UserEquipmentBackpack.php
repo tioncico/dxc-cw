@@ -43,6 +43,12 @@ class UserEquipmentBackpack extends UserBase
 	 * @Param(name="userId",alias="用户id",description="用户id",lengthMax="11",optional="")
 	 * @Param(name="isUse",alias="是否使用",description="是否使用",lengthMax="1",optional="",defaultValue="0")
 	 * @Param(name="strengthenLevel",alias="强化等级",description="强化等级",lengthMax="11",optional="")
+	 * @Param(name="attributeDescription",alias="属性介绍",description="属性介绍",lengthMax="255",optional="")
+	 * @Param(name="attributeEntryDescription",alias="随机属性介绍",description="随机属性介绍",lengthMax="255",optional="")
+	 * @Param(name="extraAttributeDescription",alias="额外词条属性介绍",description="额外词条属性介绍",lengthMax="255",optional="")
+	 * @Param(name="suitAttribute2Description",alias="套装2属性词条介绍",description="套装2属性词条介绍",lengthMax="255",optional="")
+	 * @Param(name="suitAttribute3Description",alias="套装3属性词条介绍",description="套装3属性词条介绍",lengthMax="255",optional="")
+	 * @Param(name="suitAttribute5Description",alias="套装5属性词条介绍",description="套装5属性词条介绍",lengthMax="255",optional="")
 	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="255",optional="")
 	 * @Param(name="goodsName",alias="物品名",description="物品名",lengthMax="255",optional="")
 	 * @Param(name="equipmentType",alias="装备类型",description="装备类型",lengthMax="1",optional="")
@@ -56,9 +62,6 @@ class UserEquipmentBackpack extends UserBase
 	 * @Param(name="endurance",alias="耐力",description="耐力",lengthMax="11",optional="")
 	 * @Param(name="intellect",alias="智力",description="智力",lengthMax="11",optional="")
 	 * @Param(name="strength",alias="力量",description="力量",lengthMax="11",optional="")
-	 * @Param(name="enduranceQualification",alias="耐力资质",description="耐力资质",lengthMax="11",optional="")
-	 * @Param(name="intellectQualification",alias="智力资质",description="智力资质",lengthMax="11",optional="")
-	 * @Param(name="strengthQualification",alias="力量资质",description="力量资质",lengthMax="11",optional="")
 	 * @Param(name="criticalRate",alias="暴击率",description="暴击率",lengthMax="11",optional="")
 	 * @Param(name="criticalStrikeDamage",alias="暴击伤害",description="暴击伤害",lengthMax="11",optional="")
 	 * @Param(name="hitRate",alias="命中率",description="命中率",lengthMax="11",optional="")
@@ -75,7 +78,6 @@ class UserEquipmentBackpack extends UserBase
 	 * @Param(name="light",alias="光",description="光",lengthMax="11",optional="")
 	 * @Param(name="dark",alias="暗",description="暗",lengthMax="11",optional="")
 	 * @Param(name="luck",alias="幸运值",description="幸运值",lengthMax="11",optional="")
-	 * @Param(name="physicalStrength",alias="体力",description="体力",lengthMax="11",optional="")
 	 */
 	public function add()
 	{
@@ -85,6 +87,12 @@ class UserEquipmentBackpack extends UserBase
 		    'userId'=>$param['userId'] ?? '',
 		    'isUse'=>$param['isUse'] ?? '',
 		    'strengthenLevel'=>$param['strengthenLevel'] ?? '',
+		    'attributeDescription'=>$param['attributeDescription'] ?? '',
+		    'attributeEntryDescription'=>$param['attributeEntryDescription'] ?? '',
+		    'extraAttributeDescription'=>$param['extraAttributeDescription'] ?? '',
+		    'suitAttribute2Description'=>$param['suitAttribute2Description'] ?? '',
+		    'suitAttribute3Description'=>$param['suitAttribute3Description'] ?? '',
+		    'suitAttribute5Description'=>$param['suitAttribute5Description'] ?? '',
 		    'goodsCode'=>$param['goodsCode'] ?? '',
 		    'goodsName'=>$param['goodsName'] ?? '',
 		    'equipmentType'=>$param['equipmentType'] ?? '',
@@ -114,7 +122,6 @@ class UserEquipmentBackpack extends UserBase
 		    'light'=>$param['light'] ?? '',
 		    'dark'=>$param['dark'] ?? '',
 		    'luck'=>$param['luck'] ?? '',
-		    'physicalStrength'=>$param['physicalStrength'] ?? '',
 		];
 		$model = new UserEquipmentBackpackModel($data);
 		$model->save();
@@ -136,6 +143,12 @@ class UserEquipmentBackpack extends UserBase
 	 * @Param(name="userId",alias="用户id",description="用户id",lengthMax="11",optional="")
 	 * @Param(name="isUse",alias="是否使用",description="是否使用",lengthMax="1",optional="",defaultValue="0")
 	 * @Param(name="strengthenLevel",alias="强化等级",description="强化等级",lengthMax="11",optional="")
+	 * @Param(name="attributeDescription",alias="属性介绍",description="属性介绍",lengthMax="255",optional="")
+	 * @Param(name="attributeEntryDescription",alias="随机属性介绍",description="随机属性介绍",lengthMax="255",optional="")
+	 * @Param(name="extraAttributeDescription",alias="额外词条属性介绍",description="额外词条属性介绍",lengthMax="255",optional="")
+	 * @Param(name="suitAttribute2Description",alias="套装2属性词条介绍",description="套装2属性词条介绍",lengthMax="255",optional="")
+	 * @Param(name="suitAttribute3Description",alias="套装3属性词条介绍",description="套装3属性词条介绍",lengthMax="255",optional="")
+	 * @Param(name="suitAttribute5Description",alias="套装5属性词条介绍",description="套装5属性词条介绍",lengthMax="255",optional="")
 	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="255",optional="")
 	 * @Param(name="goodsName",alias="物品名",description="物品名",lengthMax="255",optional="")
 	 * @Param(name="equipmentType",alias="装备类型",description="装备类型",lengthMax="1",optional="")
@@ -149,9 +162,6 @@ class UserEquipmentBackpack extends UserBase
 	 * @Param(name="endurance",alias="耐力",description="耐力",lengthMax="11",optional="")
 	 * @Param(name="intellect",alias="智力",description="智力",lengthMax="11",optional="")
 	 * @Param(name="strength",alias="力量",description="力量",lengthMax="11",optional="")
-	 * @Param(name="enduranceQualification",alias="耐力资质",description="耐力资质",lengthMax="11",optional="")
-	 * @Param(name="intellectQualification",alias="智力资质",description="智力资质",lengthMax="11",optional="")
-	 * @Param(name="strengthQualification",alias="力量资质",description="力量资质",lengthMax="11",optional="")
 	 * @Param(name="criticalRate",alias="暴击率",description="暴击率",lengthMax="11",optional="")
 	 * @Param(name="criticalStrikeDamage",alias="暴击伤害",description="暴击伤害",lengthMax="11",optional="")
 	 * @Param(name="hitRate",alias="命中率",description="命中率",lengthMax="11",optional="")
@@ -168,7 +178,6 @@ class UserEquipmentBackpack extends UserBase
 	 * @Param(name="light",alias="光",description="光",lengthMax="11",optional="")
 	 * @Param(name="dark",alias="暗",description="暗",lengthMax="11",optional="")
 	 * @Param(name="luck",alias="幸运值",description="幸运值",lengthMax="11",optional="")
-	 * @Param(name="physicalStrength",alias="体力",description="体力",lengthMax="11",optional="")
 	 */
 	public function update()
 	{
@@ -184,6 +193,12 @@ class UserEquipmentBackpack extends UserBase
 		$updateData['userId']=$param['userId'] ?? $info->userId;
 		$updateData['isUse']=$param['isUse'] ?? $info->isUse;
 		$updateData['strengthenLevel']=$param['strengthenLevel'] ?? $info->strengthenLevel;
+		$updateData['attributeDescription']=$param['attributeDescription'] ?? $info->attributeDescription;
+		$updateData['attributeEntryDescription']=$param['attributeEntryDescription'] ?? $info->attributeEntryDescription;
+		$updateData['extraAttributeDescription']=$param['extraAttributeDescription'] ?? $info->extraAttributeDescription;
+		$updateData['suitAttribute2Description']=$param['suitAttribute2Description'] ?? $info->suitAttribute2Description;
+		$updateData['suitAttribute3Description']=$param['suitAttribute3Description'] ?? $info->suitAttribute3Description;
+		$updateData['suitAttribute5Description']=$param['suitAttribute5Description'] ?? $info->suitAttribute5Description;
 		$updateData['goodsCode']=$param['goodsCode'] ?? $info->goodsCode;
 		$updateData['goodsName']=$param['goodsName'] ?? $info->goodsName;
 		$updateData['equipmentType']=$param['equipmentType'] ?? $info->equipmentType;
@@ -197,9 +212,6 @@ class UserEquipmentBackpack extends UserBase
 		$updateData['endurance']=$param['endurance'] ?? $info->endurance;
 		$updateData['intellect']=$param['intellect'] ?? $info->intellect;
 		$updateData['strength']=$param['strength'] ?? $info->strength;
-		$updateData['enduranceQualification']=$param['enduranceQualification'] ?? $info->enduranceQualification;
-		$updateData['intellectQualification']=$param['intellectQualification'] ?? $info->intellectQualification;
-		$updateData['strengthQualification']=$param['strengthQualification'] ?? $info->strengthQualification;
 		$updateData['criticalRate']=$param['criticalRate'] ?? $info->criticalRate;
 		$updateData['criticalStrikeDamage']=$param['criticalStrikeDamage'] ?? $info->criticalStrikeDamage;
 		$updateData['hitRate']=$param['hitRate'] ?? $info->hitRate;
@@ -216,7 +228,6 @@ class UserEquipmentBackpack extends UserBase
 		$updateData['light']=$param['light'] ?? $info->light;
 		$updateData['dark']=$param['dark'] ?? $info->dark;
 		$updateData['luck']=$param['luck'] ?? $info->luck;
-		$updateData['physicalStrength']=$param['physicalStrength'] ?? $info->physicalStrength;
 		$info->update($updateData);
 		$this->writeJson(Status::CODE_OK, $info, "更新数据成功");
 	}
@@ -237,6 +248,12 @@ class UserEquipmentBackpack extends UserBase
 	 * @ApiSuccessParam(name="result.userId",description="用户id")
 	 * @ApiSuccessParam(name="result.isUse",description="是否使用")
 	 * @ApiSuccessParam(name="result.strengthenLevel",description="强化等级")
+	 * @ApiSuccessParam(name="result.attributeDescription",description="属性介绍")
+	 * @ApiSuccessParam(name="result.attributeEntryDescription",description="随机属性介绍")
+	 * @ApiSuccessParam(name="result.extraAttributeDescription",description="额外词条属性介绍")
+	 * @ApiSuccessParam(name="result.suitAttribute2Description",description="套装2属性词条介绍")
+	 * @ApiSuccessParam(name="result.suitAttribute3Description",description="套装3属性词条介绍")
+	 * @ApiSuccessParam(name="result.suitAttribute5Description",description="套装5属性词条介绍")
 	 * @ApiSuccessParam(name="result.goodsCode",description="物品code")
 	 * @ApiSuccessParam(name="result.goodsName",description="物品名")
 	 * @ApiSuccessParam(name="result.equipmentType",description="装备类型")
@@ -250,9 +267,6 @@ class UserEquipmentBackpack extends UserBase
 	 * @ApiSuccessParam(name="result.endurance",description="耐力")
 	 * @ApiSuccessParam(name="result.intellect",description="智力")
 	 * @ApiSuccessParam(name="result.strength",description="力量")
-	 * @ApiSuccessParam(name="result.enduranceQualification",description="耐力资质")
-	 * @ApiSuccessParam(name="result.intellectQualification",description="智力资质")
-	 * @ApiSuccessParam(name="result.strengthQualification",description="力量资质")
 	 * @ApiSuccessParam(name="result.criticalRate",description="暴击率")
 	 * @ApiSuccessParam(name="result.criticalStrikeDamage",description="暴击伤害")
 	 * @ApiSuccessParam(name="result.hitRate",description="命中率")
@@ -269,7 +283,6 @@ class UserEquipmentBackpack extends UserBase
 	 * @ApiSuccessParam(name="result.light",description="光")
 	 * @ApiSuccessParam(name="result.dark",description="暗")
 	 * @ApiSuccessParam(name="result.luck",description="幸运值")
-	 * @ApiSuccessParam(name="result.physicalStrength",description="体力")
 	 */
 	public function getOne()
 	{
@@ -300,6 +313,12 @@ class UserEquipmentBackpack extends UserBase
 	 * @ApiSuccessParam(name="result[].userId",description="用户id")
 	 * @ApiSuccessParam(name="result[].isUse",description="是否使用")
 	 * @ApiSuccessParam(name="result[].strengthenLevel",description="强化等级")
+	 * @ApiSuccessParam(name="result[].attributeDescription",description="属性介绍")
+	 * @ApiSuccessParam(name="result[].attributeEntryDescription",description="随机属性介绍")
+	 * @ApiSuccessParam(name="result[].extraAttributeDescription",description="额外词条属性介绍")
+	 * @ApiSuccessParam(name="result[].suitAttribute2Description",description="套装2属性词条介绍")
+	 * @ApiSuccessParam(name="result[].suitAttribute3Description",description="套装3属性词条介绍")
+	 * @ApiSuccessParam(name="result[].suitAttribute5Description",description="套装5属性词条介绍")
 	 * @ApiSuccessParam(name="result[].goodsCode",description="物品code")
 	 * @ApiSuccessParam(name="result[].goodsName",description="物品名")
 	 * @ApiSuccessParam(name="result[].equipmentType",description="装备类型")
@@ -313,9 +332,6 @@ class UserEquipmentBackpack extends UserBase
 	 * @ApiSuccessParam(name="result[].endurance",description="耐力")
 	 * @ApiSuccessParam(name="result[].intellect",description="智力")
 	 * @ApiSuccessParam(name="result[].strength",description="力量")
-	 * @ApiSuccessParam(name="result[].enduranceQualification",description="耐力资质")
-	 * @ApiSuccessParam(name="result[].intellectQualification",description="智力资质")
-	 * @ApiSuccessParam(name="result[].strengthQualification",description="力量资质")
 	 * @ApiSuccessParam(name="result[].criticalRate",description="暴击率")
 	 * @ApiSuccessParam(name="result[].criticalStrikeDamage",description="暴击伤害")
 	 * @ApiSuccessParam(name="result[].hitRate",description="命中率")
@@ -332,7 +348,6 @@ class UserEquipmentBackpack extends UserBase
 	 * @ApiSuccessParam(name="result[].light",description="光")
 	 * @ApiSuccessParam(name="result[].dark",description="暗")
 	 * @ApiSuccessParam(name="result[].luck",description="幸运值")
-	 * @ApiSuccessParam(name="result[].physicalStrength",description="体力")
 	 */
 	public function getList()
 	{

@@ -12,6 +12,12 @@ use App\Model\BaseModel;
  * @property int $userId // 用户id
  * @property int $isUse // 是否使用
  * @property int $strengthenLevel // 强化等级
+ * @property string $attributeDescription // 属性介绍
+ * @property string $attributeEntryDescription // 随机属性介绍
+ * @property string $extraAttributeDescription // 额外词条属性介绍
+ * @property string $suitAttribute2Description // 套装2属性词条介绍
+ * @property string $suitAttribute3Description // 套装3属性词条介绍
+ * @property string $suitAttribute5Description // 套装5属性词条介绍
  * @property string $goodsCode // 物品code
  * @property string $goodsName // 物品名
  * @property int $equipmentType // 装备类型
@@ -25,9 +31,6 @@ use App\Model\BaseModel;
  * @property int $endurance // 耐力
  * @property int $intellect // 智力
  * @property int $strength // 力量
- * @property int $enduranceQualification // 耐力资质
- * @property int $intellectQualification // 智力资质
- * @property int $strengthQualification // 力量资质
  * @property int $criticalRate // 暴击率
  * @property int $criticalStrikeDamage // 暴击伤害
  * @property int $hitRate // 命中率
@@ -44,7 +47,6 @@ use App\Model\BaseModel;
  * @property int $light // 光
  * @property int $dark // 暗
  * @property int $luck // 幸运值
- * @property int $physicalStrength // 体力
  */
 class UserEquipmentBackpackModel extends BaseModel
 {
@@ -69,6 +71,5 @@ class UserEquipmentBackpackModel extends BaseModel
 		];
 		return $data;
 	}
-
 }
 

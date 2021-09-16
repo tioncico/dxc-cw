@@ -42,6 +42,13 @@ class GoodsEquipment extends UserBase
 	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="32",required="")
 	 * @Param(name="equipmentType",alias="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指",description="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指",lengthMax="1",optional="")
 	 * @Param(name="goodsName",alias="装备名",description="装备名",lengthMax="32",optional="")
+	 * @Param(name="description",alias="装备介绍",description="装备介绍",lengthMax="255",optional="")
+	 * @Param(name="attributeDescription",alias="属性介绍",description="属性介绍",lengthMax="255",optional="")
+	 * @Param(name="attributeEntryDescription",alias="随机属性介绍",description="随机属性介绍",lengthMax="255",optional="")
+	 * @Param(name="extraAttributeDescription",alias="额外词条属性介绍",description="额外词条属性介绍",lengthMax="255",optional="")
+	 * @Param(name="suitAttribute2Description",alias="套装2属性词条介绍",description="套装2属性词条介绍",lengthMax="255",optional="")
+	 * @Param(name="suitAttribute3Description",alias="套装3属性词条介绍",description="套装3属性词条介绍",lengthMax="255",optional="")
+	 * @Param(name="suitAttribute5Description",alias="套装5属性词条介绍",description="套装5属性词条介绍",lengthMax="255",optional="")
 	 * @Param(name="suitCode",alias="套装code",description="套装code",lengthMax="255",optional="")
 	 * @Param(name="strengthenLevel",alias="强化等级",description="强化等级",lengthMax="11",optional="")
 	 * @Param(name="rarityLevel",alias="稀有度",description="稀有度",lengthMax="11",optional="")
@@ -53,9 +60,6 @@ class GoodsEquipment extends UserBase
 	 * @Param(name="endurance",alias="耐力",description="耐力",lengthMax="11",optional="")
 	 * @Param(name="intellect",alias="智力",description="智力",lengthMax="11",optional="")
 	 * @Param(name="strength",alias="力量",description="力量",lengthMax="11",optional="")
-	 * @Param(name="enduranceQualification",alias="耐力资质",description="耐力资质",lengthMax="11",optional="")
-	 * @Param(name="intellectQualification",alias="智力资质",description="智力资质",lengthMax="11",optional="")
-	 * @Param(name="strengthQualification",alias="力量资质",description="力量资质",lengthMax="11",optional="")
 	 * @Param(name="criticalRate",alias="暴击率",description="暴击率",lengthMax="11",optional="")
 	 * @Param(name="criticalStrikeDamage",alias="暴击伤害",description="暴击伤害",lengthMax="11",optional="")
 	 * @Param(name="hitRate",alias="命中率",description="命中率",lengthMax="11",optional="")
@@ -80,6 +84,13 @@ class GoodsEquipment extends UserBase
 		    'goodsCode'=>$param['goodsCode'],
 		    'equipmentType'=>$param['equipmentType'] ?? '',
 		    'goodsName'=>$param['goodsName'] ?? '',
+		    'description'=>$param['description'] ?? '',
+		    'attributeDescription'=>$param['attributeDescription'] ?? '',
+		    'attributeEntryDescription'=>$param['attributeEntryDescription'] ?? '',
+		    'extraAttributeDescription'=>$param['extraAttributeDescription'] ?? '',
+		    'suitAttribute2Description'=>$param['suitAttribute2Description'] ?? '',
+		    'suitAttribute3Description'=>$param['suitAttribute3Description'] ?? '',
+		    'suitAttribute5Description'=>$param['suitAttribute5Description'] ?? '',
 		    'suitCode'=>$param['suitCode'] ?? '',
 		    'strengthenLevel'=>$param['strengthenLevel'] ?? '',
 		    'rarityLevel'=>$param['rarityLevel'] ?? '',
@@ -91,9 +102,6 @@ class GoodsEquipment extends UserBase
 		    'endurance'=>$param['endurance'] ?? '',
 		    'intellect'=>$param['intellect'] ?? '',
 		    'strength'=>$param['strength'] ?? '',
-		    'enduranceQualification'=>$param['enduranceQualification'] ?? '',
-		    'intellectQualification'=>$param['intellectQualification'] ?? '',
-		    'strengthQualification'=>$param['strengthQualification'] ?? '',
 		    'criticalRate'=>$param['criticalRate'] ?? '',
 		    'criticalStrikeDamage'=>$param['criticalStrikeDamage'] ?? '',
 		    'hitRate'=>$param['hitRate'] ?? '',
@@ -130,6 +138,13 @@ class GoodsEquipment extends UserBase
 	 * @Param(name="goodsCode",alias="物品code",description="物品code",lengthMax="32",required="")
 	 * @Param(name="equipmentType",alias="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指",description="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指",lengthMax="1",optional="")
 	 * @Param(name="goodsName",alias="装备名",description="装备名",lengthMax="32",optional="")
+	 * @Param(name="description",alias="装备介绍",description="装备介绍",lengthMax="255",optional="")
+	 * @Param(name="attributeDescription",alias="属性介绍",description="属性介绍",lengthMax="255",optional="")
+	 * @Param(name="attributeEntryDescription",alias="随机属性介绍",description="随机属性介绍",lengthMax="255",optional="")
+	 * @Param(name="extraAttributeDescription",alias="额外词条属性介绍",description="额外词条属性介绍",lengthMax="255",optional="")
+	 * @Param(name="suitAttribute2Description",alias="套装2属性词条介绍",description="套装2属性词条介绍",lengthMax="255",optional="")
+	 * @Param(name="suitAttribute3Description",alias="套装3属性词条介绍",description="套装3属性词条介绍",lengthMax="255",optional="")
+	 * @Param(name="suitAttribute5Description",alias="套装5属性词条介绍",description="套装5属性词条介绍",lengthMax="255",optional="")
 	 * @Param(name="suitCode",alias="套装code",description="套装code",lengthMax="255",optional="")
 	 * @Param(name="strengthenLevel",alias="强化等级",description="强化等级",lengthMax="11",optional="")
 	 * @Param(name="rarityLevel",alias="稀有度",description="稀有度",lengthMax="11",optional="")
@@ -141,9 +156,6 @@ class GoodsEquipment extends UserBase
 	 * @Param(name="endurance",alias="耐力",description="耐力",lengthMax="11",optional="")
 	 * @Param(name="intellect",alias="智力",description="智力",lengthMax="11",optional="")
 	 * @Param(name="strength",alias="力量",description="力量",lengthMax="11",optional="")
-	 * @Param(name="enduranceQualification",alias="耐力资质",description="耐力资质",lengthMax="11",optional="")
-	 * @Param(name="intellectQualification",alias="智力资质",description="智力资质",lengthMax="11",optional="")
-	 * @Param(name="strengthQualification",alias="力量资质",description="力量资质",lengthMax="11",optional="")
 	 * @Param(name="criticalRate",alias="暴击率",description="暴击率",lengthMax="11",optional="")
 	 * @Param(name="criticalStrikeDamage",alias="暴击伤害",description="暴击伤害",lengthMax="11",optional="")
 	 * @Param(name="hitRate",alias="命中率",description="命中率",lengthMax="11",optional="")
@@ -174,6 +186,13 @@ class GoodsEquipment extends UserBase
 
 		$updateData['equipmentType']=$param['equipmentType'] ?? $info->equipmentType;
 		$updateData['goodsName']=$param['goodsName'] ?? $info->goodsName;
+		$updateData['description']=$param['description'] ?? $info->description;
+		$updateData['attributeDescription']=$param['attributeDescription'] ?? $info->attributeDescription;
+		$updateData['attributeEntryDescription']=$param['attributeEntryDescription'] ?? $info->attributeEntryDescription;
+		$updateData['extraAttributeDescription']=$param['extraAttributeDescription'] ?? $info->extraAttributeDescription;
+		$updateData['suitAttribute2Description']=$param['suitAttribute2Description'] ?? $info->suitAttribute2Description;
+		$updateData['suitAttribute3Description']=$param['suitAttribute3Description'] ?? $info->suitAttribute3Description;
+		$updateData['suitAttribute5Description']=$param['suitAttribute5Description'] ?? $info->suitAttribute5Description;
 		$updateData['suitCode']=$param['suitCode'] ?? $info->suitCode;
 		$updateData['strengthenLevel']=$param['strengthenLevel'] ?? $info->strengthenLevel;
 		$updateData['rarityLevel']=$param['rarityLevel'] ?? $info->rarityLevel;
@@ -185,9 +204,6 @@ class GoodsEquipment extends UserBase
 		$updateData['endurance']=$param['endurance'] ?? $info->endurance;
 		$updateData['intellect']=$param['intellect'] ?? $info->intellect;
 		$updateData['strength']=$param['strength'] ?? $info->strength;
-		$updateData['enduranceQualification']=$param['enduranceQualification'] ?? $info->enduranceQualification;
-		$updateData['intellectQualification']=$param['intellectQualification'] ?? $info->intellectQualification;
-		$updateData['strengthQualification']=$param['strengthQualification'] ?? $info->strengthQualification;
 		$updateData['criticalRate']=$param['criticalRate'] ?? $info->criticalRate;
 		$updateData['criticalStrikeDamage']=$param['criticalStrikeDamage'] ?? $info->criticalStrikeDamage;
 		$updateData['hitRate']=$param['hitRate'] ?? $info->hitRate;
@@ -223,6 +239,13 @@ class GoodsEquipment extends UserBase
 	 * @ApiSuccessParam(name="result.goodsCode",description="物品code")
 	 * @ApiSuccessParam(name="result.equipmentType",description="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指")
 	 * @ApiSuccessParam(name="result.goodsName",description="装备名")
+	 * @ApiSuccessParam(name="result.description",description="装备介绍")
+	 * @ApiSuccessParam(name="result.attributeDescription",description="属性介绍")
+	 * @ApiSuccessParam(name="result.attributeEntryDescription",description="随机属性介绍")
+	 * @ApiSuccessParam(name="result.extraAttributeDescription",description="额外词条属性介绍")
+	 * @ApiSuccessParam(name="result.suitAttribute2Description",description="套装2属性词条介绍")
+	 * @ApiSuccessParam(name="result.suitAttribute3Description",description="套装3属性词条介绍")
+	 * @ApiSuccessParam(name="result.suitAttribute5Description",description="套装5属性词条介绍")
 	 * @ApiSuccessParam(name="result.suitCode",description="套装code")
 	 * @ApiSuccessParam(name="result.strengthenLevel",description="强化等级")
 	 * @ApiSuccessParam(name="result.rarityLevel",description="稀有度")
@@ -234,9 +257,6 @@ class GoodsEquipment extends UserBase
 	 * @ApiSuccessParam(name="result.endurance",description="耐力")
 	 * @ApiSuccessParam(name="result.intellect",description="智力")
 	 * @ApiSuccessParam(name="result.strength",description="力量")
-	 * @ApiSuccessParam(name="result.enduranceQualification",description="耐力资质")
-	 * @ApiSuccessParam(name="result.intellectQualification",description="智力资质")
-	 * @ApiSuccessParam(name="result.strengthQualification",description="力量资质")
 	 * @ApiSuccessParam(name="result.criticalRate",description="暴击率")
 	 * @ApiSuccessParam(name="result.criticalStrikeDamage",description="暴击伤害")
 	 * @ApiSuccessParam(name="result.hitRate",description="命中率")
@@ -282,6 +302,13 @@ class GoodsEquipment extends UserBase
 	 * @ApiSuccessParam(name="result[].goodsCode",description="物品code")
 	 * @ApiSuccessParam(name="result[].equipmentType",description="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指")
 	 * @ApiSuccessParam(name="result[].goodsName",description="装备名")
+	 * @ApiSuccessParam(name="result[].description",description="装备介绍")
+	 * @ApiSuccessParam(name="result[].attributeDescription",description="属性介绍")
+	 * @ApiSuccessParam(name="result[].attributeEntryDescription",description="随机属性介绍")
+	 * @ApiSuccessParam(name="result[].extraAttributeDescription",description="额外词条属性介绍")
+	 * @ApiSuccessParam(name="result[].suitAttribute2Description",description="套装2属性词条介绍")
+	 * @ApiSuccessParam(name="result[].suitAttribute3Description",description="套装3属性词条介绍")
+	 * @ApiSuccessParam(name="result[].suitAttribute5Description",description="套装5属性词条介绍")
 	 * @ApiSuccessParam(name="result[].suitCode",description="套装code")
 	 * @ApiSuccessParam(name="result[].strengthenLevel",description="强化等级")
 	 * @ApiSuccessParam(name="result[].rarityLevel",description="稀有度")
@@ -293,9 +320,6 @@ class GoodsEquipment extends UserBase
 	 * @ApiSuccessParam(name="result[].endurance",description="耐力")
 	 * @ApiSuccessParam(name="result[].intellect",description="智力")
 	 * @ApiSuccessParam(name="result[].strength",description="力量")
-	 * @ApiSuccessParam(name="result[].enduranceQualification",description="耐力资质")
-	 * @ApiSuccessParam(name="result[].intellectQualification",description="智力资质")
-	 * @ApiSuccessParam(name="result[].strengthQualification",description="力量资质")
 	 * @ApiSuccessParam(name="result[].criticalRate",description="暴击率")
 	 * @ApiSuccessParam(name="result[].criticalStrikeDamage",description="暴击伤害")
 	 * @ApiSuccessParam(name="result[].hitRate",description="命中率")

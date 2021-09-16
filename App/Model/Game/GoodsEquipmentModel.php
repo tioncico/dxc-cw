@@ -11,6 +11,13 @@ use App\Model\BaseModel;
  * @property string $goodsCode // 物品code
  * @property int $equipmentType // 装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指
  * @property string $goodsName // 装备名
+ * @property string $description // 装备介绍
+ * @property string $attributeDescription // 属性介绍
+ * @property string $attributeEntryDescription // 随机属性介绍
+ * @property string $extraAttributeDescription // 额外词条属性介绍
+ * @property string $suitAttribute2Description // 套装2属性词条介绍
+ * @property string $suitAttribute3Description // 套装3属性词条介绍
+ * @property string $suitAttribute5Description // 套装5属性词条介绍
  * @property string $suitCode // 套装code
  * @property int $strengthenLevel // 强化等级
  * @property int $rarityLevel // 稀有度
@@ -22,9 +29,6 @@ use App\Model\BaseModel;
  * @property int $endurance // 耐力
  * @property int $intellect // 智力
  * @property int $strength // 力量
- * @property int $enduranceQualification // 耐力资质
- * @property int $intellectQualification // 智力资质
- * @property int $strengthQualification // 力量资质
  * @property int $criticalRate // 暴击率
  * @property int $criticalStrikeDamage // 暴击伤害
  * @property int $hitRate // 命中率
@@ -45,16 +49,6 @@ use App\Model\BaseModel;
 class GoodsEquipmentModel extends BaseModel
 {
 	protected $tableName = 'goods_equipment_list';
-
-    const TYPE_WEAPON = 1;//1武器
-    const TYPE_HAT = 2;//2帽子
-    const TYPE_CLOTHE = 3;//3衣服
-    const TYPE_PANT = 4;//4裤子
-    const TYPE_SHOE = 5;//5鞋子
-    const TYPE_CAPE = 6;//6披风
-    const TYPE_TITLE = 7;//7称号
-    const TYPE_NECKLACE = 8;//8项链
-    const TYPE_RING = 9;//9戒指
 
 
 	public function getList(int $page = 1, int $pageSize = 10, string $field = '*'): array
