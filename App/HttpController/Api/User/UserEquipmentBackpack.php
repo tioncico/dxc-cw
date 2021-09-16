@@ -23,7 +23,7 @@ use EasySwoole\Validate\Validate;
  * UserEquipmentBackpack
  * Class UserEquipmentBackpack
  * Create With ClassGeneration
- * @ApiGroup(groupName="/Api/User.UserEquipmentBackpack")
+ * @ApiGroup(groupName="用户装备")
  * @ApiGroupAuth(name="")
  * @ApiGroupDescription("")
  */
