@@ -20,23 +20,42 @@ class EquipmentService extends BaseService
 {
     use Singleton;
 
-    public function addUserEquipment($userId, GoodsModel $goodsInfo, GoodsEquipmentModel $equipmentInfo)
+    /**
+     * 新增用户装备
+     * addUserEquipment
+     * @param                     $userId
+     * @param GoodsModel          $goodsInfo
+     * @param GoodsEquipmentModel $equipmentInfo
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 9:16 下午
+     */
+    public function addUserEquipment($userId, GoodsModel $goodsInfo)
     {
-        BaseModel::transaction(function () use ($userId, $goodsInfo, $equipmentInfo) {
+        BaseModel::transaction(function () use ($userId, $goodsInfo) {
             //新增装备信息到背包
             $backpackInfo = BackpackService::getInstance()->addGoods($userId, $goodsInfo, 1);
+            $equipmentInfo = GoodsEquipmentModel::create()->get(['goodsCode'=>$goodsInfo->code]);
             //新增用户装备信息
-            $this->addUserEquipmentBackpack($userId, $backpackInfo, $equipmentInfo);
-            //随机用户词条
+            $userEquipmentBackpackInfo = $this->addUserEquipmentBackpack($userId, $backpackInfo, $equipmentInfo);
+            //随机装备词条
+            $entryArr = $this->addUserEquipmentEntry($backpackInfo, $equipmentInfo);
+            //更新装备本身的词条介绍
+            $this->updateEquipmentAttributeDescription($userEquipmentBackpackInfo);
+            //更新装备词条介绍
+            $this->updateEquipmentAttributeEntryDescription($userEquipmentBackpackInfo, $entryArr);
+            //更新装备额外词条
+
+            //更新装备套装词条
 
         });
     }
 
-    public function addUserEquipmentBackpack($userId, $backpackInfo,GoodsEquipmentModel $equipmentInfo)
+    public function addUserEquipmentBackpack($userId,UserBackpackModel $backpackInfo, GoodsEquipmentModel $equipmentInfo)
     {
 
         $data = [
-            'backpackId'                => $backpackInfo->userId,
+            'backpackId'                => $backpackInfo->backpackId,
             'userId'                    => $userId,
             'isUse'                     => 0,
             'strengthenLevel'           => $equipmentInfo->strengthenLevel,
@@ -136,6 +155,7 @@ class EquipmentService extends BaseService
             $bean->setValue($value);
             $randBeanList[] = $bean;
         }
+        $returnArr = [];
         $rand = new Rand($randBeanList);
         for ($i = $randNumArr[$equipmentInfo->rarityLevel]; $i > 0; $i--) {
             $value = $rand->randOne();
@@ -143,6 +163,7 @@ class EquipmentService extends BaseService
              * @var $goodsEquipmentAttributeEntryInfo GoodsEquipmentAttributeEntryModel
              */
             $goodsEquipmentAttributeEntryInfo = $value->getValue();
+
             if ($goodsEquipmentAttributeEntryInfo->baseCode == '0001') {//增加固定数值
                 $param = json_decode($goodsEquipmentAttributeEntryInfo->param, true);
                 //获取到数值
@@ -153,10 +174,41 @@ class EquipmentService extends BaseService
                 $goodsEquipmentAttributeEntryInfo->param = json_encode($param);
                 UserGoodsEquipmentAttributeEntryModel::create()->addData($backpackInfo->backpackId, $goodsEquipmentAttributeEntryInfo);
             }
+            $returnArr[] = $goodsEquipmentAttributeEntryInfo;
         }
+
+        return $returnArr;
     }
 
-    protected function getAttributeName($type)
+    public function updateEquipmentAttributeEntryDescription(UserEquipmentBackpackModel $userEquipmentBackpackInfo, array $goodsEquipmentAttributeEntryInfoArr)
+    {
+        /**
+         * @var GoodsEquipmentAttributeEntryModel[] $goodsEquipmentAttributeEntryInfoArr
+         */
+
+        $description = '';
+        foreach ($goodsEquipmentAttributeEntryInfoArr as $goodsEquipmentAttributeEntryInfo) {
+            $description .= "{$goodsEquipmentAttributeEntryInfo->description}\n";
+        }
+        $userEquipmentBackpackInfo->update([
+            'attributeEntryDescription' => $description
+        ]);
+    }
+
+    public function updateEquipmentAttributeDescription(UserEquipmentBackpackModel $userEquipmentBackpackInfo)
+    {
+        $description = '';
+        foreach ($this->getAttributeName() as $key=>$name){
+            if ($userEquipmentBackpackInfo->$key>0){
+                $description.="{$name}+{$userEquipmentBackpackInfo->$key}\n";
+            }
+        }
+        $userEquipmentBackpackInfo->update([
+            'attributeDescription' => $description
+        ]);
+    }
+
+    protected function getAttributeName($type=null)
     {
         $data = [
             'hp'                     => '血量',
@@ -186,6 +238,6 @@ class EquipmentService extends BaseService
             'dark'                   => '暗',
             'luck'                   => '幸运值',
         ];
-        return $data[$type] ?? '';
+        return $data[$type] ?? $data;
     }
 }
