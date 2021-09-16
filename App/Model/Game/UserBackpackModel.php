@@ -91,5 +91,15 @@ class UserBackpackModel extends BaseModel
             return $query;
         }, 'goodsCode', 'code');
     }
+
+    public function userEquipmentInfo()
+    {
+        return $this->hasOne(UserEquipmentBackpackModel::class, function (QueryBuilder $query) {
+            $query->fields(['backpackId', 'isUse', 'strengthenLevel', 'attributeDescription', 'attributeEntryDescription', 'extraAttributeDescription', 'suitAttribute2Description', 'suitAttribute3Description', 'suitAttribute5Description', 'equipmentType', 'suitCode', 'rarityLevel', 'level',
+            ]);
+            return $query;
+        }, 'backpackId', 'backpackId');
+    }
+
 }
 

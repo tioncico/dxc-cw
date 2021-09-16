@@ -129,6 +129,21 @@ class UserBackpack extends UserBase
      * @ApiSuccessParam(name="result[].goodsInfo.level",description="等级")
      * @ApiSuccessParam(name="result[].goodsInfo.rarityLevel",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
      * @ApiSuccessParam(name="result[].goodsInfo.extraData",description="额外数据")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.backpackId",description="背包id")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.isUse",description="是否装备")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.strengthenLevel",description="强化等级")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.attributeDescription",description="属性介绍")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.attributeEntryDescription",description="随机属性介绍")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.extraAttributeDescription",description="额外词条属性介绍")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.suitAttribute2Description",description="套装2属性词条介绍")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.suitAttribute3Description",description="套装3属性词条介绍")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.suitAttribute5Description",description="套装5属性词条介绍")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.goodsCode",description="物品code")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.goodsName",description="物品名")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.equipmentType",description="装备类型")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.suitCode",description="套装code")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.rarityLevel",description="稀有度")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.level",description="装备等级")
 	 */
 	public function getList()
 	{
@@ -142,7 +157,7 @@ class UserBackpack extends UserBase
 		if ($param['code']){
 		    $model->where('code',$param['goodsType']);
         }
-		$data = $model->with(['goodsInfo'],false)->where('userId',$this->who->userId)->getList($page, $pageSize);
+		$data = $model->with(['goodsInfo','userEquipmentInfo'],false)->where('userId',$this->who->userId)->getList($page, $pageSize);
 		$this->writeJson(Status::CODE_OK, $data, '获取列表成功');
 	}
 

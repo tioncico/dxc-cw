@@ -3,6 +3,7 @@
 namespace App\Model\Game;
 
 use App\Model\BaseModel;
+use EasySwoole\Mysqli\QueryBuilder;
 
 /**
  * UserEquipmentBackpackModel

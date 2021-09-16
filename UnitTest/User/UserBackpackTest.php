@@ -81,6 +81,16 @@ class UserBackpackTest extends UserBaseTestCase
 		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
 	}
 
+	public function testGetGoodsInfo()
+	{
+		$data = [
+		    'backpackId'=>59
+        ];
+		$response = $this->request('getGoodsInfo',$data);
+
+		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
+	}
+
 
 	public function testDel()
 	{
