@@ -112,6 +112,28 @@ class UserEquipment extends UserBase
         $this->writeJson(Status::CODE_OK, $newStrengthenInfo, "强化成功");
     }
 
+    /**
+     * @Api(name="分解装备",path="/Api/User/UserEquipmentBackpack/decompose")
+     * @ApiDescription("分解装备")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
+     * @Param(name="backpackId",alias="装备所属背包id",description="装备所属背包id",lengthMax="11",required="")
+     */
+    public function decompose()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId',$param['backpackId'])->where('userId', $this->who->userId)->get();
+        Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
+        Assert::assert($userEquipmentInfo->isUse==0, "不能分解已穿戴装备");
+        $goodsList = EquipmentService::getInstance()->decomposeEquipment($userEquipmentInfo);
+        $this->writeJson(Status::CODE_OK, $goodsList, "分解成功");
+    }
+
 
     /**
      * @Api(name="update",path="/Api/User/UserEquipmentBackpack/update")

@@ -231,12 +231,33 @@
         <field name="extraData" type="string" comment="额外数据"></field>
     </struct>
 
-
     <message dir="CS" name="CS_StrengthenEquipment" router="/Api/User/UserEquipmentBackpack/strengthen" comment="强化装备">
         <field name="backpackId" type="number" comment="装备id"></field>
     </message>
     <message dir="SC" name="SC_StrengthenEquipment" comment="强化装备">
         <field name="oldStrengthenInfo" type="EquipmentStrengthenInfo" comment="强化后装备信息(为空表示强化失败)"></field>
     </message>
+
+    <!-- 装备模块 -->
+    <message dir="CS" name="CS_DecomposeEquipment" router="/Api/User/UserEquipmentBackpack/decompose" comment="分解装备">
+        <field name="backpackId" type="number" comment="装备id"></field>
+    </message>
+    <message dir="SC" name="SC_DecomposeEquipment" comment="分解装备">
+        <field name="list" type="ChangeGoodsInfo[]" comment="分解之后获得的物品奖励"></field>
+    </message>
+    <struct name="ChangeGoodsInfo" comment="物品变动信息">
+        <field name="num" type="number" comment="物品数量"></field>
+        <field name="goodsId" type="number" comment="物品id"></field>
+        <field name="name" type="string" comment="物品名称"></field>
+        <field name="code" type="number" comment="物品code"></field>
+        <field name="baseCode" type="number" comment="物品基础类型"></field>
+        <field name="type" type="number" comment="物品类型"></field>
+        <field name="description" type="string" comment="介绍"></field>
+        <field name="gold" type="number" comment="售出金币"></field>
+        <field name="isSale" type="number" comment="是否可售出"></field>
+        <field name="level" type="number" comment="等级"></field>
+        <field name="rarityLevel" type="number" comment="稀有度"></field>
+        <field name="extraData" type="string" comment="额外数据"></field>
+    </struct>
 
 </root>

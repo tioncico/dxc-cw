@@ -11,6 +11,7 @@ use App\Model\Game\GoodsModel;
 use App\Model\Game\UserBackpackModel;
 use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserGoodsEquipmentAttributeEntryModel;
+use App\Model\UserGoodsEquipmentStrengthenAttributeModel;
 use App\Service\BaseService;
 use App\Utility\Rand\Bean;
 use App\Utility\Rand\Rand;
@@ -19,6 +20,40 @@ use EasySwoole\Component\Singleton;
 class EquipmentService extends BaseService
 {
     use Singleton;
+
+    /**
+     * 分解装备
+     * decomposeEquipment
+     * @param UserEquipmentBackpackModel $equipmentInfo
+     * @author tioncico
+     * Time: 8:11 下午
+     */
+    public function decomposeEquipment(UserEquipmentBackpackModel $equipmentInfo)
+    {
+        //用户装备信息包括
+        //用户物品栏数据
+        //用户装备数据
+        //装备附加属性
+        //装备强化属性
+        //分解材料数量 = 装备等级*装备品级*装备强化等级*5
+        $goodsList = BaseModel::transaction(function () use ($equipmentInfo) {
+            $materialNum = $equipmentInfo->level * $equipmentInfo->rarityLevel * $equipmentInfo->strengthenLevel * 5;
+            //增加物品
+            $materialInfo = GoodsModel::create()->getInfoByCode('material00001');
+            $backpackInfo = BackpackService::getInstance()->addGoods($equipmentInfo->userId, $materialInfo, $materialNum);
+            //删除背包
+            UserBackpackModel::create()->destroy(['backpackId' => $equipmentInfo->backpackId]);
+            //删除装备附件属性
+            UserGoodsEquipmentAttributeEntryModel::create()->destroy(['backpackId' => $equipmentInfo->backpackId]);
+            //删除装备强化属性
+            UserGoodsEquipmentStrengthenAttributeModel::create()->destroy(['userEquipmentBackpackId' => $equipmentInfo->backpackId]);
+            //删除装备属性
+            $equipmentInfo->destroy();
+            $goodsList[] = $materialInfo['num'] = $materialNum;
+            return $goodsList;
+        });
+        return $goodsList;
+    }
 
     /**
      * 新增用户装备
