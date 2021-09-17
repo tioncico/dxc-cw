@@ -153,22 +153,6 @@
         <field name="goodsList" type="MailGoodsInfo[]" comment="邮件物品详情"></field>
     </message>
 
-    <struct name="MailGoodsInfo" comment="物品详情">
-        <field name="mailId" type="number" comment="邮件id"></field>
-        <field name="num" type="number" comment="物品数量"></field>
-        <field name="goodsId" type="number" comment="物品id"></field>
-        <field name="name" type="string" comment="物品名称"></field>
-        <field name="code" type="number" comment="物品code"></field>
-        <field name="baseCode" type="number" comment="物品基础类型"></field>
-        <field name="type" type="number" comment="物品类型"></field>
-        <field name="description" type="string" comment="介绍"></field>
-        <field name="gold" type="number" comment="售出金币"></field>
-        <field name="isSale" type="number" comment="是否可售出"></field>
-        <field name="level" type="number" comment="等级"></field>
-        <field name="rarityLevel" type="number" comment="稀有度"></field>
-        <field name="extraData" type="string" comment="额外数据"></field>
-    </struct>
-
     <message dir="CS" name="CS_ReceiveMailGoods" router="/Api/User/Mail/receive" comment="领取邮件物品">
         <field name="id" type="number" comment="邮件id"></field>
     </message>
