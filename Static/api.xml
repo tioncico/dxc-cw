@@ -106,7 +106,7 @@
         <field name="num" type="number" comment="物品数量"></field>
         <field name="goodsType" type="number" comment="物品类型"></field>
         <field name="goodsInfo" type="GoodsInfo" comment="物品详情"></field>
-        <field name="userEquipmentInfo`" type="UserEquipmentInfo" comment="用户装备信息"></field>
+        <field name="userEquipmentInfo" type="UserEquipmentInfo" comment="用户装备信息"></field>
         <field name="strengthenInfo" type="EquipmentStrengthenInfo" comment="装备强化信息"></field>
     </struct>
     <struct name="UserEquipmentInfo" comment="用户装备信息">
