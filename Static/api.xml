@@ -235,7 +235,7 @@
     <message dir="CS" name="CS_StrengthenEquipment" router="/Api/User/UserEquipmentBackpack/strengthen" comment="强化装备">
         <field name="backpackId" type="number" comment="装备id"></field>
     </message>
-    <message dir="SC" name="SC_GetEquipmentStrengthenData" router="/Api/User/UserEquipmentBackpack/getStrengthenData" comment="获取强化装备信息">
+    <message dir="SC" name="SC_StrengthenEquipment" router="/Api/User/UserEquipmentBackpack/getStrengthenData" comment="强化装备">
         <field name="oldStrengthenInfo" type="EquipmentStrengthenInfo" comment="强化后装备信息(为空表示强化失败)"></field>
     </message>
 
