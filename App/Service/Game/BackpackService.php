@@ -53,8 +53,7 @@ class BackpackService extends BaseService
     {
         //装备无法叠加
         if ($goodsModel->type == 7) {
-            $backpackInfo = UserBackpackModel::create()->addData($userId, $goodsModel, 1);
-//            $this->addUserEquipmentInfo($userId, $backpackInfo, $equipmentModel);
+            $backpackInfo =   EquipmentService::getInstance()->addUserEquipment($userId,$goodsModel);
         } elseif ($goodsModel->type == 1) {
             $backpackInfo = $this->addGold($userId, $num);
         } elseif ($goodsModel->type == 2) {
@@ -68,6 +67,25 @@ class BackpackService extends BaseService
             }
         }
 
+        return $backpackInfo;
+    }
+
+    public function decGoods($userId, GoodsModel $goodsModel, $num)
+    {
+        if ($goodsModel->type == 7) {
+//            $backpackInfo =   EquipmentService::getInstance()->addUserEquipment($userId,$goodsModel);
+        } elseif ($goodsModel->type == 1) {
+            $backpackInfo = $this->decGold($userId, $num);
+        } elseif ($goodsModel->type == 2) {
+            $backpackInfo = $this->decMoney($userId, $num);
+        } else {
+            $backpackInfo = UserBackpackModel::create()->getInfoByCode($userId, $goodsModel->code);
+            if (empty($backpackInfo)) {
+                $backpackInfo = UserBackpackModel::create()->addData($userId, $goodsModel, $num);
+            } else {
+                $backpackInfo->update(['num' => QueryBuilder::dec($num)]);
+            }
+        }
         return $backpackInfo;
     }
 

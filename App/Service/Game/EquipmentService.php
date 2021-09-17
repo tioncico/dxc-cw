@@ -30,12 +30,12 @@ class EquipmentService extends BaseService
      * @author tioncico
      * Time: 9:16 下午
      */
-    public function addUserEquipment($userId, GoodsModel $goodsInfo)
+    public function addUserEquipment($userId, GoodsModel $goodsInfo): UserBackpackModel
     {
-        BaseModel::transaction(function () use ($userId, $goodsInfo) {
+        return BaseModel::transaction(function () use ($userId, $goodsInfo) {
             //新增装备信息到背包
             $backpackInfo = BackpackService::getInstance()->addGoods($userId, $goodsInfo, 1);
-            $equipmentInfo = GoodsEquipmentModel::create()->get(['goodsCode'=>$goodsInfo->code]);
+            $equipmentInfo = GoodsEquipmentModel::create()->get(['goodsCode' => $goodsInfo->code]);
             //新增用户装备信息
             $userEquipmentBackpackInfo = $this->addUserEquipmentBackpack($userId, $backpackInfo, $equipmentInfo);
             //随机装备词条
@@ -47,7 +47,7 @@ class EquipmentService extends BaseService
             //更新装备额外词条
 
             //更新装备套装词条
-
+            return $backpackInfo;
         });
     }
 
@@ -63,7 +63,7 @@ class EquipmentService extends BaseService
      * @author tioncico
      * Time: 9:45 下午
      */
-    protected function addUserEquipmentBackpack($userId,UserBackpackModel $backpackInfo, GoodsEquipmentModel $equipmentInfo)
+    protected function addUserEquipmentBackpack($userId, UserBackpackModel $backpackInfo, GoodsEquipmentModel $equipmentInfo)
     {
 
         $data = [
@@ -231,9 +231,9 @@ class EquipmentService extends BaseService
     protected function updateEquipmentAttributeDescription(UserEquipmentBackpackModel $userEquipmentBackpackInfo)
     {
         $description = '';
-        foreach ($this->getAttributeName() as $key=>$name){
-            if ($userEquipmentBackpackInfo->$key>0){
-                $description.="{$name}+{$userEquipmentBackpackInfo->$key}\n";
+        foreach ($this->getAttributeName() as $key => $name) {
+            if ($userEquipmentBackpackInfo->$key > 0) {
+                $description .= "{$name}+{$userEquipmentBackpackInfo->$key}\n";
             }
         }
         $userEquipmentBackpackInfo->update([
@@ -241,7 +241,7 @@ class EquipmentService extends BaseService
         ]);
     }
 
-    protected function getAttributeName($type=null)
+    protected function getAttributeName($type = null)
     {
         $data = [
             'hp'                     => '血量',

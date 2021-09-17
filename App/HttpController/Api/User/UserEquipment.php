@@ -2,8 +2,11 @@
 
 namespace App\HttpController\Api\User;
 
+use App\Model\BaseModel;
 use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserGoodsEquipmentStrengthenAttributeModel;
+use App\Service\Game\BackpackService;
+use App\Service\Game\EquipmentService;
 use App\Service\Game\EquipmentStrengthenService;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
@@ -51,20 +54,20 @@ class UserEquipment extends UserBase
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         //获取装备强化信息
         $oldStrengthenInfo = UserGoodsEquipmentStrengthenAttributeModel::create()->getData($userEquipmentInfo->backpackId);
-        $newStrengthenInfo = EquipmentStrengthenService::getInstance()->getStrengthenData($oldStrengthenInfo);
+        $newStrengthenInfo = EquipmentStrengthenService::getInstance()->getStrengthenData($userEquipmentInfo,$oldStrengthenInfo);
         //获取装备强化所需要的材料
         $consumableData = EquipmentStrengthenService::getInstance()->getStrengthenConsumable($userEquipmentInfo, $newStrengthenInfo);
 
         $this->writeJson(Status::CODE_OK, [
             'oldStrengthenInfo' => $oldStrengthenInfo,
-            'newStrengthenInfo' => $oldStrengthenInfo,
+            'newStrengthenInfo' => $newStrengthenInfo,
             'consumableData'    => $consumableData,
         ], "获取强化数据成功");
     }
 
     /**
      * @Api(name="强化装备",path="/Api/User/UserEquipmentBackpack/strengthen")
-     * @ApiDescription("新增数据")
+     * @ApiDescription("强化装备")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
      * @ApiSuccessParam(name="code",description="状态码")
@@ -79,19 +82,33 @@ class UserEquipment extends UserBase
         $param = ContextManager::getInstance()->get('param');
         $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('userId', $this->who->userId)->get($param['backpackId']);
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
+        Assert::assert($userEquipmentInfo->isUse==0, "不能强化已穿戴装备");
         //获取装备强化信息
         $oldStrengthenInfo = UserGoodsEquipmentStrengthenAttributeModel::create()->getData($userEquipmentInfo->backpackId);
-        $newStrengthenInfo = EquipmentStrengthenService::getInstance()->getStrengthenData($oldStrengthenInfo);
+        $newStrengthenInfo = EquipmentStrengthenService::getInstance()->getStrengthenData($userEquipmentInfo,$oldStrengthenInfo);
         //获取装备强化所需要的材料
         $consumableData = EquipmentStrengthenService::getInstance()->getStrengthenConsumable($userEquipmentInfo, $newStrengthenInfo);
         //判断数量是否足够
+        foreach ($consumableData as $consumableDatum){
+            if ($consumableDatum['nowNum']<$consumableDatum['num']){
+                Assert::assert(false,"材料[{$consumableDatum['name']}]不足");
+            }
+        }
+        BaseModel::transaction(function ()use($consumableData,$newStrengthenInfo){
+            //先消耗物品
+            /**
+             * @var $consumableDatum  UserGoodsEquipmentStrengthenAttributeModel
+             */
+            foreach ($consumableData as $consumableDatum){
+                BackpackService::getInstance()->decGoods($this->who->userId,$consumableDatum,$consumableDatum['num']);
+            }
+            //强化
+            $newStrengthenInfo = EquipmentStrengthenService::getInstance()->strengthenEquipment($newStrengthenInfo);
+            Assert::assert($newStrengthenInfo!=null,'强化失败,请重新强化');
+            return $newStrengthenInfo;
+        });
 
-
-        $this->writeJson(Status::CODE_OK, [
-            'oldStrengthenInfo' => $oldStrengthenInfo,
-            'newStrengthenInfo' => $oldStrengthenInfo,
-            'consumableData'    => $consumableData,
-        ], "获取强化数据成功");
+        $this->writeJson(Status::CODE_OK, $newStrengthenInfo, "强化成功");
     }
 
 

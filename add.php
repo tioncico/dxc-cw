@@ -23,11 +23,7 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-    \App\Service\Game\MailService::getInstance()->sendMail(1,'测试','测试',[
-        [
-            'num'=>1,
-            'code'=>'pet00031'
-        ]
-    ]);
+    \App\Service\Game\BackpackService::getInstance()->addGoods(1,GoodsModel::create()->getInfoByCode('material00001'),99999999999999999);
+
     \Swoole\Timer::clearAll();
 });
