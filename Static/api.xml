@@ -204,7 +204,7 @@
     <message dir="SC" name="SC_GetEquipmentStrengthenData" comment="获取强化装备信息">
         <field name="oldStrengthenInfo" type="EquipmentStrengthenInfo" comment="原有装备强化信息"></field>
         <field name="newStrengthenInfo" type="EquipmentStrengthenInfo" comment="强化后装备强化信息"></field>
-        <field name="consumableData" type="consumableGoodsInfo[]" comment="强化需要消耗物品信息"></field>
+        <field name="consumableData" type="ConsumableGoodsInfo[]" comment="强化需要消耗物品信息"></field>
     </message>
 
     <struct name="EquipmentStrengthenInfo" comment="装备强化信息">
@@ -215,7 +215,7 @@
         <field name="defense" type="number" comment="防御力"></field>
     </struct>
 
-    <struct name="consumableGoodsInfo" comment="强化所需消耗物品信息">
+    <struct name="ConsumableGoodsInfo" comment="强化所需消耗物品信息">
         <field name="nowNum" type="number" comment="当前数量"></field>
         <field name="num" type="number" comment="所需数量"></field>
         <field name="goodsId" type="number" comment="物品id"></field>
