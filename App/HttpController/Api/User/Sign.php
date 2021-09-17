@@ -65,7 +65,7 @@ class Sign extends UserBase
         $signList = SignRewardModel::create()->order('signNum', 'asc')->all();
         //当前用户签到天数
         $signInfo = UserSignModel::create()->get($this->who()->userId);
-        $signNum = $signInfo->signNum;
+        $signNum = $signInfo->signNum ?? 0;
         $lastSignTime = $signInfo->lastUpdateTime ?? 0;
         //如果时间小于昨天
         if ($signInfo->lastUpdateTime < strtotime(date('Y-m-d', time() - 86400))) {
