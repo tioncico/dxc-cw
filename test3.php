@@ -17,7 +17,7 @@ go(function () {
 //   $data =  \App\Service\Game\EquipmentService::getInstance()->addUserEquipmentEntry(new \App\Model\Game\UserBackpackModel(),GoodsEquipmentModel::create()->get("eq_0001"));
 //   var_dump($data);
 
-   \App\Service\Game\EquipmentService::getInstance()->addUserEquipment(1,\App\Model\Game\GoodsModel::create()->getInfoByCode('eq_0001'),GoodsEquipmentModel::create()->get("eq_0001"));
+var_dump(xmlrpc_encode(['code'=>123312,'msg'=>'asddsa','data'=>['sad'=>123]]));
 
 
     \Swoole\Timer::clearAll();

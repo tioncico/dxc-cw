@@ -14,7 +14,7 @@
 
     <struct name="ServerInfo" comment="服务器详情">
         <field name="serverId" type="number" comment="服务器id"></field>
-        <field name="serverName" type="serverName" comment="服务器名称"></field>
+        <field name="serverName" type="string" comment="服务器名称"></field>
         <field name="isAllowRegister" type="boolean" comment="是否允许注册(服务器爆满,不允许新创角"></field>
         <field name="serverHost" type="string" comment="服务器地址"></field>
     </struct>
