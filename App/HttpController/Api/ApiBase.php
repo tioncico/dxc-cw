@@ -38,7 +38,7 @@ class ApiBase extends Base
                 "msg" => $msg,
                 'requestId'=>$this->request()->getRequestParam('requestId')
             );
-            $this->response()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            $this->response()->write(xmlrpc_encode($data));
             $this->response()->withHeader('Content-type', 'application/json;charset=utf-8');
             $this->response()->withStatus(200);
             return true;
