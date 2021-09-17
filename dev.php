@@ -15,7 +15,9 @@ return [
             'worker_num'    => 8,
             'reload_async'  => true,
             'package_max_length'       => 1024 * 1024 * 200,
-            'max_wait_time' => 3
+            'max_wait_time' => 3,
+            'document_root' => EASYSWOOLE_ROOT . '/Static/',
+            'enable_static_handler' => true,
         ],
         'TASK'           => [
             'workerNum'     => 4,

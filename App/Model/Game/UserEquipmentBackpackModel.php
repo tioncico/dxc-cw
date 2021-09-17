@@ -21,7 +21,7 @@ use EasySwoole\Mysqli\QueryBuilder;
  * @property string $suitAttribute5Description // 套装5属性词条介绍
  * @property string $goodsCode // 物品code
  * @property string $goodsName // 物品名
- * @property int $equipmentType // 装备类型
+ * @property int $equipmentType // 装备类型  1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指
  * @property string $suitCode // 套装code
  * @property int $rarityLevel // 稀有度
  * @property int $level // 装备等级

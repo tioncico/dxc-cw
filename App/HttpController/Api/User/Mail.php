@@ -128,7 +128,8 @@ class Mail extends UserBase
      * @ApiSuccessParam(name="result.[].id",description="")
      * @ApiSuccessParam(name="result.[].mailId",description="邮件id")
      * @ApiSuccessParam(name="result.[].goodsId",description="物品id")
-     * @ApiSuccessParam(name="result.[].num",description="数量")	 * @ApiSuccessParam(name="result.goodsId",description="物品id")
+     * @ApiSuccessParam(name="result.[].num",description="数量")
+     * @ApiSuccessParam(name="result.[].goodsInfo.goodsId",description="物品id")
      * @ApiSuccessParam(name="result.[].goodsInfo.name",description="物品名称")
      * @ApiSuccessParam(name="result.[].goodsInfo.code",description="物品code值")
      * @ApiSuccessParam(name="result.[].goodsInfo.baseCode",description="物品基础类型")
@@ -146,18 +147,19 @@ class Mail extends UserBase
         $model = new MailModel();
         $info = $model->where('userId', $this->who->userId)->get(['id' => $param['id']]);
         Assert::assert(!!$info, '邮件不存在');
-        Assert::assert($info->isReceive == 0, '邮件已领取');
+//        Assert::assert($info->isReceive == 0, '邮件已领取');
         //获取邮件附带数据
-        $goodsList = MailGoodsModel::create()->with(['goodsInfo'], false)->where('mailId', $info->id)->all();
+        $goodsList = GoodsModel::create()
+            ->field(['goods_list.*','mail_goods_list.mailId','mail_goods_list.num'])
+            ->join('mail_goods_list','goods_list.code = mail_goods_list.goodsCode')->where('mailId', $info->id)->all();
         Assert::assert(!empty($goodsList), '没有附件领取');
 
         BaseModel::transaction(function () use ($goodsList, $info) {
             /**
-             * @var $goods MailGoodsModel
+             * @var $goods GoodsModel
              */
             foreach ($goodsList as $goods) {
-                $goodsInfo = $goods->goodsInfo;
-                BackpackService::getInstance()->addGoods($this->who->userId, $goodsInfo, $goods->num);
+                BackpackService::getInstance()->addGoods($this->who->userId, $goods, $goods['num']);
             }
             $info->update(['isReceive' => 1]);
         });
@@ -217,17 +219,18 @@ class Mail extends UserBase
      * @ApiSuccessParam(name="result[].addTime",description="发送时间")
      * @ApiSuccessParam(name="result[].isRead",description="是否已读")
      * @ApiSuccessParam(name="result[].isReceive",description="是否已接收")
-     * @ApiSuccessParam(name="result[].goodsList.goodsId",description="物品id")
-     * @ApiSuccessParam(name="result[].goodsList.name",description="物品名称")
-     * @ApiSuccessParam(name="result[].goodsList.code",description="物品code值")
-     * @ApiSuccessParam(name="result[].goodsList.baseCode",description="物品基础类型")
-     * @ApiSuccessParam(name="result[].goodsList.type",description="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备")
-     * @ApiSuccessParam(name="result[].goodsList.description",description="介绍")
-     * @ApiSuccessParam(name="result[].goodsList.gold",description="售出金币")
-     * @ApiSuccessParam(name="result[].goodsList.isSale",description="是否可售出")
-     * @ApiSuccessParam(name="result[].goodsList.level",description="等级")
-     * @ApiSuccessParam(name="result[].goodsList.rarityLevel",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
-     * @ApiSuccessParam(name="result[].goodsList.extraData",description="额外数据")
+     * @ApiSuccessParam(name="result[].goodsList[].num",description="物品数量")
+     * @ApiSuccessParam(name="result[].goodsList[].goodsId",description="物品id")
+     * @ApiSuccessParam(name="result[].goodsList[].name",description="物品名称")
+     * @ApiSuccessParam(name="result[].goodsList[].code",description="物品code值")
+     * @ApiSuccessParam(name="result[].goodsList[].baseCode",description="物品基础类型")
+     * @ApiSuccessParam(name="result[].goodsList[].type",description="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备")
+     * @ApiSuccessParam(name="result[].goodsList[].description",description="介绍")
+     * @ApiSuccessParam(name="result[].goodsList[].gold",description="售出金币")
+     * @ApiSuccessParam(name="result[].goodsList[].isSale",description="是否可售出")
+     * @ApiSuccessParam(name="result[].goodsList[].level",description="等级")
+     * @ApiSuccessParam(name="result[].goodsList[].rarityLevel",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
+     * @ApiSuccessParam(name="result[].goodsList[].extraData",description="额外数据")
      */
     public function getList()
     {

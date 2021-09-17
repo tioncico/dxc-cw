@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <!-- 消息结构 message => dir(CS:请求 SC:返回) name:接口名称 router:接口路由 comment:注释 -->
+    <!-- SC里面的字段是服务端返回结构里面的result结构 -->
+    <!-- 数据结构 struct => name:接口名称 comment:注释 -->
+    <!-- 字段 field => name:字段名 type:类型(number/string/boolean/数据结构,数组:基础类型[])  -->
+
+    <!-- 账号模块 -->
+    <message dir="CS" name="CS_GetServerList" router="/Api/Common/Server/getList" comment="获取服务器列表">
+    </message>
+    <message dir="SC" name="SC_GetServerList" comment="返回服务器列表">
+        <field name="list" type="ServerInfo[]" comment="服务器列表"></field>
+    </message>
+
+    <struct name="ServerInfo" comment="服务器详情">
+        <field name="serverId" type="number" comment="服务器id"></field>
+        <field name="serverName" type="string" comment="服务器名称"></field>
+        <field name="isAllowRegister" type="boolean" comment="是否允许注册(服务器爆满,不允许新创角"></field>
+        <field name="serverHost" type="string" comment="服务器地址"></field>
+    </struct>
+
+    <message dir="CS" name="CS_AccountRegister" router="/Api/User/Auth/register" comment="账号注册">
+        <field name="account" type="string" comment="账号"></field>
+        <field name="password" type="string" comment="密码"></field>
+    </message>
+    <message dir="SC" name="SC_AccountRegister" comment="返回账号注册">
+    </message>
+
+    <message dir="CS" name="CS_AccountLogin" router="/Api/User/Auth/login" comment="账号登录">
+        <field name="account" type="string" comment="账号"></field>
+        <field name="password" type="string" comment="密码"></field>
+    </message>
+    <message dir="SC" name="SC_AccountLogin" comment="返回账号登录">
+        <field name="account" type="string" comment="账号"></field>
+        <field name="addTime" type="string" comment="添加时间"></field>
+        <field name="avatar" type="string" comment="头像"></field>
+        <field name="nickname" type="string" comment="别名"></field>
+        <field name="password" type="string" comment="密码"></field>
+        <field name="phone" type="number" comment="号码"></field>
+        <field name="session" type="string" comment="session"></field>
+        <field name="state" type="string" comment="state"></field>
+        <field name="userId" type="string" comment="用户id"></field>
+    </message>
+
+    <!-- 角色模块 -->
+    <message dir="CS" name="CS_UserCreate" router="/Api/User/Game/add" comment="创建角色">
+        <field name="name" type="string" comment="名称"></field>
+    </message>
+    <message dir="SC" name="SC_UserCreate" comment="返回角色创建">
+    </message>
+
+    <message dir="CS" name="CS_GetUserInfo" router="/Api/User/Game/userInfo" comment="获取角色信息">
+    </message>
+    <message dir="SC" name="SC_GetUserInfo" comment="返回角色信息">
+        <field name="goldNum" type="number" comment="金币"></field>
+        <field name="moneyNum" type="number" comment="钻石"></field>
+        <field name="attributeInfo" type="AttributeInfo" comment="角色信息"></field>
+    </message>
+
+    <struct name="AttributeInfo" comment="角色信息">
+        <field name="userId" type="number" comment="用户id"></field>
+        <field name="level" type="number" comment="等级"></field>
+        <field name="exp" type="number" comment="经验"></field>
+        <field name="hp" type="number" comment="血量"></field>
+        <field name="mp" type="number" comment="法力值"></field>
+        <field name="attack" type="number" comment="攻击力"></field>
+        <field name="defense" type="number" comment="防御力"></field>
+        <field name="endurance" type="number" comment="耐力"></field>
+        <field name="intellect" type="number" comment="智力"></field>
+        <field name="strength" type="number" comment="力量"></field>
+        <field name="enduranceQualification" type="number" comment="耐力资质"></field>
+        <field name="intellectQualification" type="number" comment="智力资质"></field>
+        <field name="strengthQualification" type="number" comment="力量资质"></field>
+        <field name="criticalRate" type="number" comment="暴击率"></field>
+        <field name="criticalStrikeDamage" type="number" comment="暴击伤害"></field>
+        <field name="hitRate" type="number" comment="命中率"></field>
+        <field name="dodgeRate" type="number" comment="闪避率"></field>
+        <field name="penetrate" type="number" comment="穿透"></field>
+        <field name="attackSpeed" type="number" comment="攻击速度"></field>
+        <field name="userElement" type="number" comment="角色元素"></field>
+        <field name="attackElement" type="number" comment="攻击元素"></field>
+        <field name="jin" type="number" comment="金"></field>
+        <field name="mu" type="number" comment="木"></field>
+        <field name="tu" type="number" comment="土"></field>
+        <field name="sui" type="number" comment="水"></field>
+        <field name="huo" type="number" comment="火"></field>
+        <field name="light" type="number" comment="光"></field>
+        <field name="dark" type="number" comment="暗"></field>
+        <field name="luck" type="number" comment="幸运值"></field>
+        <field name="physicalStrength" type="number" comment="体力"></field>
+    </struct>
+
+    <!-- 背包模块 -->
+    <message dir="CS" name="CS_GetBagInfo" router="/Api/User/UserBackpack/getList" comment="获取背包数据">
+        <field name="goodsType" type="number" comment="背包类型:1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备"></field>
+    </message>
+    <message dir="SC" name="SC_GetBagInfo" comment="返回背包数据">
+        <field name="list" type="Goods[]" comment="物品列表"></field>
+    </message>
+
+    <struct name="Goods" comment="物品结构">
+        <field name="backpackId" type="number" comment="背包id"></field>
+        <field name="userId" type="number" comment="用户id"></field>
+        <field name="goodsId" type="number" comment="物品id"></field>
+        <field name="goodsCode" type="number" comment="物品code"></field>
+        <field name="num" type="number" comment="物品数量"></field>
+        <field name="goodsType" type="number" comment="物品类型"></field>
+        <field name="goodsInfo" type="GoodsInfo" comment="物品详情"></field>
+    </struct>
+    <struct name="GoodsInfo" comment="物品详情">
+        <field name="goodsId" type="number" comment="物品id"></field>
+        <field name="name" type="string" comment="物品名称"></field>
+        <field name="code" type="number" comment="物品code"></field>
+        <field name="baseCode" type="number" comment="物品基础类型"></field>
+        <field name="type" type="number" comment="物品类型"></field>
+        <field name="description" type="string" comment="介绍"></field>
+        <field name="gold" type="number" comment="售出金币"></field>
+        <field name="isSale" type="number" comment="是否可售出"></field>
+        <field name="level" type="number" comment="等级"></field>
+        <field name="rarityLevel" type="number" comment="稀有度"></field>
+        <field name="extraData" type="string" comment="额外数据"></field>
+    </struct>
+
+    <!-- 签到模块 -->
+    <message dir="CS" name="CS_GetSignInfo" router="/Api/User/Sign/getInfo" comment="获取签到奖励列表和当前连续签到天数">
+    </message>
+    <message dir="SC" name="SC_GetSignInfo" comment="返回签到数据">
+        <field name="signNum" type="number" comment="连续签到天数"></field>
+        <field name="signRewardList" type="SignInfo[]" comment="签到奖励数据"></field>
+        <field name="lastSignTime" type="number" comment="上次签到时间戳"></field>
+    </message>
+
+    <message dir="CS" name="CS_UserSign" router="/Api/User/Sign/userSign" comment="用户签到">
+    </message>
+    <message dir="SC" name="SC_UserSign" comment="返回用户签到">
+    </message>
+
+    <struct name="SignInfo" comment="签到奖励">
+        <field name="goodsInfo" type="GoodsInfo" comment="物品详情"></field>
+        <field name="num" type="number" comment="数量"></field>
+    </struct>
+
+    <!-- 邮件模块 -->
+    <message dir="CS" name="CS_GetMailList" router="/Api/User/Mail/getList" comment="获取用户邮件列表"></message>
+    <message dir="SC" name="SC_GetMailList" comment="返回邮件数据">
+        <field name="id" type="number" comment="邮件id"></field>
+        <field name="userId" type="number" comment="用户id"></field>
+        <field name="name" type="string" comment="邮件标题"></field>
+        <field name="msg" type="string" comment="邮件内容"></field>
+        <field name="addTime" type="number" comment="发送时间"></field>
+        <field name="isRead" type="number" comment="是否已读"></field>
+        <field name="isReceive" type="number" comment="是否已接收"></field>
+        <field name="goodsList" type="MailGoodsInfo[]" comment="邮件物品详情"></field>
+    </message>
+
+    <message dir="CS" name="CS_ReceiveMailGoods" router="/Api/User/Mail/receive" comment="领取邮件物品">
+        <field name="id" type="number" comment="邮件id"></field>
+    </message>
+    <message dir="SC" name="SC_ReceiveMailGoods" comment="返回领取的物品数据">
+        <field name="array" type="MailGoodsInfo[]" comment="邮件物品详情"></field>
+    </message>
+
+    <struct name="MailGoodsInfo" comment="物品详情">
+        <field name="mailId" type="number" comment="邮件id"></field>
+        <field name="num" type="number" comment="物品数量"></field>
+        <field name="goodsId" type="number" comment="物品id"></field>
+        <field name="name" type="string" comment="物品名称"></field>
+        <field name="code" type="number" comment="物品code"></field>
+        <field name="baseCode" type="number" comment="物品基础类型"></field>
+        <field name="type" type="number" comment="物品类型"></field>
+        <field name="description" type="string" comment="介绍"></field>
+        <field name="gold" type="number" comment="售出金币"></field>
+        <field name="isSale" type="number" comment="是否可售出"></field>
+        <field name="level" type="number" comment="等级"></field>
+        <field name="rarityLevel" type="number" comment="稀有度"></field>
+        <field name="extraData" type="string" comment="额外数据"></field>
+    </struct>
+
+    <message dir="CS" name="CS_DelMail" router="/Api/User/Mail/delete" comment="删除邮件">
+        <field name="id" type="number" comment="邮件id,不传则删除所有已领取邮件"></field>
+    </message>
+    <message dir="SC" name="SC_DelMail" comment="无返回值">
+    </message>
+
+</root>

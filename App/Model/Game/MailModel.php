@@ -62,7 +62,7 @@ class MailModel extends BaseModel
     public function goodsList()
     {
         return $this->hasMany(GoodsModel::class, function (QueryBuilder $query) {
-            $query->fields(['goods_list.*','mail_goods_list.mailId']);
+            $query->fields(['goods_list.*','mail_goods_list.mailId','mail_goods_list.num']);
             $query->join('mail_goods_list', 'mail_goods_list.goodsCode = goods_list.code');
             return $query;
         }, 'id', 'mailId');

@@ -2,7 +2,7 @@
 
 namespace App\HttpController\Api\User;
 
-use App\Model\UserGoodsEquipmentStrengthenAttributeModel;
+use App\Model\Game\UserGoodsEquipmentStrengthenAttributeModel;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiDescription;
