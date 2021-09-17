@@ -64,7 +64,7 @@ class UserEquipmentTest extends UserBaseTestCase
 	public function testGetStrengthenData()
 	{
 		$data = [
-		    'backpackId'=>1
+		    'backpackId'=>47
         ];
 		$response = $this->request('getStrengthenData',$data);
 		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
@@ -73,7 +73,7 @@ class UserEquipmentTest extends UserBaseTestCase
 	public function testStrengthen()
 	{
 		$data = [
-		    'backpackId'=>1
+		    'backpackId'=>60
         ];
 		$response = $this->request('strengthen',$data);
 		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));

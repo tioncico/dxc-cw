@@ -106,6 +106,21 @@
         <field name="num" type="number" comment="物品数量"></field>
         <field name="goodsType" type="number" comment="物品类型"></field>
         <field name="goodsInfo" type="GoodsInfo" comment="物品详情"></field>
+        <field name="userEquipmentInfo`" type="UserEquipmentInfo" comment="用户装备信息"></field>
+        <field name="strengthenInfo" type="EquipmentStrengthenInfo" comment="装备强化信息"></field>
+    </struct>
+    <struct name="UserEquipmentInfo" comment="用户装备信息">
+        <field name="backpackId" type="number" comment="背包id"></field>
+        <field name="isUse" type="number" comment="是否穿戴"></field>
+        <field name="strengthenLevel" type="number" comment="强化等级"></field>
+        <field name="attributeDescription" type="string" comment="基础属性介绍"></field>
+        <field name="attributeEntryDescription" type="string" comment="随机词条属性介绍"></field>
+        <field name="extraAttributeDescription" type="string" comment="高级装备专属属性介绍"></field>
+        <field name="suitAttribute2Description" type="string" comment="2件套套装介绍"></field>
+        <field name="suitAttribute3Description" type="string" comment="3件套套装介绍"></field>
+        <field name="suitAttribute5Description" type="string" comment="5件套套装介绍"></field>
+        <field name="equipmentType" type="number" comment="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指"></field>
+        <field name="suitCode" type="number" comment="套装code.为0或空代表不是套装"></field>
     </struct>
     <struct name="GoodsInfo" comment="物品详情">
         <field name="goodsId" type="number" comment="物品id"></field>
@@ -187,12 +202,12 @@
         <field name="backpackId" type="number" comment="装备id"></field>
     </message>
     <message dir="SC" name="SC_GetEquipmentStrengthenData" router="/Api/User/UserEquipmentBackpack/getStrengthenData" comment="获取强化装备信息">
-        <field name="oldStrengthenInfo" type="StrengthenInfo" comment="原有装备强化信息"></field>
-        <field name="newStrengthenInfo" type="StrengthenInfo" comment="强化后装备强化信息"></field>
+        <field name="oldStrengthenInfo" type="EquipmentStrengthenInfo" comment="原有装备强化信息"></field>
+        <field name="newStrengthenInfo" type="EquipmentStrengthenInfo" comment="强化后装备强化信息"></field>
         <field name="consumableData" type="consumableGoodsInfo[]" comment="强化需要消耗物品信息"></field>
     </message>
 
-    <struct name="StrengthenInfo" comment="装备强化信息">
+    <struct name="EquipmentStrengthenInfo" comment="装备强化信息">
         <field name="userEquipmentBackpackId" type="number" comment="用户装备id"></field>
         <field name="strengthenLevel" type="number" comment="强化等级"></field>
         <field name="hp" type="number" comment="血量"></field>
@@ -221,7 +236,7 @@
         <field name="backpackId" type="number" comment="装备id"></field>
     </message>
     <message dir="SC" name="SC_GetEquipmentStrengthenData" router="/Api/User/UserEquipmentBackpack/getStrengthenData" comment="获取强化装备信息">
-        <field name="oldStrengthenInfo" type="StrengthenInfo" comment="强化后装备信息(为空表示强化失败)"></field>
+        <field name="oldStrengthenInfo" type="EquipmentStrengthenInfo" comment="强化后装备信息(为空表示强化失败)"></field>
     </message>
 
 </root>

@@ -92,6 +92,13 @@ class UserBackpackModel extends BaseModel
         }, 'goodsCode', 'code');
     }
 
+    public function strengthenInfo()
+    {
+        return $this->hasOne(UserGoodsEquipmentStrengthenAttributeModel::class, function (QueryBuilder $query) {
+            return $query;
+        }, 'backpackId', 'userEquipmentBackpackId');
+    }
+
     public function userEquipmentInfo()
     {
         return $this->hasOne(UserEquipmentBackpackModel::class, function (QueryBuilder $query) {

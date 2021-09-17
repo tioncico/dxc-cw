@@ -157,7 +157,7 @@ class UserBackpack extends UserBase
 		if ($param['code']){
 		    $model->where('code',$param['goodsType']);
         }
-		$data = $model->with(['goodsInfo','userEquipmentInfo'],false)->where('userId',$this->who->userId)->getList($page, $pageSize);
+		$data = $model->with(['goodsInfo','userEquipmentInfo','strengthenInfo'],false)->where('userId',$this->who->userId)->getList($page, $pageSize);
 		$this->writeJson(Status::CODE_OK, $data, '获取列表成功');
 	}
 

@@ -50,7 +50,8 @@ class UserEquipment extends UserBase
     public function getStrengthenData()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('userId', $this->who->userId)->get($param['backpackId']);
+        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId',$param['backpackId'])->where('userId', $this->who->userId)->get();
+
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         //获取装备强化信息
         $oldStrengthenInfo = UserGoodsEquipmentStrengthenAttributeModel::create()->getData($userEquipmentInfo->backpackId);
@@ -80,7 +81,7 @@ class UserEquipment extends UserBase
     public function strengthen()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('userId', $this->who->userId)->get($param['backpackId']);
+        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId',$param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         Assert::assert($userEquipmentInfo->isUse==0, "不能强化已穿戴装备");
         //获取装备强化信息
