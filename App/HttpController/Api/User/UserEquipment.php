@@ -3,6 +3,7 @@
 namespace App\HttpController\Api\User;
 
 use App\Model\BaseModel;
+use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserGoodsEquipmentStrengthenAttributeModel;
 use App\Service\Game\BackpackService;
@@ -50,12 +51,12 @@ class UserEquipment extends UserBase
     public function getStrengthenData()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId',$param['backpackId'])->where('userId', $this->who->userId)->get();
+        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
 
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         //获取装备强化信息
         $oldStrengthenInfo = UserGoodsEquipmentStrengthenAttributeModel::create()->getData($userEquipmentInfo->backpackId);
-        $newStrengthenInfo = EquipmentStrengthenService::getInstance()->getStrengthenData($userEquipmentInfo,$oldStrengthenInfo);
+        $newStrengthenInfo = EquipmentStrengthenService::getInstance()->getStrengthenData($userEquipmentInfo, $oldStrengthenInfo);
         //获取装备强化所需要的材料
         $consumableData = EquipmentStrengthenService::getInstance()->getStrengthenConsumable($userEquipmentInfo, $newStrengthenInfo);
 
@@ -81,32 +82,32 @@ class UserEquipment extends UserBase
     public function strengthen()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId',$param['backpackId'])->where('userId', $this->who->userId)->get();
+        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
-        Assert::assert($userEquipmentInfo->isUse==0, "不能强化已穿戴装备");
-        Assert::assert($userEquipmentInfo->strengthenLevel>=20, "最高强化到20");
+        Assert::assert($userEquipmentInfo->isUse == 0, "不能强化已穿戴装备");
+        Assert::assert($userEquipmentInfo->strengthenLevel >= 20, "最高强化到20");
         //获取装备强化信息
         $oldStrengthenInfo = UserGoodsEquipmentStrengthenAttributeModel::create()->getData($userEquipmentInfo->backpackId);
-        $newStrengthenInfo = EquipmentStrengthenService::getInstance()->getStrengthenData($userEquipmentInfo,$oldStrengthenInfo);
+        $newStrengthenInfo = EquipmentStrengthenService::getInstance()->getStrengthenData($userEquipmentInfo, $oldStrengthenInfo);
         //获取装备强化所需要的材料
         $consumableData = EquipmentStrengthenService::getInstance()->getStrengthenConsumable($userEquipmentInfo, $newStrengthenInfo);
         //判断数量是否足够
-        foreach ($consumableData as $consumableDatum){
-            if ($consumableDatum['nowNum']<$consumableDatum['num']){
-                Assert::assert(false,"材料[{$consumableDatum['name']}]不足");
+        foreach ($consumableData as $consumableDatum) {
+            if ($consumableDatum['nowNum'] < $consumableDatum['num']) {
+                Assert::assert(false, "材料[{$consumableDatum['name']}]不足");
             }
         }
-        BaseModel::transaction(function ()use($consumableData,$newStrengthenInfo){
+        BaseModel::transaction(function () use ($consumableData, $newStrengthenInfo) {
             //先消耗物品
             /**
              * @var $consumableDatum  UserGoodsEquipmentStrengthenAttributeModel
              */
-            foreach ($consumableData as $consumableDatum){
-                BackpackService::getInstance()->decGoods($this->who->userId,$consumableDatum,$consumableDatum['num']);
+            foreach ($consumableData as $consumableDatum) {
+                BackpackService::getInstance()->decGoods($this->who->userId, $consumableDatum, $consumableDatum['num']);
             }
             //强化
             $newStrengthenInfo = EquipmentStrengthenService::getInstance()->strengthenEquipment($newStrengthenInfo);
-            Assert::assert($newStrengthenInfo!=null,'强化失败,请重新强化');
+            Assert::assert($newStrengthenInfo != null, '强化失败,请重新强化');
             return $newStrengthenInfo;
         });
 
@@ -128,9 +129,9 @@ class UserEquipment extends UserBase
     public function decompose()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId',$param['backpackId'])->where('userId', $this->who->userId)->get();
+        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
-        Assert::assert($userEquipmentInfo->isUse==0, "不能分解已穿戴装备");
+        Assert::assert($userEquipmentInfo->isUse == 0, "不能分解已穿戴装备");
         $goodsList = EquipmentService::getInstance()->decomposeEquipment($userEquipmentInfo);
         $this->writeJson(Status::CODE_OK, $goodsList, "分解成功");
     }
@@ -150,11 +151,11 @@ class UserEquipment extends UserBase
     public function useEquipment()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId',$param['backpackId'])->where('userId', $this->who->userId)->get();
+        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
-        Assert::assert($userEquipmentInfo->isUse==0, "该装备已经穿戴");
-        $goodsList = EquipmentService::getInstance()->useEquipment($userEquipmentInfo);
-        $this->writeJson(Status::CODE_OK, $goodsList, "分解成功");
+//        Assert::assert($userEquipmentInfo->isUse==0, "该装备已经穿戴");
+        $userAttribute = EquipmentService::getInstance()->useEquipment($userEquipmentInfo);
+        $this->writeJson(Status::CODE_OK, $userAttribute, "穿戴成功");
     }
 
 

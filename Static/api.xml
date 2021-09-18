@@ -272,5 +272,45 @@
     </message>
     <message dir="SC" name="SC_DecomposeEquipment" comment="分解装备返回成功消息">
     </message>
+    <message dir="CS" name="CS_UseEquipment" router="/Api/User/UserEquipmentBackpack/useEquipment" comment="穿戴装备">
+        <field name="backpackId" type="number" comment="装备id"></field>
+    </message>
+    <message dir="SC" name="SC_UseEquipment" comment="穿戴装备返回用户新属性">
+        <field name="list" type="UserAttributeInfo" comment="用户属性"></field>
+    </message>
+
+
+    <struct name="UserAttributeInfo" comment="用户属性">
+        <field name="userId" type="number" comment="用户id"></field>
+        <field name="level" type="number" comment="等级"></field>
+        <field name="exp" type="number" comment="经验"></field>
+        <field name="hp" type="number" comment="血量"></field>
+        <field name="mp" type="number" comment="法力值"></field>
+        <field name="attack" type="number" comment="攻击力"></field>
+        <field name="defense" type="number" comment="防御力"></field>
+        <field name="endurance" type="number" comment="耐力"></field>
+        <field name="intellect" type="number" comment="智力"></field>
+        <field name="strength" type="number" comment="力量"></field>
+        <field name="enduranceQualification" type="number" comment="耐力资质"></field>
+        <field name="intellectQualification" type="number" comment="智力资质"></field>
+        <field name="strengthQualification" type="number" comment="力量资质"></field>
+        <field name="criticalRate" type="number" comment="暴击率"></field>
+        <field name="criticalStrikeDamage" type="number" comment="暴击伤害"></field>
+        <field name="hitRate" type="number" comment="命中率"></field>
+        <field name="dodgeRate" type="number" comment="闪避率"></field>
+        <field name="penetrate" type="number" comment="穿透"></field>
+        <field name="attackSpeed" type="number" comment="攻击速度"></field>
+        <field name="userElement" type="number" comment="角色元素"></field>
+        <field name="attackElement" type="number" comment="攻击元素"></field>
+        <field name="jin" type="number" comment="金"></field>
+        <field name="mu" type="number" comment="木"></field>
+        <field name="tu" type="number" comment="土"></field>
+        <field name="sui" type="number" comment="水"></field>
+        <field name="huo" type="number" comment="火"></field>
+        <field name="light" type="number" comment="光"></field>
+        <field name="dark" type="number" comment="暗"></field>
+        <field name="luck" type="number" comment="幸运值"></field>
+        <field name="physicalStrength" type="number" comment="体力"></field>
+    </struct>
 
 </root>

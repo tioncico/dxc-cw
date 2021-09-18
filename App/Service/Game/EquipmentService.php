@@ -99,13 +99,13 @@ class EquipmentService extends BaseService
     {
         //查看该部位是不是有旧装备存在
         $oldUserUseEquipment = UserEquipmentBackpackModel::create()->where('equipmentType', $userEquipmentBackpackModel->equipmentType)->where('userId', $userEquipmentBackpackModel->userId)->where('isUse', 1)->get();
-        BaseModel::transaction(function ()use($userEquipmentBackpackModel,$oldUserUseEquipment) {
-            if ($oldUserUseEquipment){
-                $oldUserUseEquipment->update(['isUse'=>0]);
+        return BaseModel::transaction(function () use ($userEquipmentBackpackModel, $oldUserUseEquipment) {
+            if ($oldUserUseEquipment) {
+                $oldUserUseEquipment->update(['isUse' => 0]);
             }
-            $userEquipmentBackpackModel->update(['isUse'=>1]);
+            $userEquipmentBackpackModel->update(['isUse' => 1]);
             //更新用户属性
-            UserService::getInstance()->countUserAttribute($userEquipmentBackpackModel->userId);
+            return UserService::getInstance()->countUserAttribute($userEquipmentBackpackModel->userId);
         });
     }
 

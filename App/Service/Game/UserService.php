@@ -70,7 +70,7 @@ class UserService extends BaseService
         return $userBaseAttributeInfo;
     }
 
-    public function countUserAttribute($userId)
+    public function countUserAttribute($userId):UserAttributeModel
     {
         //获取用户基础信息
         $userBaseAttributeInfo = UserBaseAttributeModel::create()->getInfo($userId);
@@ -112,14 +112,15 @@ class UserService extends BaseService
             //强化数据
             if (isset($userEquipment->strengthenInfo)) {
                 $strengthenInfo = $userEquipment->strengthenInfo;
-                $userAttributeBean->incHp($strengthenInfo->hp);
-                $userAttributeBean->incDefense($strengthenInfo->defense);
-                $userAttributeBean->incAttack($strengthenInfo->attack);
+                $userAttributeBean->incHp($strengthenInfo->hp??0);
+                $userAttributeBean->incDefense($strengthenInfo->defense??0);
+                $userAttributeBean->incAttack($strengthenInfo->attack??0);
             }
             //随机属性只在进图的时候加
         }
 
         UserAttributeModel::create()->where('userId', $userBaseAttributeInfo->userId)->update($userAttributeBean->toArray());
+        return UserAttributeModel::create()->getInfo($userBaseAttributeInfo->userId);
     }
 
 }

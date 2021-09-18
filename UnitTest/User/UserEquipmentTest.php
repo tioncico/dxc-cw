@@ -88,6 +88,15 @@ class UserEquipmentTest extends UserBaseTestCase
 		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
 	}
 
+	public function testUseEquipment()
+	{
+		$data = [
+		    'backpackId'=>53
+        ];
+		$response = $this->request('useEquipment',$data);
+		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+	}
+
 
 	public function testGetOne()
 	{
