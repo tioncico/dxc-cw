@@ -110,7 +110,7 @@
         <field name="session" type="string" comment="session"></field>
         <field name="state" type="number" comment="state"></field>
         <field name="userId" type="number" comment="用户id"></field>
-        <field name="inviteServerId" type="number" comment="推荐服务器id"></field>
+        <field name="inviteServerInfo" type="ServerInfo" comment="推荐服务器id"></field>
     </message>
 
     <!-- 角色模块 -->

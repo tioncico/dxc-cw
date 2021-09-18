@@ -8,6 +8,7 @@ use App\Model\BaseModel;
 use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserBaseAttributeModel;
 use App\Model\Game\UserMapModel;
+use App\Model\ServerModel;
 use App\Model\User\UserModel;
 use App\Utility\ApiErrorCode\UserError;
 use App\Utility\Assert\Assert;
@@ -51,7 +52,7 @@ class Auth extends UserBase
             'session' => $session
         ]);
         $userInfo = $userInfo->toArray();
-        $userInfo['inviteServerId'] = 1;
+        $userInfo['inviteServerInfo'] = ServerModel::create()->get();
         $this->response()->setCookie(self::USER_TOKEN_NAME, $session, time() + 86400 * 7, '/');
         $this->writeJson(Status::CODE_OK, $userInfo, "登陆信息");
     }
