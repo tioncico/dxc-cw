@@ -120,13 +120,19 @@ class Sign extends UserBase
 
         BaseModel::transaction(function () use ($signInfo, $signRewardInfo, $signNum) {
             $signInfo->update([
-                'signNum'        => $signNum,
+                'signNum'        => $signNum+1,
                 'lastUpdateTime' => time()
             ]);
             //增加钻石奖励
             BackpackService::getInstance()->addGoods($this->who->userId,GoodsModel::create()->getInfoByCode('money'), $signRewardInfo->money);
         });
-        $this->writeJson(Status::CODE_OK, null, "签到成功");
+
+        $data = [
+            'signNum'        => $signNum+1,
+            'lastSignTime'   => time()
+        ];
+
+        $this->writeJson(Status::CODE_OK, $data, "签到成功");
     }
 
 

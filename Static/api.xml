@@ -180,6 +180,8 @@
     <message dir="CS" name="CS_UserSign" router="/Api/User/Sign/userSign" comment="用户签到">
     </message>
     <message dir="SC" name="SC_UserSign" comment="返回用户签到">
+        <field name="signNum" type="number" comment="连续签到天数"></field>
+        <field name="lastSignTime" type="number" comment="上次签到时间戳"></field>
     </message>
 
     <struct name="SignInfo" comment="签到奖励">
