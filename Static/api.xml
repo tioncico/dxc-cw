@@ -24,10 +24,10 @@
 
     <struct name="EquipmentChangeInfo" comment="装备变动信息">
         <field name="num" type="number" comment="物品数量,负数表示失去"></field>
-        <field name="userEquipment" type="userEquipmentBaseInfo" comment="用户装备基础信息"></field>
+        <field name="userEquipment" type="UserEquipmentBaseInfo" comment="用户装备基础信息"></field>
     </struct>
 
-    <struct name="userEquipmentBaseInfo" comment="用户装备基础属性">
+    <struct name="UserEquipmentBaseInfo" comment="用户装备基础属性">
         <field name="backpackId" type="number" comment="背包id"></field>
         <field name="isUse" type="number" comment="是否穿戴"></field>
         <field name="strengthenLevel" type="number" comment="强化等级"></field>
