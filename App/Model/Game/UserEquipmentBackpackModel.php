@@ -48,6 +48,9 @@ use EasySwoole\Mysqli\QueryBuilder;
  * @property int $light // 光
  * @property int $dark // 暗
  * @property int $luck // 幸运值
+ *
+ * @property UserGoodsEquipmentStrengthenAttributeModel $strengthenInfo
+ * @property UserGoodsEquipmentAttributeEntryModel[] $equipmentAttributeEntryList
  */
 class UserEquipmentBackpackModel extends BaseModel
 {
@@ -72,5 +75,29 @@ class UserEquipmentBackpackModel extends BaseModel
 		];
 		return $data;
 	}
+
+
+    /**
+     * 强化数据
+     * strengthenInfo
+     * @return array|mixed|null
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 10:09 上午
+     */
+    public function strengthenInfo()
+    {
+        return $this->hasOne(UserGoodsEquipmentStrengthenAttributeModel::class, function (QueryBuilder $query) {
+            return $query;
+        }, 'backpackId', 'userEquipmentBackpackId');
+    }
+
+    public function equipmentAttributeEntryList()
+    {
+        return $this->hasMany(UserGoodsEquipmentAttributeEntryModel::class, function (QueryBuilder $query) {
+            return $query;
+        }, 'backpackId', 'backpackId');
+    }
+
 }
 

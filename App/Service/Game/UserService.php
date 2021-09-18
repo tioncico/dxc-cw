@@ -57,11 +57,11 @@ class UserService extends BaseService
         //血量公式计算=用户等级*100+用户耐力*100
         $hp = $userBaseAttributeInfo->level * 100 + $userBaseAttributeInfo->endurance * 100;
         //蓝量计算公式= 100+((用户等级-1)*10+用户智力*10);
-        $mp = 100 + (($userBaseAttributeInfo->level-1) * 10 + $userBaseAttributeInfo->intellect * 10);
+        $mp = 100 + (($userBaseAttributeInfo->level - 1) * 10 + $userBaseAttributeInfo->intellect * 10);
         //攻击力计算=1+(用户等级*5+用户力量*10)
         $attack = 1 + ($userBaseAttributeInfo->level * 5 + $userBaseAttributeInfo->strength * 10);
         //防御力计算=0+((用户等级-1)*2+用户耐力*10)
-        $defense = 0 + (($userBaseAttributeInfo->level-1) * 2 + $userBaseAttributeInfo->endurance * 10);
+        $defense = 0 + (($userBaseAttributeInfo->level - 1) * 2 + $userBaseAttributeInfo->endurance * 10);
         $userBaseAttributeInfo->hp = $hp;
         $userBaseAttributeInfo->mp = $mp;
         $userBaseAttributeInfo->attack = $attack;
@@ -77,7 +77,7 @@ class UserService extends BaseService
         $userBaseAttributeBean = new Attribute($userBaseAttributeInfo->toArray());
         $userAttributeBean = clone $userBaseAttributeBean;
         //获取用户穿戴装备信息
-        $userEquipmentBackpackList = UserEquipmentBackpackModel::create()->where('userId', $userId)->where('isUse', 1)->all();
+        $userEquipmentBackpackList = UserEquipmentBackpackModel::create()->with(['strengthenInfo', 'equipmentAttributeEntryList'])->where('userId', $userId)->where('isUse', 1)->all();
 
         /**
          * @var $userEquipment UserEquipmentBackpackModel
@@ -109,15 +109,14 @@ class UserService extends BaseService
             if (!empty($userEquipment->attackElement)) {
                 $userAttributeBean->setAttackElement($userEquipment->attackElement);
             }
-            //todo 词条相关
-            $userEquipmentArray = $userEquipment->toArray();
-            $userEquipmentArray = array_filter($userEquipmentArray, function ($data) {
-                if (empty($data)) {
-                    return false;
-                }
-                return true;
-            });
-            var_dump($userEquipmentArray);
+            //强化数据
+            if (isset($userEquipment->strengthenInfo)) {
+                $strengthenInfo = $userEquipment->strengthenInfo;
+                $userAttributeBean->incHp($strengthenInfo->hp);
+                $userAttributeBean->incDefense($strengthenInfo->defense);
+                $userAttributeBean->incAttack($strengthenInfo->attack);
+            }
+            //随机属性只在进图的时候加
         }
 
         UserAttributeModel::create()->where('userId', $userBaseAttributeInfo->userId)->update($userAttributeBean->toArray());

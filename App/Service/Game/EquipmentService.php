@@ -51,7 +51,7 @@ class EquipmentService extends BaseService
             //删除装备属性
             $equipmentInfo->destroy();
             $goodsList[] = $materialInfo['num'] = $materialNum;
-            GoodsChangeResponse::getInstance()->addEquipment($equipmentInfo,-1);
+            GoodsChangeResponse::getInstance()->addEquipment($equipmentInfo, -1);
             return $goodsList;
         });
         return $goodsList;
@@ -85,6 +85,27 @@ class EquipmentService extends BaseService
 
             //更新装备套装词条
             return $backpackInfo;
+        });
+    }
+
+    /**
+     * 穿戴装备
+     * useEquipment
+     * @param UserEquipmentBackpackModel $userEquipmentBackpackModel
+     * @author tioncico
+     * Time: 9:59 上午
+     */
+    public function useEquipment(UserEquipmentBackpackModel $userEquipmentBackpackModel)
+    {
+        //查看该部位是不是有旧装备存在
+        $oldUserUseEquipment = UserEquipmentBackpackModel::create()->where('equipmentType', $userEquipmentBackpackModel->equipmentType)->where('userId', $userEquipmentBackpackModel->userId)->where('isUse', 1)->get();
+        BaseModel::transaction(function ()use($userEquipmentBackpackModel,$oldUserUseEquipment) {
+            if ($oldUserUseEquipment){
+                $oldUserUseEquipment->update(['isUse'=>0]);
+            }
+            $userEquipmentBackpackModel->update(['isUse'=>1]);
+            //更新用户属性
+            UserService::getInstance()->countUserAttribute($userEquipmentBackpackModel->userId);
         });
     }
 

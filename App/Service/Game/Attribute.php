@@ -177,6 +177,14 @@ class Attribute extends SplBean
     }
 
     /**
+     * @param mixed $attack
+     */
+    public function incAttack($attack): void
+    {
+        $this->attack += $attack;
+    }
+
+    /**
      * @return mixed
      */
     public function getDefense()
@@ -190,6 +198,13 @@ class Attribute extends SplBean
     public function setDefense($defense): void
     {
         $this->defense = $defense;
+    }
+    /**
+     * @param mixed $defense
+     */
+    public function incDefense($defense): void
+    {
+        $this->defense += $defense;
     }
 
     /**
