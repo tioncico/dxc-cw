@@ -113,23 +113,24 @@ class Sign extends UserBase
         //如果时间小于昨天
         if ($signInfo->lastUpdateTime < strtotime(date('Y-m-d', time() - 86400))) {
             $signNum = 1;
+        } else {
+            $signNum = $signInfo->signNum + 1;
         }
         //获取钻石奖励
         $signRewardInfo = SignRewardModel::create()->get(['signNum' => ($signNum % 7) + 1]);
         Assert::assert(!!$signRewardInfo, '签到奖励配置不存在');
-
         BaseModel::transaction(function () use ($signInfo, $signRewardInfo, $signNum) {
             $signInfo->update([
-                'signNum'        => $signNum+1,
+                'signNum'        => $signNum,
                 'lastUpdateTime' => time()
             ]);
             //增加钻石奖励
-            BackpackService::getInstance()->addGoods($this->who->userId,GoodsModel::create()->getInfoByCode('money'), $signRewardInfo->money);
+            BackpackService::getInstance()->addGoods($this->who->userId, GoodsModel::create()->getInfoByCode('money'), $signRewardInfo->money);
         });
 
         $data = [
-            'signNum'        => $signNum+1,
-            'lastSignTime'   => time()
+            'signNum'      => $signNum,
+            'lastSignTime' => time()
         ];
 
         $this->writeJson(Status::CODE_OK, $data, "签到成功");
