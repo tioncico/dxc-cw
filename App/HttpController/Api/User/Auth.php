@@ -51,6 +51,7 @@ class Auth extends UserBase
             'session' => $session
         ]);
         $userInfo = $userInfo->toArray();
+        $userInfo['inviteServerId'] = 1;
         $this->response()->setCookie(self::USER_TOKEN_NAME, $session, time() + 86400 * 7, '/');
         $this->writeJson(Status::CODE_OK, $userInfo, "登陆信息");
     }

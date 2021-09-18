@@ -108,8 +108,9 @@
         <field name="password" type="string" comment="密码"></field>
         <field name="phone" type="number" comment="号码"></field>
         <field name="session" type="string" comment="session"></field>
-        <field name="state" type="string" comment="state"></field>
-        <field name="userId" type="string" comment="用户id"></field>
+        <field name="state" type="number" comment="state"></field>
+        <field name="userId" type="number" comment="用户id"></field>
+        <field name="inviteServerId" type="number" comment="推荐服务器id"></field>
     </message>
 
     <!-- 角色模块 -->
