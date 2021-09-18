@@ -237,7 +237,7 @@
         <field name="defense" type="number" comment="防御力"></field>
     </struct>
 
-    <struct name="ConsumableGoodsInfo" extends="goodsInfo" comment="强化所需消耗物品信息">
+    <struct name="ConsumableGoodsInfo" extends="GoodsInfo" comment="强化所需消耗物品信息">
         <field name="nowNum" type="number" comment="当前数量"></field>
         <field name="num" type="number" comment="所需数量"></field>
     </struct>
