@@ -13,6 +13,7 @@ use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserGoodsEquipmentAttributeEntryModel;
 use App\Model\UserGoodsEquipmentStrengthenAttributeModel;
 use App\Service\BaseService;
+use App\Service\GoodsChangeResponse;
 use App\Utility\Rand\Bean;
 use App\Utility\Rand\Rand;
 use EasySwoole\Component\Singleton;
@@ -50,6 +51,7 @@ class EquipmentService extends BaseService
             //删除装备属性
             $equipmentInfo->destroy();
             $goodsList[] = $materialInfo['num'] = $materialNum;
+            GoodsChangeResponse::getInstance()->addEquipment($equipmentInfo,-1);
             return $goodsList;
         });
         return $goodsList;

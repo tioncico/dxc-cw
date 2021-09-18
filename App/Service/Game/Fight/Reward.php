@@ -77,11 +77,11 @@ class Reward
                  * @var $goodsEquipmentInfo GoodsEquipmentModel
                  */
                 $goodsEquipmentInfo = Rand::randArray($list, 1);
-                $goodsInfo = GoodsModel::create()->getInfoByCode($goodsEquipmentInfo->goodsCode) ;
+                $goodsInfo = GoodsModel::create()->getInfoByCode($goodsEquipmentInfo->goodsCode);
             } else {
-                $goodsInfo = GoodsModel::create()->getInfoByCode($list[$randValue->getValue()]->goodsCode) ;
+                $goodsInfo = GoodsModel::create()->getInfoByCode($list[$randValue->getValue()]->goodsCode);
             }
-            $goodsList[] = ['goodsInfo' => $goodsInfo,'num'=>1];
+            $goodsList[] = ['goodsInfo' => $goodsInfo, 'num' => 1];
         }
         $this->goodsList = $goodsList;
         return $goodsList;
@@ -100,9 +100,9 @@ class Reward
             //增加经验
             UserService::getInstance()->userAddExp($this->userId, $this->exp);
             //增加金币
-            BackpackService::getInstance()->addGold($this->userId, $this->gold);
+            BackpackService::getInstance()->addGoods($this->userId, GoodsModel::create()->getInfoByCode('gold'), $this->gold);
             foreach ($this->goodsList as $value) {
-                BackpackService::getInstance()->addGoods($this->userId, $value['goodsInfo'],$value['num']);
+                BackpackService::getInstance()->addGoods($this->userId, $value['goodsInfo'], $value['num']);
             }
         });
     }

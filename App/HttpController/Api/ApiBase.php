@@ -5,6 +5,7 @@ namespace App\HttpController\Api;
 
 
 use App\HttpController\Base;
+use App\Service\GoodsChangeResponse;
 use App\Utility\Assert\AssertException;
 use EasySwoole\Http\Message\Status;
 use EasySwoole\HttpAnnotation\Exception\Annotation\ParamValidateError;
@@ -32,11 +33,13 @@ class ApiBase extends Base
     protected function writeJson($statusCode = 200, $result = null, $msg = null)
     {
         if (!$this->response()->isEndResponse()) {
-            $data = Array(
-                "code" => $statusCode,
-                "result" => $result,
-                "msg" => $msg,
-                'requestId'=>$this->request()->getRequestParam('requestId')
+            $data = array(
+                "code"            => $statusCode,
+                "result"          => $result,
+                "msg"             => $msg,
+                'requestId'       => $this->request()->getRequestParam('requestId'),
+                'goodsChange'     => GoodsChangeResponse::getInstance()->getGoods(),
+                'equipmentChange' => GoodsChangeResponse::getInstance()->getEquipment(),
             );
             $this->response()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
             $this->response()->withHeader('Content-type', 'application/json;charset=utf-8');
@@ -47,7 +50,8 @@ class ApiBase extends Base
         }
     }
 
-    protected function getRequestAndCookieParam($name){
+    protected function getRequestAndCookieParam($name)
+    {
         $value = $this->request()->getRequestParam($name);
         if (empty($value)) {
             $value = $this->request()->getCookieParams($name);

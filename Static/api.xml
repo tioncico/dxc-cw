@@ -5,6 +5,49 @@
     <!-- 数据结构 struct => name:接口名称 comment:注释 -->
     <!-- 字段 field => name:字段名 type:类型(number/string/boolean/数据结构,数组:基础类型[])  -->
 
+    <!-- 全局模块 -->
+    <message dir="CS" name="CS_" router="/Api/" comment="全局模块">
+        <field name="requestId" type="number" comment="请求id"></field>
+    </message>
+    <message dir="SC" name="SC_" comment="全局模块返回参数">
+        <field name="code" type="number" comment="返回状态码,200表示成功,400表示失败,401未登录,500服务器异常"></field>
+        <field name="result" type="object" comment="返回结果,可能是任何数据"></field>
+        <field name="msg" type="string" comment="接口返回的消息"></field>
+        <field name="requestId" type="number" comment="请求id"></field>
+        <field name="goodsChange" type="GoodsChangeInfo[]" comment="物品变动情况"></field>
+        <field name="equipmentChange" type="EquipmentChangeInfo[]" comment="装备变动情况"></field>
+    </message>
+    <struct name="GoodsChangeInfo" comment="物品变动信息">
+        <field name="num" type="number" comment="物品数量,负数表示失去"></field>
+        <field name="goodsId" type="number" comment="物品id"></field>
+        <field name="name" type="string" comment="物品名称"></field>
+        <field name="code" type="number" comment="物品code"></field>
+        <field name="baseCode" type="number" comment="物品基础类型"></field>
+        <field name="type" type="number" comment="物品类型"></field>
+        <field name="description" type="string" comment="介绍"></field>
+        <field name="gold" type="number" comment="售出金币"></field>
+        <field name="isSale" type="number" comment="是否可售出"></field>
+        <field name="level" type="number" comment="等级"></field>
+        <field name="rarityLevel" type="number" comment="稀有度"></field>
+        <field name="extraData" type="string" comment="额外数据"></field>
+    </struct>
+
+    <struct name="EquipmentChangeInfo" comment="装备变动信息">
+        <field name="num" type="number" comment="物品数量,负数表示失去"></field>
+        <field name="backpackId" type="number" comment="背包id"></field>
+        <field name="isUse" type="number" comment="是否穿戴"></field>
+        <field name="strengthenLevel" type="number" comment="强化等级"></field>
+        <field name="attributeDescription" type="string" comment="基础属性介绍"></field>
+        <field name="attributeEntryDescription" type="string" comment="随机词条属性介绍"></field>
+        <field name="extraAttributeDescription" type="string" comment="高级装备专属属性介绍"></field>
+        <field name="suitAttribute2Description" type="string" comment="2件套套装介绍"></field>
+        <field name="suitAttribute3Description" type="string" comment="3件套套装介绍"></field>
+        <field name="suitAttribute5Description" type="string" comment="5件套套装介绍"></field>
+        <field name="equipmentType" type="number" comment="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指"></field>
+        <field name="suitCode" type="number" comment="套装code.为0或空代表不是套装"></field>
+    </struct>
+
+
     <!-- 账号模块 -->
     <message dir="CS" name="CS_GetServerList" router="/Api/Common/Server/getList" comment="获取服务器列表">
     </message>
@@ -171,25 +214,9 @@
     <message dir="CS" name="CS_ReceiveMailGoods" router="/Api/User/Mail/receive" comment="领取邮件物品">
         <field name="id" type="number" comment="邮件id"></field>
     </message>
-    <message dir="SC" name="SC_ReceiveMailGoods" comment="返回领取的物品数据">
-        <field name="array" type="MailGoodsInfo[]" comment="邮件物品详情"></field>
+    <message dir="SC" name="SC_ReceiveMailGoods" comment="返回领取成功的msg">
     </message>
 
-    <struct name="MailGoodsInfo" comment="物品详情">
-        <field name="mailId" type="number" comment="邮件id"></field>
-        <field name="num" type="number" comment="物品数量"></field>
-        <field name="goodsId" type="number" comment="物品id"></field>
-        <field name="name" type="string" comment="物品名称"></field>
-        <field name="code" type="number" comment="物品code"></field>
-        <field name="baseCode" type="number" comment="物品基础类型"></field>
-        <field name="type" type="number" comment="物品类型"></field>
-        <field name="description" type="string" comment="介绍"></field>
-        <field name="gold" type="number" comment="售出金币"></field>
-        <field name="isSale" type="number" comment="是否可售出"></field>
-        <field name="level" type="number" comment="等级"></field>
-        <field name="rarityLevel" type="number" comment="稀有度"></field>
-        <field name="extraData" type="string" comment="额外数据"></field>
-    </struct>
 
     <message dir="CS" name="CS_DelMail" router="/Api/User/Mail/delete" comment="删除邮件">
         <field name="id" type="number" comment="邮件id,不传则删除所有已领取邮件"></field>
@@ -198,7 +225,8 @@
     </message>
 
     <!-- 强化装备模块 -->
-    <message dir="CS" name="CS_GetEquipmentStrengthenData" router="/Api/User/UserEquipmentBackpack/getStrengthenData" comment="获取强化装备信息">
+    <message dir="CS" name="CS_GetEquipmentStrengthenData" router="/Api/User/UserEquipmentBackpack/getStrengthenData"
+             comment="获取强化装备信息">
         <field name="backpackId" type="number" comment="装备id"></field>
     </message>
     <message dir="SC" name="SC_GetEquipmentStrengthenData" comment="获取强化装备信息">

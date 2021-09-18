@@ -8,6 +8,7 @@ use App\Model\Game\MailGoodsModel;
 use App\Model\Game\MailModel;
 use App\Model\Game\UserBackpackModel;
 use App\Service\Game\BackpackService;
+use App\Service\GoodsChangeResponse;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
@@ -163,7 +164,9 @@ class Mail extends UserBase
             }
             $info->update(['isReceive' => 1]);
         });
-        $this->writeJson(Status::CODE_OK, $goodsList, "领取成功");
+
+
+        $this->writeJson(Status::CODE_OK, [], "领取成功");
     }
 
 

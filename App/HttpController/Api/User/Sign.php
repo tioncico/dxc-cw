@@ -7,6 +7,7 @@ use App\Model\Game\GoodsModel;
 use App\Model\Game\SignRewardModel;
 use App\Model\Game\UserSignModel;
 use App\Service\Game\BackpackService;
+use App\Service\GoodsChangeResponse;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
@@ -123,10 +124,9 @@ class Sign extends UserBase
                 'lastUpdateTime' => time()
             ]);
             //增加钻石奖励
-            BackpackService::getInstance()->addMoney($this->who->userId, $signRewardInfo->money);
+            BackpackService::getInstance()->addGoods($this->who->userId,GoodsModel::create()->getInfoByCode('money'), $signRewardInfo->money);
         });
-
-        $this->writeJson(Status::CODE_OK, null, "签到成功,获得钻石*{$signRewardInfo->money}");
+        $this->writeJson(Status::CODE_OK, null, "签到成功");
     }
 
 
