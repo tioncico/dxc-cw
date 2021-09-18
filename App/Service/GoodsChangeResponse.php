@@ -21,7 +21,7 @@ class GoodsChangeResponse
         if (isset($data[$goodsModel->code])) {
             $data[$goodsModel->code]['num'] += $num;
         } else {
-            $data[$goodsModel->code] = $goodsModel->toArray();
+            $data[$goodsModel->code]['goodsInfo'] = $goodsModel->toArray();
             $data[$goodsModel->code]['num'] = $num;
         }
         ContextManager::getInstance()->set(self::GOODS_KEY, $data);
@@ -33,7 +33,7 @@ class GoodsChangeResponse
         if (isset($data[$userEquipmentBackpackModel->backpackId])) {
             $data[$userEquipmentBackpackModel->backpackId]['num'] += $num;
         } else {
-            $data[$userEquipmentBackpackModel->backpackId] = $userEquipmentBackpackModel->toArray();
+            $data[$userEquipmentBackpackModel->backpackId]['equipmentInfo'] = $userEquipmentBackpackModel->toArray();
             $data[$userEquipmentBackpackModel->backpackId]['num'] = $num;
         }
         ContextManager::getInstance()->set(self::EQUIPMENT_KEY, $data);

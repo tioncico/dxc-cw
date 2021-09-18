@@ -19,21 +19,15 @@
     </message>
     <struct name="GoodsChangeInfo" comment="物品变动信息">
         <field name="num" type="number" comment="物品数量,负数表示失去"></field>
-        <field name="goodsId" type="number" comment="物品id"></field>
-        <field name="name" type="string" comment="物品名称"></field>
-        <field name="code" type="number" comment="物品code"></field>
-        <field name="baseCode" type="number" comment="物品基础类型"></field>
-        <field name="type" type="number" comment="物品类型"></field>
-        <field name="description" type="string" comment="介绍"></field>
-        <field name="gold" type="number" comment="售出金币"></field>
-        <field name="isSale" type="number" comment="是否可售出"></field>
-        <field name="level" type="number" comment="等级"></field>
-        <field name="rarityLevel" type="number" comment="稀有度"></field>
-        <field name="extraData" type="string" comment="额外数据"></field>
+        <field name="goodsInfo" type="GoodsInfo" comment="物品信息"></field>
     </struct>
 
     <struct name="EquipmentChangeInfo" comment="装备变动信息">
         <field name="num" type="number" comment="物品数量,负数表示失去"></field>
+        <field name="userEquipment" type="userEquipmentBaseInfo" comment="用户装备基础信息"></field>
+    </struct>
+
+    <struct name="userEquipmentBaseInfo" comment="用户装备基础属性">
         <field name="backpackId" type="number" comment="背包id"></field>
         <field name="isUse" type="number" comment="是否穿戴"></field>
         <field name="strengthenLevel" type="number" comment="强化等级"></field>
@@ -46,6 +40,39 @@
         <field name="equipmentType" type="number" comment="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指"></field>
         <field name="suitCode" type="number" comment="套装code.为0或空代表不是套装"></field>
     </struct>
+
+    <struct name="BaseAttribute" comment="游戏基础属性">
+        <field name="level" type="number" comment="等级"></field>
+        <field name="exp" type="number" comment="经验"></field>
+        <field name="hp" type="number" comment="血量"></field>
+        <field name="mp" type="number" comment="法力"></field>
+        <field name="attack" type="number" comment="攻击力"></field>
+        <field name="defense" type="number" comment="防御力"></field>
+        <field name="endurance" type="number" comment="耐力"></field>
+        <field name="intellect" type="number" comment="智力"></field>
+        <field name="strength" type="number" comment="力量"></field>
+        <field name="enduranceQualification" type="number" comment="耐力资质"></field>
+        <field name="intellectQualification" type="number" comment="智力资质"></field>
+        <field name="strengthQualification" type="number" comment="力量资质"></field>
+        <field name="criticalRate" type="number" comment="暴击率"></field>
+        <field name="criticalStrikeDamage" type="number" comment="暴击伤害"></field>
+        <field name="hitRate" type="number" comment="命中率"></field>
+        <field name="dodgeRate" type="number" comment="闪避率"></field>
+        <field name="penetrate" type="number" comment="穿透力"></field>
+        <field name="attackSpeed" type="number" comment="攻击速度"></field>
+        <field name="userElement" type="number" comment="角色元素"></field>
+        <field name="attackElement" type="number" comment="攻击元素"></field>
+        <field name="jin" type="number" comment="金"></field>
+        <field name="mu" type="number" comment="木"></field>
+        <field name="tu" type="number" comment="土"></field>
+        <field name="sui" type="number" comment="水"></field>
+        <field name="huo" type="number" comment="火"></field>
+        <field name="light" type="number" comment="光"></field>
+        <field name="dark" type="number" comment="暗"></field>
+    </struct>
+
+
+
 
 
     <!-- 账号模块 -->
@@ -97,39 +124,12 @@
     <message dir="SC" name="SC_GetUserInfo" comment="返回角色信息">
         <field name="goldNum" type="number" comment="金币"></field>
         <field name="moneyNum" type="number" comment="钻石"></field>
-        <field name="attributeInfo" type="AttributeInfo" comment="角色信息"></field>
+        <field name="attributeInfo" type="UserAttributeInfo" comment="角色信息"></field>
     </message>
 
-    <struct name="AttributeInfo" comment="角色信息">
+    <struct name="UserAttributeInfo" extends="BaseAttribute" comment="角色信息">
         <field name="userId" type="number" comment="用户id"></field>
-        <field name="level" type="number" comment="等级"></field>
-        <field name="exp" type="number" comment="经验"></field>
-        <field name="hp" type="number" comment="血量"></field>
-        <field name="mp" type="number" comment="法力值"></field>
-        <field name="attack" type="number" comment="攻击力"></field>
-        <field name="defense" type="number" comment="防御力"></field>
-        <field name="endurance" type="number" comment="耐力"></field>
-        <field name="intellect" type="number" comment="智力"></field>
-        <field name="strength" type="number" comment="力量"></field>
-        <field name="enduranceQualification" type="number" comment="耐力资质"></field>
-        <field name="intellectQualification" type="number" comment="智力资质"></field>
-        <field name="strengthQualification" type="number" comment="力量资质"></field>
-        <field name="criticalRate" type="number" comment="暴击率"></field>
-        <field name="criticalStrikeDamage" type="number" comment="暴击伤害"></field>
-        <field name="hitRate" type="number" comment="命中率"></field>
-        <field name="dodgeRate" type="number" comment="闪避率"></field>
-        <field name="penetrate" type="number" comment="穿透"></field>
-        <field name="attackSpeed" type="number" comment="攻击速度"></field>
-        <field name="userElement" type="number" comment="角色元素"></field>
-        <field name="attackElement" type="number" comment="攻击元素"></field>
-        <field name="jin" type="number" comment="金"></field>
-        <field name="mu" type="number" comment="木"></field>
-        <field name="tu" type="number" comment="土"></field>
-        <field name="sui" type="number" comment="水"></field>
-        <field name="huo" type="number" comment="火"></field>
-        <field name="light" type="number" comment="光"></field>
-        <field name="dark" type="number" comment="暗"></field>
-        <field name="luck" type="number" comment="幸运值"></field>
+        <field name="name" type="string" comment="用户角色名"></field>
         <field name="physicalStrength" type="number" comment="体力"></field>
     </struct>
 
@@ -149,22 +149,10 @@
         <field name="num" type="number" comment="物品数量"></field>
         <field name="goodsType" type="number" comment="物品类型"></field>
         <field name="goodsInfo" type="GoodsInfo" comment="物品详情"></field>
-        <field name="userEquipmentInfo" type="UserEquipmentInfo" comment="用户装备信息"></field>
+        <field name="userEquipmentInfo" type="userEquipmentBaseInfo" comment="用户装备基础信息"></field>
         <field name="strengthenInfo" type="EquipmentStrengthenInfo" comment="装备强化信息"></field>
     </struct>
-    <struct name="UserEquipmentInfo" comment="用户装备信息">
-        <field name="backpackId" type="number" comment="背包id"></field>
-        <field name="isUse" type="number" comment="是否穿戴"></field>
-        <field name="strengthenLevel" type="number" comment="强化等级"></field>
-        <field name="attributeDescription" type="string" comment="基础属性介绍"></field>
-        <field name="attributeEntryDescription" type="string" comment="随机词条属性介绍"></field>
-        <field name="extraAttributeDescription" type="string" comment="高级装备专属属性介绍"></field>
-        <field name="suitAttribute2Description" type="string" comment="2件套套装介绍"></field>
-        <field name="suitAttribute3Description" type="string" comment="3件套套装介绍"></field>
-        <field name="suitAttribute5Description" type="string" comment="5件套套装介绍"></field>
-        <field name="equipmentType" type="number" comment="装备类型 1武器 2帽子 3衣服 4裤子 5鞋子 6披风  7称号 8项链 9戒指"></field>
-        <field name="suitCode" type="number" comment="套装code.为0或空代表不是套装"></field>
-    </struct>
+
     <struct name="GoodsInfo" comment="物品详情">
         <field name="goodsId" type="number" comment="物品id"></field>
         <field name="name" type="string" comment="物品名称"></field>
@@ -220,17 +208,7 @@
     <struct name="MailGoodsInfo" comment="邮件物品详情">
         <field name="mailId" type="number" comment="邮件id"></field>
         <field name="num" type="number" comment="物品数量"></field>
-        <field name="goodsId" type="number" comment="物品id"></field>
-        <field name="name" type="string" comment="物品名称"></field>
-        <field name="code" type="number" comment="物品code"></field>
-        <field name="baseCode" type="number" comment="物品基础类型"></field>
-        <field name="type" type="number" comment="物品类型"></field>
-        <field name="description" type="string" comment="介绍"></field>
-        <field name="gold" type="number" comment="售出金币"></field>
-        <field name="isSale" type="number" comment="是否可售出"></field>
-        <field name="level" type="number" comment="等级"></field>
-        <field name="rarityLevel" type="number" comment="稀有度"></field>
-        <field name="extraData" type="string" comment="额外数据"></field>
+        <field name="goodsInfo" type="GoodsInfo" comment="物品详情"></field>
     </struct>
 
 
@@ -259,20 +237,9 @@
         <field name="defense" type="number" comment="防御力"></field>
     </struct>
 
-    <struct name="ConsumableGoodsInfo" comment="强化所需消耗物品信息">
+    <struct name="ConsumableGoodsInfo" extends="goodsInfo" comment="强化所需消耗物品信息">
         <field name="nowNum" type="number" comment="当前数量"></field>
         <field name="num" type="number" comment="所需数量"></field>
-        <field name="goodsId" type="number" comment="物品id"></field>
-        <field name="name" type="string" comment="物品名称"></field>
-        <field name="code" type="number" comment="物品code"></field>
-        <field name="baseCode" type="number" comment="物品基础类型"></field>
-        <field name="type" type="number" comment="物品类型"></field>
-        <field name="description" type="string" comment="介绍"></field>
-        <field name="gold" type="number" comment="售出金币"></field>
-        <field name="isSale" type="number" comment="是否可售出"></field>
-        <field name="level" type="number" comment="等级"></field>
-        <field name="rarityLevel" type="number" comment="稀有度"></field>
-        <field name="extraData" type="string" comment="额外数据"></field>
     </struct>
 
     <message dir="CS" name="CS_StrengthenEquipment" router="/Api/User/UserEquipmentBackpack/strengthen" comment="强化装备">
@@ -294,39 +261,5 @@
     <message dir="SC" name="SC_UseEquipment" comment="穿戴装备返回用户新属性">
         <field name="list" type="UserAttributeInfo" comment="用户属性"></field>
     </message>
-
-
-    <struct name="UserAttributeInfo" comment="用户属性">
-        <field name="userId" type="number" comment="用户id"></field>
-        <field name="level" type="number" comment="等级"></field>
-        <field name="exp" type="number" comment="经验"></field>
-        <field name="hp" type="number" comment="血量"></field>
-        <field name="mp" type="number" comment="法力值"></field>
-        <field name="attack" type="number" comment="攻击力"></field>
-        <field name="defense" type="number" comment="防御力"></field>
-        <field name="endurance" type="number" comment="耐力"></field>
-        <field name="intellect" type="number" comment="智力"></field>
-        <field name="strength" type="number" comment="力量"></field>
-        <field name="enduranceQualification" type="number" comment="耐力资质"></field>
-        <field name="intellectQualification" type="number" comment="智力资质"></field>
-        <field name="strengthQualification" type="number" comment="力量资质"></field>
-        <field name="criticalRate" type="number" comment="暴击率"></field>
-        <field name="criticalStrikeDamage" type="number" comment="暴击伤害"></field>
-        <field name="hitRate" type="number" comment="命中率"></field>
-        <field name="dodgeRate" type="number" comment="闪避率"></field>
-        <field name="penetrate" type="number" comment="穿透"></field>
-        <field name="attackSpeed" type="number" comment="攻击速度"></field>
-        <field name="userElement" type="number" comment="角色元素"></field>
-        <field name="attackElement" type="number" comment="攻击元素"></field>
-        <field name="jin" type="number" comment="金"></field>
-        <field name="mu" type="number" comment="木"></field>
-        <field name="tu" type="number" comment="土"></field>
-        <field name="sui" type="number" comment="水"></field>
-        <field name="huo" type="number" comment="火"></field>
-        <field name="light" type="number" comment="光"></field>
-        <field name="dark" type="number" comment="暗"></field>
-        <field name="luck" type="number" comment="幸运值"></field>
-        <field name="physicalStrength" type="number" comment="体力"></field>
-    </struct>
 
 </root>
