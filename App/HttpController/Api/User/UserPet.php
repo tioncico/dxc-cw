@@ -39,8 +39,8 @@ class UserPet extends UserBase
      * @ApiSuccessParam(name="msg",description="api提示信息")
      * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
      * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
-     * @Param(name="userPetId",lengthMax="11",required="")
      * @Param(name="petId",lengthMax="11",required="")
+     * @Param(name="userId",alias="用户id",description="用户id",lengthMax="11",optional="")
      * @Param(name="name",alias="宠物名称",description="宠物名称",lengthMax="255",optional="")
      * @Param(name="type",alias="宠物类型 1金2木3土4水5火6光7暗",description="宠物类型 1金2木3土4水5火6光7暗",lengthMax="255",optional="")
      * @Param(name="isUse",alias="是否携带宠物",description="是否携带宠物",lengthMax="11",optional="")
@@ -78,8 +78,8 @@ class UserPet extends UserBase
     {
         $param = ContextManager::getInstance()->get('param');
         $data = [
-            'userPetId'              => $param['userPetId'],
             'petId'                  => $param['petId'],
+            'userId'                 => $param['userId'] ?? '',
             'name'                   => $param['name'] ?? '',
             'type'                   => $param['type'] ?? '',
             'isUse'                  => $param['isUse'] ?? '',
@@ -131,6 +131,7 @@ class UserPet extends UserBase
      * @ApiFail({"code":400,"result":[],"msg":"更新失败"})
      * @Param(name="userPetId",lengthMax="11",required="")
      * @Param(name="petId",lengthMax="11",optional="")
+     * @Param(name="userId",alias="用户id",description="用户id",lengthMax="11",optional="")
      * @Param(name="name",alias="宠物名称",description="宠物名称",lengthMax="255",optional="")
      * @Param(name="type",alias="宠物类型 1金2木3土4水5火6光7暗",description="宠物类型 1金2木3土4水5火6光7暗",lengthMax="255",optional="")
      * @Param(name="isUse",alias="是否携带宠物",description="是否携带宠物",lengthMax="11",optional="")
@@ -176,6 +177,7 @@ class UserPet extends UserBase
         $updateData = [];
 
         $updateData['petId'] = $param['petId'] ?? $info->petId;
+        $updateData['userId'] = $param['userId'] ?? $info->userId;
         $updateData['name'] = $param['name'] ?? $info->name;
         $updateData['type'] = $param['type'] ?? $info->type;
         $updateData['isUse'] = $param['isUse'] ?? $info->isUse;
@@ -226,6 +228,7 @@ class UserPet extends UserBase
      * @Param(name="userPetId",lengthMax="11",required="")
      * @ApiSuccessParam(name="result.userPetId",description="")
      * @ApiSuccessParam(name="result.petId",description="")
+     * @ApiSuccessParam(name="result.userId",description="用户id")
      * @ApiSuccessParam(name="result.name",description="宠物名称")
      * @ApiSuccessParam(name="result.type",description="宠物类型 1金2木3土4水5火6光7暗")
      * @ApiSuccessParam(name="result.isUse",description="是否携带宠物")
@@ -264,16 +267,12 @@ class UserPet extends UserBase
         $param = ContextManager::getInstance()->get('param');
         $model = new UserPetModel();
         $info = $model->get(['userPetId' => $param['userPetId']]);
-        if ($info) {
-            $this->writeJson(Status::CODE_OK, $info, "获取数据成功.");
-        } else {
-            $this->writeJson(Status::CODE_BAD_REQUEST, [], '数据不存在');
-        }
+        $this->writeJson(Status::CODE_OK, $info, "获取数据成功.");
     }
 
 
     /**
-     * @Api(name="getList",path="/Api/User/UserPet/getList")
+     * @Api(name="获取用户宠物列表",path="/Api/User/UserPet/getList")
      * @ApiDescription("获取数据列表")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -282,11 +281,12 @@ class UserPet extends UserBase
      * @ApiSuccessParam(name="msg",description="api提示信息")
      * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
      * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
-     * @Param(name="type", from={GET,POST}, alias="宠物类型", optional="")
+     * @Param(name="type", from={GET,POST}, description="宠物类型 1金2木3土4水5火6光7暗", optional="")
      * @Param(name="page", from={GET,POST}, alias="页数", optional="")
      * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
      * @ApiSuccessParam(name="result[].userPetId",description="")
      * @ApiSuccessParam(name="result[].petId",description="")
+     * @ApiSuccessParam(name="result[].userId",description="用户id")
      * @ApiSuccessParam(name="result[].name",description="宠物名称")
      * @ApiSuccessParam(name="result[].type",description="宠物类型 1金2木3土4水5火6光7暗")
      * @ApiSuccessParam(name="result[].isUse",description="是否携带宠物")
@@ -327,7 +327,10 @@ class UserPet extends UserBase
         $pageSize = (int)($param['pageSize'] ?? 20);
         $model = new UserPetModel();
         $model->where('userId', $this->who->userId);
-        $data = $model->getList($page, $pageSize);
+        if (isset($param['type'])) {
+            $model->where('type', $param['type']);
+        }
+        $data = $model->order('isUse','desc')->order('level','desc')->getList($page, $pageSize);
         $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
     }
 
@@ -351,6 +354,7 @@ class UserPet extends UserBase
         $info = $model->get(['userPetId' => $param['userPetId']]);
         if (!$info) {
             $this->writeJson(Status::CODE_OK, $info, "数据不存在.");
+            return false;
         }
 
         $info->destroy();

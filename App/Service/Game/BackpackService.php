@@ -93,4 +93,22 @@ class BackpackService extends BaseService
         GoodsChangeResponse::getInstance()->addGoods($goodsModel,-$num);
         return $backpackInfo;
     }
+
+    /**
+     * 使用物品,只有部分道具,礼包,宠物蛋可使用
+     * useGoods
+     * @param                   $userId
+     * @param UserBackpackModel $userBackpackModel
+     * @param                   $num
+     * @author tioncico
+     * Time: 3:33 下午
+     */
+    public function useGoods($userId,UserBackpackModel $userBackpackModel,$num){
+
+
+
+
+
+
+    }
 }
