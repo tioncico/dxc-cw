@@ -8,6 +8,7 @@ use App\Model\BaseModel;
 use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserBackpackModel;
 use App\Model\Game\UserBaseAttributeModel;
+use App\Model\Game\UserLevelConfigModel;
 use App\Model\Game\UserMapModel;
 use App\Utility\Assert\Assert;
 use EasySwoole\Http\Message\Status;
@@ -86,7 +87,7 @@ class Game extends UserBase
             'attributeInfo' => $userAttributeInfo,
             'goldNum'       => $userGoldInfo->num,
             'moneyNum'      => $userMoneyInfo->num,
-        ];
+            'levelExpInfo'   => UserLevelConfigModel::create()->get(['level' => $userAttributeInfo->level + 1])];
         $this->writeJson(Status::CODE_OK, $data, "获取数据成功");
     }
 

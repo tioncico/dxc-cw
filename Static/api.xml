@@ -126,6 +126,7 @@
         <field name="goldNum" type="number" comment="金币"></field>
         <field name="moneyNum" type="number" comment="钻石"></field>
         <field name="attributeInfo" type="UserAttributeInfo" comment="角色信息"></field>
+        <field name="levelExpInfo" type="LevelExpInfo" comment="等级经验信息"></field>
     </message>
 
     <struct name="UserAttributeInfo" extends="BaseAttribute" comment="角色信息">
@@ -284,5 +285,11 @@
         <field name="type" type="number" comment="宠物类型"></field>
         <field name="isUse" type="number" comment="是否携带"></field>
         <field name="isBest" type="number" comment="是否为极品宠物"></field>
+    </struct>
+
+
+    <struct name="levelExpInfo" comment="等级经验信息">
+        <field name="level" type="number" comment="等级"></field>
+        <field name="exp" type="number" comment="所需经验"></field>
     </struct>
 </root>
