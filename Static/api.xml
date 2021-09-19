@@ -129,6 +129,11 @@
         <field name="levelExpInfo" type="LevelExpInfo" comment="等级经验信息"></field>
     </message>
 
+    <struct name="LevelExpInfo" comment="等级经验信息">
+        <field name="level" type="number" comment="等级"></field>
+        <field name="exp" type="number" comment="所需经验"></field>
+    </struct>
+
     <struct name="UserAttributeInfo" extends="BaseAttribute" comment="角色信息">
         <field name="userId" type="number" comment="用户id"></field>
         <field name="name" type="string" comment="用户角色名"></field>
@@ -288,8 +293,4 @@
     </struct>
 
 
-    <struct name="levelExpInfo" comment="等级经验信息">
-        <field name="level" type="number" comment="等级"></field>
-        <field name="exp" type="number" comment="所需经验"></field>
-    </struct>
 </root>
