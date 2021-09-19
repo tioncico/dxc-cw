@@ -269,4 +269,20 @@
         <field name="list" type="UserAttributeInfo" comment="用户属性"></field>
     </message>
 
+    <!-- 宠物模块 -->
+    <message dir="CS" name="CS_GetUserPetList" router="/Api/User/UserPet/getList" comment="获取宠物列表">
+        <field name="type" type="number" comment="宠物类型 1金2木3土4水5火6光7暗"></field>
+    </message>
+    <message dir="SC" name="SC_GetUserPetList" comment="返回宠物列表信息">
+        <field name="list" type="UserPetInfo[]" comment="用户宠物信息"></field>
+    </message>
+    <struct name="UserPetInfo" extends="BaseAttribute" comment="用户宠物信息">
+        <field name="userPetId" type="number" comment="id"></field>
+        <field name="petId" type="number" comment="宠物id"></field>
+        <field name="userId" type="number" comment="用户id"></field>
+        <field name="name" type="number" comment="宠物名"></field>
+        <field name="type" type="number" comment="宠物类型"></field>
+        <field name="isUse" type="number" comment="是否携带"></field>
+        <field name="isBest" type="number" comment="是否为极品宠物"></field>
+    </struct>
 </root>
