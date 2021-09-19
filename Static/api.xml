@@ -150,7 +150,7 @@
         <field name="num" type="number" comment="物品数量"></field>
         <field name="goodsType" type="number" comment="物品类型"></field>
         <field name="goodsInfo" type="GoodsInfo" comment="物品详情"></field>
-        <field name="userEquipmentInfo" type="userEquipmentBaseInfo" comment="用户装备基础信息"></field>
+        <field name="userEquipmentInfo" type="UserEquipmentBaseInfo" comment="用户装备基础信息"></field>
         <field name="strengthenInfo" type="EquipmentStrengthenInfo" comment="装备强化信息"></field>
     </struct>
 
@@ -192,6 +192,10 @@
     <!-- 邮件模块 -->
     <message dir="CS" name="CS_GetMailList" router="/Api/User/Mail/getList" comment="获取用户邮件列表"></message>
     <message dir="SC" name="SC_GetMailList" comment="返回邮件数据">
+        <field name="list" type="MailList" comment="邮件id"></field>
+    </message>
+
+    <struct name="MailList" comment="签到奖励">
         <field name="id" type="number" comment="邮件id"></field>
         <field name="userId" type="number" comment="用户id"></field>
         <field name="name" type="string" comment="邮件标题"></field>
@@ -200,7 +204,7 @@
         <field name="isRead" type="number" comment="是否已读"></field>
         <field name="isReceive" type="number" comment="是否已接收"></field>
         <field name="goodsList" type="MailGoodsInfo[]" comment="邮件物品详情"></field>
-    </message>
+    </struct>
 
     <message dir="CS" name="CS_ReceiveMailGoods" router="/Api/User/Mail/receive" comment="领取邮件物品">
         <field name="id" type="number" comment="邮件id"></field>
