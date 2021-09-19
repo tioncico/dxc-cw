@@ -249,7 +249,7 @@ class Mail extends UserBase
                         'extraData'=>$value['extraData'],
                     ],
                 ];
-                $goodsList = $goodsInfo;
+                $goodsList[$k] = $goodsInfo;
             }
             $data['list'][$key]['goodsList'] = $goodsList;
         }
