@@ -195,7 +195,7 @@
         <field name="list" type="MailInfo[]" comment="邮件id"></field>
     </message>
 
-    <struct name="MailInfo" comment="签到奖励">
+    <struct name="MailInfo" comment="邮件信息">
         <field name="id" type="number" comment="邮件id"></field>
         <field name="userId" type="number" comment="用户id"></field>
         <field name="name" type="string" comment="邮件标题"></field>
