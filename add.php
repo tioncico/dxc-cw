@@ -23,6 +23,5 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-   \App\Service\Game\PetService::getInstance()->addUserPet(1,PetModel::create()->get(6));
     \Swoole\Timer::clearAll();
 });

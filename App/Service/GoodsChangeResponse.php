@@ -41,12 +41,12 @@ class GoodsChangeResponse
 
     public function getEquipment()
     {
-        return ContextManager::getInstance()->get(self::EQUIPMENT_KEY);
+        return array_values(ContextManager::getInstance()->get(self::EQUIPMENT_KEY));
     }
 
     public function getGoods()
     {
-        return ContextManager::getInstance()->get(self::GOODS_KEY);
+        return array_values(ContextManager::getInstance()->get(self::GOODS_KEY));
     }
 
 }
