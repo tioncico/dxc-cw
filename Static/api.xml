@@ -15,7 +15,7 @@
         <field name="msg" type="string" comment="接口返回的消息"></field>
         <field name="requestId" type="number" comment="请求id"></field>
         <field name="goodsChange" type="GoodsChangeInfo[]" comment="物品变动情况"></field>
-        <field name="equipmentChange" type="Goods" comment="装备变动情况,背包结构"></field>
+        <field name="equipmentChange" type="Goods[]" comment="装备变动情况,背包结构"></field>
     </message>
     <struct name="GoodsChangeInfo" comment="物品变动信息">
         <field name="num" type="number" comment="物品数量,负数表示失去"></field>
