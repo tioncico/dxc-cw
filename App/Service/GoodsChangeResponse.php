@@ -33,6 +33,13 @@ class GoodsChangeResponse
         if (isset($data[$userEquipmentBackpackModel->backpackId])) {
             $data[$userEquipmentBackpackModel->backpackId]['num'] += $num;
         } else {
+            $goodsInfo = GoodsModel::create()->getInfoByCode($userEquipmentBackpackModel->goodsCode);
+            $data[$userEquipmentBackpackModel->backpackId]['backpackId'] = $userEquipmentBackpackModel->backpackId;
+            $data[$userEquipmentBackpackModel->backpackId]['userId'] = $userEquipmentBackpackModel->userId;
+            $data[$userEquipmentBackpackModel->backpackId]['goodsId'] = $goodsInfo->goodsId;
+            $data[$userEquipmentBackpackModel->backpackId]['goodsCode'] = $goodsInfo->code;
+            $data[$userEquipmentBackpackModel->backpackId]['goodsType'] = $goodsInfo->type;
+            $data[$userEquipmentBackpackModel->backpackId]['goodsInfo'] = $goodsInfo->toArray();
             $data[$userEquipmentBackpackModel->backpackId]['equipmentInfo'] = $userEquipmentBackpackModel->toArray();
             $data[$userEquipmentBackpackModel->backpackId]['num'] = $num;
         }
