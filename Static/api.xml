@@ -192,10 +192,10 @@
     <!-- 邮件模块 -->
     <message dir="CS" name="CS_GetMailList" router="/Api/User/Mail/getList" comment="获取用户邮件列表"></message>
     <message dir="SC" name="SC_GetMailList" comment="返回邮件数据">
-        <field name="list" type="MailList" comment="邮件id"></field>
+        <field name="list" type="MailInfo[]" comment="邮件id"></field>
     </message>
 
-    <struct name="MailList" comment="签到奖励">
+    <struct name="MailInfo" comment="签到奖励">
         <field name="id" type="number" comment="邮件id"></field>
         <field name="userId" type="number" comment="用户id"></field>
         <field name="name" type="string" comment="邮件标题"></field>
