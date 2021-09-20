@@ -56,7 +56,9 @@ class BackpackService extends BaseService
     {
         //装备无法叠加
         if ($goodsModel->type == 7) {
-            $backpackInfo =   EquipmentService::getInstance()->addUserEquipment($userId,$goodsModel);
+            for($i=0;$i<=$num;$i++){
+                $backpackInfo =   EquipmentService::getInstance()->addUserEquipment($userId,$goodsModel);
+            }
         } elseif ($goodsModel->type == 1) {
             $backpackInfo = $this->addGold($userId, $num);
         } elseif ($goodsModel->type == 2) {
@@ -69,7 +71,9 @@ class BackpackService extends BaseService
                 $backpackInfo->update(['num' => QueryBuilder::inc($num)]);
             }
         }
-        GoodsChangeResponse::getInstance()->addGoods($goodsModel,$num);
+        if ($goodsModel->type!=7){
+            GoodsChangeResponse::getInstance()->addGoods($goodsModel,$num);
+        }
 
         return $backpackInfo;
     }
