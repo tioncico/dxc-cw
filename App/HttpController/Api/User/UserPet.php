@@ -324,7 +324,7 @@ class UserPet extends UserBase
     {
         $param = ContextManager::getInstance()->get('param');
         $page = (int)($param['page'] ?? 1);
-        $pageSize = (int)($param['pageSize'] ?? 20);
+        $pageSize = (int)($param['pageSize'] ?? 99999);
         $model = new UserPetModel();
         $model->where('userId', $this->who->userId);
         if (isset($param['type'])) {
