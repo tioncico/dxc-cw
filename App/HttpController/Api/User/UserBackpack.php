@@ -97,6 +97,36 @@ class UserBackpack extends UserBase
 		}
 	}
 
+	/**
+	 * @Api(name="使用道具",path="/Api/User/UserBackpack/useProp")
+	 * @ApiDescription("使用道具")
+	 * @Method(allow={GET,POST})
+	 * @InjectParamsContext(key="param")
+	 * @ApiSuccessParam(name="code",description="状态码")
+	 * @ApiSuccessParam(name="result",description="api请求结果")
+	 * @ApiSuccessParam(name="msg",description="api提示信息")
+	 * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+	 * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+	 * @Param(name="backpackId",alias="背包id",description="背包id",lengthMax="11",required="")
+	 * @ApiSuccessParam(name="result.backpackId",description="背包id")
+	 * @ApiSuccessParam(name="result.userId",description="用户id")
+	 * @ApiSuccessParam(name="result.goodsId",description="物品id")
+	 * @ApiSuccessParam(name="result.goodsCode",description="物品code")
+	 * @ApiSuccessParam(name="result.num",description="数量")
+	 * @ApiSuccessParam(name="result.goodsType",description="物品类型")
+	 */
+	public function useProp()
+	{
+		$param = ContextManager::getInstance()->get('param');
+		$model = new UserBackpackModel();
+		$info = $model->get(['backpackId' => $param['backpackId']]);
+		if ($info) {
+		    $this->writeJson(Status::CODE_OK, $info, "获取数据成功.");
+		} else {
+		    $this->writeJson(Status::CODE_BAD_REQUEST, [], '数据不存在');
+		}
+	}
+
 
 	/**
 	 * @Api(name="获取背包数据",path="/Api/User/UserBackpack/getList")

@@ -12,7 +12,7 @@ use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserGoodsEquipmentAttributeEntryModel;
 use App\Model\UserGoodsEquipmentStrengthenAttributeModel;
 use App\Service\BaseService;
-use App\Service\GoodsChangeResponse;
+use App\Service\GameResponse;
 use EasySwoole\Component\Singleton;
 use EasySwoole\Mysqli\QueryBuilder;
 
@@ -72,7 +72,7 @@ class BackpackService extends BaseService
             }
         }
         if ($goodsModel->type!=7){
-            GoodsChangeResponse::getInstance()->addGoods($goodsModel,$num);
+            GameResponse::getInstance()->addGoods($goodsModel,$num);
         }
 
         return $backpackInfo;
@@ -94,7 +94,7 @@ class BackpackService extends BaseService
                 $backpackInfo->update(['num' => QueryBuilder::dec($num)]);
             }
         }
-        GoodsChangeResponse::getInstance()->addGoods($goodsModel,-$num);
+        GameResponse::getInstance()->addGoods($goodsModel,-$num);
         return $backpackInfo;
     }
 

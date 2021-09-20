@@ -9,7 +9,7 @@ use App\Service\Game\BackpackService;
 use App\Service\Game\EquipmentService;
 use App\Service\Game\EquipmentStrengthenService;
 use App\Service\Game\UserService;
-use App\Service\GoodsChangeResponse;
+use App\Service\GameResponse;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
@@ -179,7 +179,7 @@ class UserEquipment extends UserBase
         Assert::assert($userEquipmentInfo->isUse == 1, "该装备未穿戴");
         $userAttribute = BaseModel::transaction(function () use ($userEquipmentInfo) {
             $userEquipmentInfo->update(['isUse' => 0]);
-            GoodsChangeResponse::getInstance()->addEquipment($userEquipmentInfo,0);
+            GameResponse::getInstance()->addEquipment($userEquipmentInfo,0);
             //更新用户属性
             return UserService::getInstance()->countUserAttribute($userEquipmentInfo->userId);
         });

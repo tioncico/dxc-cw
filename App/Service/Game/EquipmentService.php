@@ -13,7 +13,7 @@ use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserGoodsEquipmentAttributeEntryModel;
 use App\Model\Game\UserGoodsEquipmentStrengthenAttributeModel;
 use App\Service\BaseService;
-use App\Service\GoodsChangeResponse;
+use App\Service\GameResponse;
 use App\Utility\Rand\Bean;
 use App\Utility\Rand\Rand;
 use EasySwoole\Component\Singleton;
@@ -51,7 +51,7 @@ class EquipmentService extends BaseService
             //删除装备属性
             $equipmentInfo->destroy();
             $goodsList[] = $materialInfo['num'] = $materialNum;
-            GoodsChangeResponse::getInstance()->addEquipment($equipmentInfo, -1);
+            GameResponse::getInstance()->addEquipment($equipmentInfo, -1);
             return $goodsList;
         });
         return $goodsList;
@@ -76,7 +76,7 @@ class EquipmentService extends BaseService
             $equipmentInfo = GoodsEquipmentModel::create()->get(['goodsCode' => $goodsInfo->code]);
             //新增用户装备信息
             $userEquipmentBackpackInfo = $this->addUserEquipmentBackpack($userId, $backpackInfo, $equipmentInfo);
-            GoodsChangeResponse::getInstance()->addEquipment($userEquipmentBackpackInfo,1);
+            GameResponse::getInstance()->addEquipment($userEquipmentBackpackInfo,1);
             //随机装备词条
             $entryArr = $this->addUserEquipmentEntry($backpackInfo, $equipmentInfo);
             //更新装备本身的词条介绍

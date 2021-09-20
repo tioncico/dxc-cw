@@ -5,7 +5,7 @@ namespace App\HttpController\Api;
 
 
 use App\HttpController\Base;
-use App\Service\GoodsChangeResponse;
+use App\Service\GameResponse;
 use App\Utility\Assert\AssertException;
 use EasySwoole\Http\Message\Status;
 use EasySwoole\HttpAnnotation\Exception\Annotation\ParamValidateError;
@@ -38,8 +38,8 @@ class ApiBase extends Base
                 "result"          => $result,
                 "msg"             => $msg,
                 'requestId'       => $this->request()->getRequestParam('requestId'),
-                'goodsChange'     => GoodsChangeResponse::getInstance()->getGoods(),
-                'equipmentChange' => GoodsChangeResponse::getInstance()->getEquipment(),
+                'goodsChange'     => GameResponse::getInstance()->getGoods(),
+                'equipmentChange' => GameResponse::getInstance()->getEquipment(),
             );
             $this->response()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
             $this->response()->withHeader('Content-type', 'application/json;charset=utf-8');

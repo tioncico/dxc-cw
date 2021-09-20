@@ -8,7 +8,7 @@ use App\Model\Game\MailGoodsModel;
 use App\Model\Game\MailModel;
 use App\Model\Game\UserBackpackModel;
 use App\Service\Game\BackpackService;
-use App\Service\GoodsChangeResponse;
+use App\Service\GameResponse;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;

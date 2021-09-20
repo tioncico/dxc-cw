@@ -9,7 +9,7 @@ use App\Model\Game\UserEquipmentBackpackModel;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\Component\Singleton;
 
-class GoodsChangeResponse
+class GameResponse
 {
     const GOODS_KEY = 'changeGoodsKey';
     const EQUIPMENT_KEY = 'changeEquipmentKey';

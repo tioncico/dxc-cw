@@ -23,6 +23,21 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-    \App\Service\Game\EquipmentService::getInstance()->addUserEquipment(1829,GoodsModel::create()->getInfoByCode('eq_0005'));
+
+    $data = [
+        'name'=>"体力药剂",
+        'code'=>'prop0014',
+        'baseCode'=>0,
+        'type'=>3,
+        'description'=>"使用后将恢复50点体力",
+        'gold'=>0,
+        'isSale'=>0,
+        'level'=>1,
+        'rarityLevel'=>5,
+        'extraData'=>50,
+    ];
+    $model = new GoodsModel($data);
+    $model->save();
+
     \Swoole\Timer::clearAll();
 });

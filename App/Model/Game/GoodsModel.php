@@ -24,6 +24,8 @@ class GoodsModel extends BaseModel
 {
 	protected $tableName = 'goods_list';
 
+	//baseCode说明
+    //prop001  体力药剂
 
 	public function getList(int $page = 1, int $pageSize = 10, string $field = '*'): array
 	{

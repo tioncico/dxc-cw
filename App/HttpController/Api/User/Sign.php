@@ -7,7 +7,7 @@ use App\Model\Game\GoodsModel;
 use App\Model\Game\SignRewardModel;
 use App\Model\Game\UserSignModel;
 use App\Service\Game\BackpackService;
-use App\Service\GoodsChangeResponse;
+use App\Service\GameResponse;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;

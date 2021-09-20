@@ -65,7 +65,7 @@ class UserBackpackModel extends BaseModel
         return $info;
     }
 
-    public function getInfoByCode($userId, $code)
+    public function getInfoByCodgetInfoByCodee($userId, $code)
     {
         $info = $this->get(['userId' => $userId, 'goodsCode' => $code]);
         return $info;
