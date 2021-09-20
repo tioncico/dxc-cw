@@ -40,7 +40,7 @@ class GameResponse
             $data[$userEquipmentBackpackModel->backpackId]['goodsCode'] = $goodsInfo->code;
             $data[$userEquipmentBackpackModel->backpackId]['goodsType'] = $goodsInfo->type;
             $data[$userEquipmentBackpackModel->backpackId]['goodsInfo'] = $goodsInfo->toArray();
-            $data[$userEquipmentBackpackModel->backpackId]['equipmentInfo'] = $userEquipmentBackpackModel->toArray();
+            $data[$userEquipmentBackpackModel->backpackId]['userEquipmentInfo'] = $userEquipmentBackpackModel->toArray();
             $data[$userEquipmentBackpackModel->backpackId]['num'] = $num;
         }
         ContextManager::getInstance()->set(self::EQUIPMENT_KEY, $data);
