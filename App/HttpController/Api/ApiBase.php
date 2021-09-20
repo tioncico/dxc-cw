@@ -69,7 +69,7 @@ class ApiBase extends Base
         } else if ($throwable instanceof AssertException) {
             $this->writeJson(Status::CODE_BAD_REQUEST, $throwable->getErrorCode(), $throwable->getMessage());
         } else {
-//            var_dump((string)$throwable);
+            var_dump((string)$throwable);
             $this->writeJson(Status::CODE_INTERNAL_SERVER_ERROR, null, $throwable->getMessage());
         }
     }
