@@ -4,7 +4,7 @@ namespace App\HttpController\Api\User;
 
 use App\Model\BaseModel;
 use App\Model\Game\UserAttributeModel;
-use App\Model\Game\UserEquipmentBackpackModel;
+use App\Model\Game\UserEquipmentModel;
 use App\Model\Game\UserGoodsEquipmentStrengthenAttributeModel;
 use App\Service\Game\BackpackService;
 use App\Service\Game\EquipmentService;
@@ -29,8 +29,8 @@ use EasySwoole\Http\Message\Status;
 use EasySwoole\Validate\Validate;
 
 /**
- * UserEquipmentBackpack
- * Class UserEquipmentBackpack
+ * UserEquipment
+ * Class UserEquipment
  * Create With ClassGeneration
  * @ApiGroup(groupName="用户装备")
  * @ApiGroupAuth(name="")
@@ -39,7 +39,7 @@ use EasySwoole\Validate\Validate;
 class UserEquipment extends UserBase
 {
     /**
-     * @Api(name="获取强化装备需要材料",path="/Api/User/UserEquipmentBackpack/getStrengthenData")
+     * @Api(name="获取强化装备需要材料",path="/Api/User/UserEquipment/getStrengthenData")
      * @ApiDescription("新增数据")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -53,7 +53,7 @@ class UserEquipment extends UserBase
     public function getStrengthenData()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
+        $userEquipmentInfo = UserEquipmentModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
 
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         //获取装备强化信息
@@ -70,7 +70,7 @@ class UserEquipment extends UserBase
     }
 
     /**
-     * @Api(name="强化装备",path="/Api/User/UserEquipmentBackpack/strengthen")
+     * @Api(name="强化装备",path="/Api/User/UserEquipment/strengthen")
      * @ApiDescription("强化装备")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -84,7 +84,7 @@ class UserEquipment extends UserBase
     public function strengthen()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
+        $userEquipmentInfo = UserEquipmentModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         Assert::assert($userEquipmentInfo->isUse == 0, "不能强化已穿戴装备");
         Assert::assert($userEquipmentInfo->strengthenLevel >= 20, "最高强化到20");
@@ -117,7 +117,7 @@ class UserEquipment extends UserBase
     }
 
     /**
-     * @Api(name="分解装备",path="/Api/User/UserEquipmentBackpack/decompose")
+     * @Api(name="分解装备",path="/Api/User/UserEquipment/decompose")
      * @ApiDescription("分解装备")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -131,7 +131,7 @@ class UserEquipment extends UserBase
     public function decompose()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
+        $userEquipmentInfo = UserEquipmentModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         Assert::assert($userEquipmentInfo->isUse == 0, "不能分解已穿戴装备");
         $goodsList = EquipmentService::getInstance()->decomposeEquipment($userEquipmentInfo);
@@ -139,7 +139,7 @@ class UserEquipment extends UserBase
     }
 
     /**
-     * @Api(name="穿戴装备",path="/Api/User/UserEquipmentBackpack/useEquipment")
+     * @Api(name="穿戴装备",path="/Api/User/UserEquipment/useEquipment")
      * @ApiDescription("穿戴装备")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -153,7 +153,7 @@ class UserEquipment extends UserBase
     public function useEquipment()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
+        $userEquipmentInfo = UserEquipmentModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         Assert::assert($userEquipmentInfo->isUse == 0, "该装备已经穿戴");
         $userAttribute = EquipmentService::getInstance()->useEquipment($userEquipmentInfo);
@@ -161,7 +161,7 @@ class UserEquipment extends UserBase
     }
 
     /**
-     * @Api(name="卸下装备",path="/Api/User/UserEquipmentBackpack/noUseEquipment")
+     * @Api(name="卸下装备",path="/Api/User/UserEquipment/noUseEquipment")
      * @ApiDescription("卸下装备")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -175,7 +175,7 @@ class UserEquipment extends UserBase
     public function noUseEquipment()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
+        $userEquipmentInfo = UserEquipmentModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         Assert::assert($userEquipmentInfo->isUse == 1, "该装备未穿戴");
         $userAttribute = BaseModel::transaction(function () use ($userEquipmentInfo) {
@@ -189,7 +189,7 @@ class UserEquipment extends UserBase
 
 
     /**
-     * @Api(name="update",path="/Api/User/UserEquipmentBackpack/update")
+     * @Api(name="update",path="/Api/User/UserEquipment/update")
      * @ApiDescription("更新数据")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -241,7 +241,7 @@ class UserEquipment extends UserBase
     public function update()
     {
         $param = ContextManager::getInstance()->get('param');
-        $model = new UserEquipmentBackpackModel();
+        $model = new UserEquipmentModel();
         $info = $model->get(['backpackId' => $param['backpackId']]);
         if (empty($info)) {
             $this->writeJson(Status::CODE_BAD_REQUEST, [], '该数据不存在');
@@ -293,7 +293,7 @@ class UserEquipment extends UserBase
 
 
     /**
-     * @Api(name="getOne",path="/Api/User/UserEquipmentBackpack/getOne")
+     * @Api(name="getOne",path="/Api/User/UserEquipment/getOne")
      * @ApiDescription("获取一条数据")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -346,7 +346,7 @@ class UserEquipment extends UserBase
     public function getOne()
     {
         $param = ContextManager::getInstance()->get('param');
-        $model = new UserEquipmentBackpackModel();
+        $model = new UserEquipmentModel();
         $info = $model->get(['backpackId' => $param['backpackId']]);
         if ($info) {
             $this->writeJson(Status::CODE_OK, $info, "获取数据成功.");
@@ -357,7 +357,7 @@ class UserEquipment extends UserBase
 
 
     /**
-     * @Api(name="getList",path="/Api/User/UserEquipmentBackpack/getList")
+     * @Api(name="getList",path="/Api/User/UserEquipment/getList")
      * @ApiDescription("获取数据列表")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -413,14 +413,14 @@ class UserEquipment extends UserBase
         $param = ContextManager::getInstance()->get('param');
         $page = (int)($param['page'] ?? 1);
         $pageSize = (int)($param['pageSize'] ?? 20);
-        $model = new UserEquipmentBackpackModel();
+        $model = new UserEquipmentModel();
         $data = $model->getList($page, $pageSize);
         $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
     }
 
 
     /**
-     * @Api(name="delete",path="/Api/User/UserEquipmentBackpack/delete")
+     * @Api(name="delete",path="/Api/User/UserEquipment/delete")
      * @ApiDescription("删除数据")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -434,7 +434,7 @@ class UserEquipment extends UserBase
     public function delete()
     {
         $param = ContextManager::getInstance()->get('param');
-        $model = new UserEquipmentBackpackModel();
+        $model = new UserEquipmentModel();
         $info = $model->get(['backpackId' => $param['backpackId']]);
         if (!$info) {
             $this->writeJson(Status::CODE_OK, $info, "数据不存在.");

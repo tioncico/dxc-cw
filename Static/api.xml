@@ -228,7 +228,7 @@
     </message>
 
     <!-- 强化装备模块 -->
-    <message dir="CS" name="CS_GetEquipmentStrengthenData" router="/Api/User/UserEquipmentBackpack/getStrengthenData"
+    <message dir="CS" name="CS_GetEquipmentStrengthenData" router="/Api/User/UserEquipment/getStrengthenData"
              comment="获取强化装备信息">
         <field name="backpackId" type="number" comment="装备id"></field>
     </message>
@@ -239,7 +239,7 @@
     </message>
 
     <struct name="EquipmentStrengthenInfo" comment="装备强化信息">
-        <field name="userEquipmentBackpackId" type="number" comment="用户装备id"></field>
+        <field name="UserEquipmentId" type="number" comment="用户装备id"></field>
         <field name="strengthenLevel" type="number" comment="强化等级"></field>
         <field name="hp" type="number" comment="血量"></field>
         <field name="attack" type="number" comment="攻击力"></field>
@@ -251,7 +251,7 @@
         <field name="num" type="number" comment="所需数量"></field>
     </struct>
 
-    <message dir="CS" name="CS_StrengthenEquipment" router="/Api/User/UserEquipmentBackpack/strengthen" comment="强化装备">
+    <message dir="CS" name="CS_StrengthenEquipment" router="/Api/User/UserEquipment/strengthen" comment="强化装备">
         <field name="backpackId" type="number" comment="装备id"></field>
     </message>
     <message dir="SC" name="SC_StrengthenEquipment" comment="强化装备">
@@ -259,18 +259,18 @@
     </message>
 
     <!-- 装备模块 -->
-    <message dir="CS" name="CS_DecomposeEquipment" router="/Api/User/UserEquipmentBackpack/decompose" comment="分解装备">
+    <message dir="CS" name="CS_DecomposeEquipment" router="/Api/User/UserEquipment/decompose" comment="分解装备">
         <field name="backpackId" type="number" comment="装备id"></field>
     </message>
     <message dir="SC" name="SC_DecomposeEquipment" comment="分解装备返回成功消息">
     </message>
-    <message dir="CS" name="CS_UseEquipment" router="/Api/User/UserEquipmentBackpack/useEquipment" comment="穿戴装备">
+    <message dir="CS" name="CS_UseEquipment" router="/Api/User/UserEquipment/useEquipment" comment="穿戴装备">
         <field name="backpackId" type="number" comment="装备id"></field>
     </message>
     <message dir="SC" name="SC_UseEquipment" comment="穿戴装备返回用户新属性">
         <field name="list" type="UserAttributeInfo" comment="用户属性"></field>
     </message>
-    <message dir="CS" name="CS_NoUseEquipment" router="/Api/User/UserEquipmentBackpack/noUseEquipment" comment="卸下装备">
+    <message dir="CS" name="CS_NoUseEquipment" router="/Api/User/UserEquipment/noUseEquipment" comment="卸下装备">
         <field name="backpackId" type="number" comment="装备id"></field>
     </message>
     <message dir="SC" name="SC_NoUseEquipment" comment="卸下装备返回用户新属性">
