@@ -71,7 +71,8 @@ class EquipmentService extends BaseService
     {
         return BaseModel::transaction(function () use ($userId, $goodsInfo) {
             //新增装备信息到背包
-            $backpackInfo = BackpackService::getInstance()->addGoods($userId, $goodsInfo, 1);
+            $backpackInfo =UserBackpackModel::create()->addData($userId,$goodsInfo,1);
+
             $equipmentInfo = GoodsEquipmentModel::create()->get(['goodsCode' => $goodsInfo->code]);
             //新增用户装备信息
             $userEquipmentBackpackInfo = $this->addUserEquipmentBackpack($userId, $backpackInfo, $equipmentInfo);
