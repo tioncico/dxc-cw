@@ -3,9 +3,8 @@
 namespace App\HttpController\Api\User;
 
 use App\Model\BaseModel;
-use App\Model\Game\UserAttributeModel;
-use App\Model\Game\UserEquipmentModel;
 use App\Model\Game\UserGoodsEquipmentStrengthenAttributeModel;
+use App\Model\UserEquipmentBackpackModel;
 use App\Service\Game\BackpackService;
 use App\Service\Game\EquipmentService;
 use App\Service\Game\EquipmentStrengthenService;
@@ -53,7 +52,7 @@ class UserEquipment extends UserBase
     public function getStrengthenData()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
+        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
 
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         //获取装备强化信息
@@ -84,7 +83,7 @@ class UserEquipment extends UserBase
     public function strengthen()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
+        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         Assert::assert($userEquipmentInfo->isUse == 0, "不能强化已穿戴装备");
         Assert::assert($userEquipmentInfo->strengthenLevel >= 20, "最高强化到20");
@@ -131,7 +130,7 @@ class UserEquipment extends UserBase
     public function decompose()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
+        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         Assert::assert($userEquipmentInfo->isUse == 0, "不能分解已穿戴装备");
         $goodsList = EquipmentService::getInstance()->decomposeEquipment($userEquipmentInfo);
@@ -153,7 +152,7 @@ class UserEquipment extends UserBase
     public function useEquipment()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
+        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         Assert::assert($userEquipmentInfo->isUse == 0, "该装备已经穿戴");
         $userAttribute = EquipmentService::getInstance()->useEquipment($userEquipmentInfo);
@@ -175,7 +174,7 @@ class UserEquipment extends UserBase
     public function noUseEquipment()
     {
         $param = ContextManager::getInstance()->get('param');
-        $userEquipmentInfo = UserEquipmentModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
+        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         Assert::assert($userEquipmentInfo->isUse == 1, "该装备未穿戴");
         $userAttribute = BaseModel::transaction(function () use ($userEquipmentInfo) {
@@ -241,7 +240,7 @@ class UserEquipment extends UserBase
     public function update()
     {
         $param = ContextManager::getInstance()->get('param');
-        $model = new UserEquipmentModel();
+        $model = new UserEquipmentBackpackModel();
         $info = $model->get(['backpackId' => $param['backpackId']]);
         if (empty($info)) {
             $this->writeJson(Status::CODE_BAD_REQUEST, [], '该数据不存在');
@@ -346,7 +345,7 @@ class UserEquipment extends UserBase
     public function getOne()
     {
         $param = ContextManager::getInstance()->get('param');
-        $model = new UserEquipmentModel();
+        $model = new UserEquipmentBackpackModel();
         $info = $model->get(['backpackId' => $param['backpackId']]);
         if ($info) {
             $this->writeJson(Status::CODE_OK, $info, "获取数据成功.");
@@ -413,7 +412,7 @@ class UserEquipment extends UserBase
         $param = ContextManager::getInstance()->get('param');
         $page = (int)($param['page'] ?? 1);
         $pageSize = (int)($param['pageSize'] ?? 999999999);
-        $model = new UserEquipmentModel();
+        $model = new UserEquipmentBackpackModel();
         $data = $model->getList($page, $pageSize);
         $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
     }
@@ -434,7 +433,7 @@ class UserEquipment extends UserBase
     public function delete()
     {
         $param = ContextManager::getInstance()->get('param');
-        $model = new UserEquipmentModel();
+        $model = new UserEquipmentBackpackModel();
         $info = $model->get(['backpackId' => $param['backpackId']]);
         if (!$info) {
             $this->writeJson(Status::CODE_OK, $info, "数据不存在.");
