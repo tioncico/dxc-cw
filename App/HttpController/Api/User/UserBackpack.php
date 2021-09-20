@@ -149,7 +149,7 @@ class UserBackpack extends UserBase
 	{
 		$param = ContextManager::getInstance()->get('param');
 		$page = (int)($param['page'] ?? 1);
-		$pageSize = (int)($param['pageSize'] ?? 20);
+		$pageSize = (int)($param['pageSize'] ?? 9999);
 		$model = new UserBackpackModel();
 		if ($param['goodsType']){
 		    $model->where('goodsType',$param['goodsType']);
