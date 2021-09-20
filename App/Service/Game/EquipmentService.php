@@ -11,7 +11,7 @@ use App\Model\Game\GoodsModel;
 use App\Model\Game\UserBackpackModel;
 use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserGoodsEquipmentAttributeEntryModel;
-use App\Model\UserGoodsEquipmentStrengthenAttributeModel;
+use App\Model\Game\UserGoodsEquipmentStrengthenAttributeModel;
 use App\Service\BaseService;
 use App\Service\GoodsChangeResponse;
 use App\Utility\Rand\Bean;

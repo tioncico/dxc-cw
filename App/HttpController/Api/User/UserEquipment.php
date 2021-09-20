@@ -4,7 +4,7 @@ namespace App\HttpController\Api\User;
 
 use App\Model\BaseModel;
 use App\Model\Game\UserGoodsEquipmentStrengthenAttributeModel;
-use App\Model\UserEquipmentBackpackModel;
+use App\Model\Game\UserEquipmentBackpackModel;
 use App\Service\Game\BackpackService;
 use App\Service\Game\EquipmentService;
 use App\Service\Game\EquipmentStrengthenService;
