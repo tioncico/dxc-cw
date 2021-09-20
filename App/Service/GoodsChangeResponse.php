@@ -27,7 +27,7 @@ class GoodsChangeResponse
         ContextManager::getInstance()->set(self::GOODS_KEY, $data);
     }
 
-    public function addEquipment(UserEquipmentBackpackModel $userEquipmentBackpackModel, $num)
+    public function addEquipment(UserEquipmentBackpackModel $userEquipmentBackpackModel, $num=1)
     {
         $data = ContextManager::getInstance()->get(self::EQUIPMENT_KEY);
         if (isset($data[$userEquipmentBackpackModel->backpackId])) {

@@ -76,7 +76,7 @@ class EquipmentService extends BaseService
             $equipmentInfo = GoodsEquipmentModel::create()->get(['goodsCode' => $goodsInfo->code]);
             //新增用户装备信息
             $userEquipmentBackpackInfo = $this->addUserEquipmentBackpack($userId, $backpackInfo, $equipmentInfo);
-            GoodsChangeResponse::getInstance()->addEquipment($userEquipmentBackpackInfo);
+            GoodsChangeResponse::getInstance()->addEquipment($userEquipmentBackpackInfo,1);
             //随机装备词条
             $entryArr = $this->addUserEquipmentEntry($backpackInfo, $equipmentInfo);
             //更新装备本身的词条介绍

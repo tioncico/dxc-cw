@@ -412,7 +412,7 @@ class UserEquipment extends UserBase
     {
         $param = ContextManager::getInstance()->get('param');
         $page = (int)($param['page'] ?? 1);
-        $pageSize = (int)($param['pageSize'] ?? 20);
+        $pageSize = (int)($param['pageSize'] ?? 999999999);
         $model = new UserEquipmentModel();
         $data = $model->getList($page, $pageSize);
         $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
