@@ -48,12 +48,20 @@ class GoodsChangeResponse
 
     public function getEquipment()
     {
-        return array_values(ContextManager::getInstance()->get(self::EQUIPMENT_KEY));
+        $equipment = ContextManager::getInstance()->get(self::EQUIPMENT_KEY);
+        if (empty($equipment)){
+            $equipment=[];
+        }
+        return array_values($equipment);
     }
 
     public function getGoods()
     {
-        return array_values(ContextManager::getInstance()->get(self::GOODS_KEY));
+        $goods = ContextManager::getInstance()->get(self::EQUIPMENT_KEY);
+        if (empty($goods)){
+            $goods=[];
+        }
+        return array_values($goods);
     }
 
 }
