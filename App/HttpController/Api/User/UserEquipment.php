@@ -9,6 +9,8 @@ use App\Model\Game\UserGoodsEquipmentStrengthenAttributeModel;
 use App\Service\Game\BackpackService;
 use App\Service\Game\EquipmentService;
 use App\Service\Game\EquipmentStrengthenService;
+use App\Service\Game\UserService;
+use App\Service\GoodsChangeResponse;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
@@ -153,8 +155,35 @@ class UserEquipment extends UserBase
         $param = ContextManager::getInstance()->get('param');
         $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
-//        Assert::assert($userEquipmentInfo->isUse==0, "该装备已经穿戴");
+        Assert::assert($userEquipmentInfo->isUse == 0, "该装备已经穿戴");
         $userAttribute = EquipmentService::getInstance()->useEquipment($userEquipmentInfo);
+        $this->writeJson(Status::CODE_OK, $userAttribute, "穿戴成功");
+    }
+
+    /**
+     * @Api(name="卸下装备",path="/Api/User/UserEquipmentBackpack/noUseEquipment")
+     * @ApiDescription("卸下装备")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
+     * @Param(name="backpackId",alias="装备所属背包id",description="装备所属背包id",lengthMax="11",required="")
+     */
+    public function noUseEquipment()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
+        Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
+        Assert::assert($userEquipmentInfo->isUse == 1, "该装备未穿戴");
+        $userAttribute = BaseModel::transaction(function () use ($userEquipmentInfo) {
+            $userEquipmentInfo->update(['isUse' => 0]);
+            GoodsChangeResponse::getInstance()->addEquipment($userEquipmentInfo,0);
+            //更新用户属性
+            return UserService::getInstance()->countUserAttribute($userEquipmentInfo->userId);
+        });
         $this->writeJson(Status::CODE_OK, $userAttribute, "穿戴成功");
     }
 
