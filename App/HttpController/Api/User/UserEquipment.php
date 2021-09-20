@@ -183,7 +183,7 @@ class UserEquipment extends UserBase
             //更新用户属性
             return UserService::getInstance()->countUserAttribute($userEquipmentInfo->userId);
         });
-        $this->writeJson(Status::CODE_OK, $userAttribute, "穿戴成功");
+        $this->writeJson(Status::CODE_OK, $userAttribute, "卸下装备成功");
     }
 
 
