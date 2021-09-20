@@ -226,6 +226,11 @@
     </message>
     <message dir="SC" name="SC_DelMail" comment="无返回值">
     </message>
+    <message dir="CS" name="CS_ReadMail" router="/Api/User/Mail/read" comment="邮件已读">
+        <field name="id" type="number" comment="邮件id"></field>
+    </message>
+    <message dir="SC" name="SC_ReadMail" comment="无返回值">
+    </message>
 
     <!-- 强化装备模块 -->
     <message dir="CS" name="CS_GetEquipmentStrengthenData" router="/Api/User/UserEquipment/getStrengthenData"

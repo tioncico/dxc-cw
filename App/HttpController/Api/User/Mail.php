@@ -273,7 +273,33 @@ class Mail extends UserBase
     {
         $param = ContextManager::getInstance()->get('param');
         $model = new MailModel();
-        $model->where('userId', $this->who->userId)->where('isReceive', 1)->where('id', $param['id'])->update(['isDelete' => 1]);
+        if (isset($param['id'])){
+            $model->where('id', $param['id']);
+        }
+        $model->where('userId', $this->who->userId)->where('isReceive', 1)->update(['isDelete' => 1]);
+        $this->writeJson(Status::CODE_OK, [], "删除成功.");
+    }
+
+    /**
+     * @Api(name="邮件已读",path="/Api/User/Mail/read")
+     * @ApiDescription("邮件已读")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
+     * @Param(name="id",lengthMax="11",description="邮件id",required="")
+     */
+    public function read()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $model = new MailModel();
+        if (isset($param['id'])){
+            $model->where('id', $param['id']);
+        }
+        $model->where('userId', $this->who->userId)->update(['isRead' => 1]);
         $this->writeJson(Status::CODE_OK, [], "删除成功.");
     }
 }
