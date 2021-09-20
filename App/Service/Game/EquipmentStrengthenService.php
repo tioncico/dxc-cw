@@ -90,7 +90,7 @@ class EquipmentStrengthenService extends BaseService
     public function strengthenEquipment(UserGoodsEquipmentStrengthenAttributeModel $strengthenInfo):?UserGoodsEquipmentStrengthenAttributeModel
     {
         //强化概率
-        $arr = [2 => 10000, 3 => 9000, 4 => 8000, 5 => 7000, 6 => 6000, 7 => 5000, 8 => 4000, 9 => 3000, 10 => 2000, 11 => 1000, 12 => 900, 13 => 800, 14 => 700, 16 => 600, 17 => 500, 18 => 400, 19 => 300, 20 => 200, 21 => 100, 22 => 90, 23 => 80, 24 => 70, 25 => 60, 26 => 50, 27 => 40, 28 => 30, 29 => 20, 30 => 10, 31 => 9, 32 => 8,];
+        $arr = [1=>10000,2 => 10000, 3 => 9000, 4 => 8000, 5 => 7000, 6 => 6000, 7 => 5000, 8 => 4000, 9 => 3000, 10 => 2000, 11 => 1000, 12 => 900, 13 => 800, 14 => 700, 16 => 600, 17 => 500, 18 => 400, 19 => 300, 20 => 200, 21 => 100, 22 => 90, 23 => 80, 24 => 70, 25 => 60, 26 => 50, 27 => 40, 28 => 30, 29 => 20, 30 => 10, 31 => 9, 32 => 8,];
         $randRate = $arr[$strengthenInfo->strengthenLevel];
         $randNum = mt_rand(1, 10000);
         if ($randNum > $randRate) {

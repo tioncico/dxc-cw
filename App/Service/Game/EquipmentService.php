@@ -130,7 +130,7 @@ class EquipmentService extends BaseService
             'backpackId'                => $backpackInfo->backpackId,
             'userId'                    => $userId,
             'isUse'                     => 0,
-            'strengthenLevel'           => $equipmentInfo->strengthenLevel,
+            'strengthenLevel'           => 0,
             'goodsCode'                 => $equipmentInfo->goodsCode,
             'goodsName'                 => $equipmentInfo->goodsName,
             'equipmentType'             => $equipmentInfo->equipmentType,
