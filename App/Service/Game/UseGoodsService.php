@@ -66,7 +66,7 @@ class UseGoodsService
         $petInfo = PetModel::create()->get($petId);
         for ($i = 0; $i < $num; $i++) {
             $userPetInfo = PetService::getInstance()->addUserPet($userBackpackInfo->userId, $petInfo);
-            GameResponse::getInstance()->addPet($userPetInfo);
+            GameResponse::getInstance()->addPet($userPetInfo,1);
         }
     }
 
