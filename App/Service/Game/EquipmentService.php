@@ -50,11 +50,8 @@ class EquipmentService extends BaseService
             UserGoodsEquipmentStrengthenAttributeModel::create()->destroy(['userEquipmentBackpackId' => $equipmentInfo->backpackId]);
             //删除装备属性
             $equipmentInfo->destroy();
-            $goodsList[] = $materialInfo['num'] = $materialNum;
             GameResponse::getInstance()->addEquipment($equipmentInfo, -1);
-            return $goodsList;
         });
-        return $goodsList;
     }
 
     /**

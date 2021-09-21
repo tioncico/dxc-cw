@@ -133,8 +133,8 @@ class UserEquipment extends UserBase
         $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         Assert::assert($userEquipmentInfo->isUse == 0, "不能分解已穿戴装备");
-        $goodsList = EquipmentService::getInstance()->decomposeEquipment($userEquipmentInfo);
-        $this->writeJson(Status::CODE_OK, $goodsList, "分解成功");
+        EquipmentService::getInstance()->decomposeEquipment($userEquipmentInfo);
+        $this->writeJson(Status::CODE_OK, [], "分解成功");
     }
 
     /**
