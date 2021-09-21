@@ -14,6 +14,7 @@ use App\Model\BaseModel;
  * @property string $description // 怪物介绍
  * @property int $level // 怪物等级
  * @property int $classLevel // 宠物阶级
+ * @property int $awakeLevel // 觉醒等级
  * @property int $hp // 血量
  * @property int $mp // 法力
  * @property int $attack // 攻击力

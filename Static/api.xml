@@ -303,6 +303,7 @@
         <field name="userPetId" type="number" comment="id"></field>
         <field name="petId" type="number" comment="宠物id"></field>
         <field name="classLevel" type="number" comment="宠物阶级"></field>
+        <field name="awakeLevel" type="number" comment="觉醒等级"></field>
         <field name="userId" type="number" comment="用户id"></field>
         <field name="name" type="number" comment="宠物名"></field>
         <field name="type" type="number" comment="宠物类型"></field>

@@ -32,6 +32,7 @@ class PetService
             'description'            => $petModel->description,
             'level'                  => 1,
             'classLevel'             => 0,
+            'awakeLevel'             => 0,
             'exp'                    => 0,
             'isBest'                 => 0,
             'hp'                     => $petModel->hp,
