@@ -148,6 +148,11 @@
     <message dir="SC" name="SC_GetBagInfo" comment="返回背包数据">
         <field name="list" type="Goods[]" comment="物品列表"></field>
     </message>
+    <message dir="CS" name="CS_UseGoods" router="/Api/User/UserBackpack/useGoods" comment="使用物品">
+        <field name="backpackId" type="number" comment="背包id,只有道具(部分道具,不行后端会提示),礼包,宠物蛋才可使用"></field>
+    </message>
+    <message dir="SC" name="SC_UseGoods" comment="使用物品返回数据,没有返回数据,都在物品变动中">
+    </message>
 
     <struct name="Goods" comment="物品结构">
         <field name="backpackId" type="number" comment="背包id"></field>

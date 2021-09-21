@@ -128,7 +128,7 @@ class UserBackpack extends UserBase
         Assert::assert(in_array($info->goodsType,[3,4,6]),'该类型物品不能使用');
 
         UseGoodsService::getInstance()->useGoods($info,$param['num']);
-        $this->writeJson(Status::CODE_OK, $info, "使用物品成功.");
+        $this->writeJson(Status::CODE_OK, null, "使用物品成功.");
     }
 
 
