@@ -156,7 +156,7 @@ class UserEquipment extends UserBase
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         Assert::assert($userEquipmentInfo->isUse == 0, "该装备已经穿戴");
         $userAttribute = EquipmentService::getInstance()->useEquipment($userEquipmentInfo);
-        $this->writeJson(Status::CODE_OK, $userAttribute, "穿戴成功");
+        $this->writeJson(Status::CODE_OK, ['userAttributeInfo'=>$userAttribute], "穿戴成功");
     }
 
     /**

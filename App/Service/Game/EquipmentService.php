@@ -71,12 +71,12 @@ class EquipmentService extends BaseService
     {
         return BaseModel::transaction(function () use ($userId, $goodsInfo) {
             //新增装备信息到背包
-            $backpackInfo =UserBackpackModel::create()->addData($userId,$goodsInfo,1);
+            $backpackInfo = UserBackpackModel::create()->addData($userId, $goodsInfo, 1);
 
             $equipmentInfo = GoodsEquipmentModel::create()->get(['goodsCode' => $goodsInfo->code]);
             //新增用户装备信息
             $userEquipmentBackpackInfo = $this->addUserEquipmentBackpack($userId, $backpackInfo, $equipmentInfo);
-            GameResponse::getInstance()->addEquipment($userEquipmentBackpackInfo,1);
+            GameResponse::getInstance()->addEquipment($userEquipmentBackpackInfo, 1);
             //随机装备词条
             $entryArr = $this->addUserEquipmentEntry($backpackInfo, $equipmentInfo);
             //更新装备本身的词条介绍
@@ -279,25 +279,25 @@ class EquipmentService extends BaseService
          * @var GoodsEquipmentAttributeEntryModel[] $goodsEquipmentAttributeEntryInfoArr
          */
 
-        $description = '';
+        $descriptionArr = [];
         foreach ($goodsEquipmentAttributeEntryInfoArr as $goodsEquipmentAttributeEntryInfo) {
-            $description .= "{$goodsEquipmentAttributeEntryInfo->description}\n";
+            $descriptionArr[] = $this->handleUbb($goodsEquipmentAttributeEntryInfo->level,$goodsEquipmentAttributeEntryInfo->description);
         }
         $userEquipmentBackpackInfo->update([
-            'attributeEntryDescription' => $description
+            'attributeEntryDescription' => implode("\n",$descriptionArr),
         ]);
     }
 
     protected function updateEquipmentAttributeDescription(UserEquipmentBackpackModel $userEquipmentBackpackInfo)
     {
-        $description = '';
+        $descriptionArr = [];
         foreach ($this->getAttributeName() as $key => $name) {
             if ($userEquipmentBackpackInfo->$key > 0) {
-                $description .= "{$name}+{$userEquipmentBackpackInfo->$key}\n";
+                $descriptionArr[] = $this->handleUbb(1,"{$name}+{$userEquipmentBackpackInfo->$key}");
             }
         }
         $userEquipmentBackpackInfo->update([
-            'attributeDescription' => $description
+            'attributeDescription' =>implode("\n",$descriptionArr),
         ]);
     }
 
@@ -332,5 +332,25 @@ class EquipmentService extends BaseService
             'luck'                   => '幸运值',
         ];
         return $data[$type] ?? $data;
+    }
+
+    protected function handleUbb($level, $description)
+    {
+//        白
+#00FF00 绿
+#0000FF 蓝
+#FFFF00 黄
+#FF00FF 紫
+#FF0000 红
+        $arr = [
+            1 => '#FFFFFF',//白
+            2 => '#0000FF',//蓝
+            3 => '#FF00FF',//紫
+            4 => '#FFFF00',//黄
+            5 => '#FFA500',//橙色
+            6 => 'FF0000',//红色
+            7 => 'FF0000',//深红
+        ];
+return "[color={$arr[$level]}]{$description}[/color]";
     }
 }
