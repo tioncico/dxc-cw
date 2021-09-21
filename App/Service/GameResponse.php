@@ -9,6 +9,7 @@ use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserPetModel;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\Component\Singleton;
+use EasySwoole\EasySwoole\Logger;
 
 class GameResponse
 {
@@ -71,7 +72,7 @@ class GameResponse
 
     public function getGoods()
     {
-        $goods = ContextManager::getInstance()->get(self::EQUIPMENT_KEY);
+        $goods = ContextManager::getInstance()->get(self::GOODS_KEY);
         if (empty($goods)){
             $goods=[];
         }
