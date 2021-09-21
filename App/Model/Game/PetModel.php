@@ -13,6 +13,7 @@ use App\Model\BaseModel;
  * @property string $type // 宠物类型 1金2木3土4水5火6光7暗
  * @property string $description // 怪物介绍
  * @property int $level // 怪物等级
+ * @property int $classLevel // 宠物阶级
  * @property int $hp // 血量
  * @property int $mp // 法力
  * @property int $attack // 攻击力

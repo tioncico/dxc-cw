@@ -31,6 +31,7 @@ class PetService
             'isUse'                  => 0,
             'description'            => $petModel->description,
             'level'                  => 1,
+            'classLevel'             => 0,
             'exp'                    => 0,
             'isBest'                 => 0,
             'hp'                     => $petModel->hp,
