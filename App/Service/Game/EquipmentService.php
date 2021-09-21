@@ -38,7 +38,7 @@ class EquipmentService extends BaseService
         //装备强化属性
         //分解材料数量 = 装备等级*装备品级*装备强化等级*5
         $goodsList = BaseModel::transaction(function () use ($equipmentInfo) {
-            $materialNum = $equipmentInfo->level * $equipmentInfo->rarityLevel * $equipmentInfo->strengthenLevel * 5;
+            $materialNum = intval($equipmentInfo->level * $equipmentInfo->rarityLevel * ($equipmentInfo->strengthenLevel+1) * 5);
             //增加物品
             $materialInfo = GoodsModel::create()->getInfoByCode('material00001');
             $backpackInfo = BackpackService::getInstance()->addGoods($equipmentInfo->userId, $materialInfo, $materialNum);

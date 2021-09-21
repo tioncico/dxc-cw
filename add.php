@@ -23,9 +23,9 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-    \App\Service\Game\MailService::getInstance()->sendMail(1,'宠物蛋',"宠物蛋",[
+    \App\Service\Game\MailService::getInstance()->sendMail(1,'装备',"装备",[
         [
-            'code'=>'pet00020',
+            'code'=>'eq_0005',
             'num'=>100,
         ]
     ]);

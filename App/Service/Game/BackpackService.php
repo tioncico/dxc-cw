@@ -56,8 +56,8 @@ class BackpackService extends BaseService
     {
         //装备无法叠加
         if ($goodsModel->type == 7) {
-            for($i=0;$i<=$num;$i++){
-                $backpackInfo =   EquipmentService::getInstance()->addUserEquipment($userId,$goodsModel);
+            for ($i = 0; $i < $num; $i++) {
+                $backpackInfo = EquipmentService::getInstance()->addUserEquipment($userId, $goodsModel);
             }
         } elseif ($goodsModel->type == 1) {
             $backpackInfo = $this->addGold($userId, $num);
@@ -71,8 +71,8 @@ class BackpackService extends BaseService
                 $backpackInfo->update(['num' => QueryBuilder::inc($num)]);
             }
         }
-        if ($goodsModel->type!=7){
-            GameResponse::getInstance()->addGoods($goodsModel,$num);
+        if ($goodsModel->type != 7) {
+            GameResponse::getInstance()->addGoods($goodsModel, $num);
         }
 
         return $backpackInfo;
@@ -94,7 +94,9 @@ class BackpackService extends BaseService
                 $backpackInfo->update(['num' => QueryBuilder::dec($num)]);
             }
         }
-        GameResponse::getInstance()->addGoods($goodsModel,-$num);
+        if ($goodsModel->type!=7){
+            GameResponse::getInstance()->addGoods($goodsModel, -$num);
+        }
         return $backpackInfo;
     }
 
@@ -107,11 +109,8 @@ class BackpackService extends BaseService
      * @author tioncico
      * Time: 3:33 下午
      */
-    public function useGoods($userId,UserBackpackModel $userBackpackModel,$num){
-
-
-
-
+    public function useGoods($userId, UserBackpackModel $userBackpackModel, $num)
+    {
 
 
     }
