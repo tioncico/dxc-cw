@@ -279,7 +279,7 @@
         <field name="backpackId" type="number" comment="装备id"></field>
     </message>
     <message dir="SC" name="SC_NoUseEquipment" comment="卸下装备返回用户新属性">
-        <field name="list" type="UserAttributeInfo" comment="用户属性"></field>
+        <field name="userAttributeInfo" type="UserAttributeInfo" comment="用户属性"></field>
     </message>
 
     <!-- 宠物模块 -->
