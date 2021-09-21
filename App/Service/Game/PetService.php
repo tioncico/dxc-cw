@@ -68,6 +68,7 @@ class PetService
 
         $model = new UserPetModel($data);
         $model->save();
+        return $model;
     }
 
 

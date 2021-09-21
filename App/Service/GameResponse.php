@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Model\Game\GoodsModel;
 use App\Model\Game\UserEquipmentBackpackModel;
+use App\Model\Game\UserPetModel;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\Component\Singleton;
 
@@ -13,6 +14,7 @@ class GameResponse
 {
     const GOODS_KEY = 'changeGoodsKey';
     const EQUIPMENT_KEY = 'changeEquipmentKey';
+    const PET_KEY = 'changePetKey';
     use Singleton;
 
     public function addGoods(GoodsModel $goodsModel, $num)
@@ -25,6 +27,18 @@ class GameResponse
             $data[$goodsModel->code]['num'] = $num;
         }
         ContextManager::getInstance()->set(self::GOODS_KEY, $data);
+    }
+
+    public function addPet(UserPetModel $userPetModel, $num)
+    {
+        $data = ContextManager::getInstance()->get(self::PET_KEY);
+        if (isset($data[$userPetModel->userPetId])) {
+            $data[$userPetModel->userPetId]['num'] += $num;
+        } else {
+            $data[$userPetModel->userPetId]['petInfo'] = $userPetModel->toArray();
+            $data[$userPetModel->userPetId]['num'] = $num;
+        }
+        ContextManager::getInstance()->set(self::PET_KEY, $data);
     }
 
     public function addEquipment(UserEquipmentBackpackModel $userEquipmentBackpackModel, $num=1)
@@ -58,6 +72,15 @@ class GameResponse
     public function getGoods()
     {
         $goods = ContextManager::getInstance()->get(self::EQUIPMENT_KEY);
+        if (empty($goods)){
+            $goods=[];
+        }
+        return array_values($goods);
+    }
+
+    public function getPets()
+    {
+        $goods = ContextManager::getInstance()->get(self::PET_KEY);
         if (empty($goods)){
             $goods=[];
         }

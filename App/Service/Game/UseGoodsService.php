@@ -6,9 +6,11 @@ namespace App\Service\Game;
 
 use App\Model\BaseModel;
 use App\Model\Game\GoodsModel;
+use App\Model\Game\PetModel;
 use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserBackpackModel;
 use App\Model\Game\UserBaseAttributeModel;
+use App\Service\GameResponse;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Singleton;
 use EasySwoole\Utility\Str;
@@ -23,7 +25,7 @@ class UseGoodsService
         //获取物品baseCode
         $goodsInfo = GoodsModel::create()->getInfoByCode($code);
         $method = $goodsInfo->baseCode;
-        Assert::assert(method_exists($this,$method),"该物品无法使用");
+        Assert::assert(method_exists($this, $method), "该物品无法使用");
         BaseModel::transaction(function () use ($method, $userBackpackInfo, $num, $goodsInfo) {
             $userBackpackInfo = $userBackpackInfo->lockForUpdate()->get(['backpackId' => $userBackpackInfo->backpackId]);
             Assert::assert($userBackpackInfo->num >= $num, '物品数量不足,无法使用');
@@ -58,30 +60,14 @@ class UseGoodsService
         $userAttribute->update();
     }
 
-    /**
-     * 使用礼包
-     * useGift
-     * @author tioncico
-     * Time: 4:09 下午
-     */
-    protected function useGift()
+    protected function petEgg(UserBackpackModel $userBackpackInfo, GoodsModel $goodsInfo, $num)
     {
-
-
-    }
-
-    /**
-     * 使用宠物蛋
-     * usePetEgg
-     * @author tioncico
-     * Time: 4:10 下午
-     */
-    protected function usePetEgg(UserBackpackModel $userBackpackInfo)
-    {
-        //获取宠物蛋详情
-//        $goodsInfo = GoodsModel::create()->get()
-
-
+        $petId = $goodsInfo->extraData;
+        $petInfo = PetModel::create()->get($petId);
+        for ($i = 0; $i < $num; $i++) {
+            $userPetInfo = PetService::getInstance()->addUserPet($userBackpackInfo->userId, $petInfo);
+            GameResponse::getInstance()->addPet($userPetInfo);
+        }
     }
 
 }

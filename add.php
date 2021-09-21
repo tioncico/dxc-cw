@@ -23,8 +23,12 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-
-    \App\Service\Game\EquipmentService::getInstance()->addUserEquipment(1,GoodsModel::create()->getInfoByCode('eq_0001'));
+    \App\Service\Game\MailService::getInstance()->sendMail(1,'宠物蛋',"宠物蛋",[
+        [
+            'code'=>'pet00020',
+            'num'=>100,
+        ]
+    ]);
 
     \Swoole\Timer::clearAll();
 });
