@@ -311,5 +311,15 @@
         <field name="isBest" type="number" comment="是否为极品宠物"></field>
     </struct>
 
+    <message dir="CS" name="CS_UsePet" router="/Api/User/UserPet/usePet" comment="宠物上阵">
+        <field name="userPetId" type="number" comment="用户宠物id"></field>
+    </message>
+    <message dir="SC" name="SC_UsePet" comment="不返回数据,全局数据返回宠物变更信息">
+    </message>
+    <message dir="CS" name="CS_NoUsePet" router="/Api/User/UserPet/noUsePet" comment="宠物下场">
+        <field name="userPetId" type="number" comment="用户宠物id"></field>
+    </message>
+    <message dir="SC" name="SC_NoUsePet" comment="不返回数据,全局数据返回宠物变更信息">
+    </message>
 
 </root>
