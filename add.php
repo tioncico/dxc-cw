@@ -15,6 +15,7 @@ use App\Model\Game\GoodsModel;
 use App\Model\Game\MapModel;
 use App\Model\Game\MonsterModel;
 use App\Model\Game\PetModel;
+use App\Model\Game\ShopGoodsModel;
 use \App\Service\Game\Attribute;
 use \App\Service\Game\Fight\Fight;
 use \App\Actor\MapActor;
@@ -23,12 +24,7 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-    \App\Service\Game\MailService::getInstance()->sendMail(1,'装备',"装备",[
-        [
-            'code'=>'eq_0005',
-            'num'=>100,
-        ]
-    ]);
 
+    ShopGoodsModel::create()->addData(GoodsModel::create()->getInfoByCode('material00002'),100);
     \Swoole\Timer::clearAll();
 });
