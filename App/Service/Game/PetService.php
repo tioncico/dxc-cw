@@ -4,8 +4,10 @@
 namespace App\Service\Game;
 
 
+use App\Model\BaseModel;
 use App\Model\Game\PetModel;
 use App\Model\Game\UserPetModel;
+use App\Service\GameResponse;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\Component\Singleton;
 
@@ -74,4 +76,33 @@ class PetService
     }
 
 
+    /**
+     * 宠物上阵
+     * usePet
+     * @param UserPetModel $userPetInfo
+     * @return mixed
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 10:54 上午
+     */
+    public function usePet(UserPetModel $userPetInfo)
+    {
+        $info = BaseModel::transaction(function () use ($userPetInfo) {
+            //将宠物更新为已上阵
+            $userPetInfo->update(['isUse' => 1]);
+            GameResponse::getInstance()->addPet($userPetInfo, 0);
+            return $userPetInfo;
+        });
+        return $info;
+    }
+    public function noUsePet(UserPetModel $userPetInfo)
+    {
+        $info = BaseModel::transaction(function () use ($userPetInfo) {
+            //将宠物更新为已上阵
+            $userPetInfo->update(['isUse' => 0]);
+            GameResponse::getInstance()->addPet($userPetInfo, 0);
+            return $userPetInfo;
+        });
+        return $info;
+    }
 }

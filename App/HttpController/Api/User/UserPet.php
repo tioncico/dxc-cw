@@ -3,6 +3,8 @@
 namespace App\HttpController\Api\User;
 
 use App\Model\Game\UserPetModel;
+use App\Service\Game\PetService;
+use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiDescription;
@@ -268,6 +270,52 @@ class UserPet extends UserBase
         $model = new UserPetModel();
         $info = $model->get(['userPetId' => $param['userPetId']]);
         $this->writeJson(Status::CODE_OK, $info, "获取数据成功.");
+    }
+
+    /**
+     * @Api(name="usePet",path="/Api/User/UserPet/usePet")
+     * @ApiDescription("宠物上阵")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @Param(name="userPetId",lengthMax="11",required="")
+     * @ApiSuccessParam(name="result.userPetId",description="")
+     */
+    public function usePet()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $model = new UserPetModel();
+        $info = $model->where('userId',$this->who->userId)->get(['userPetId' => $param['userPetId']]);
+        Assert::assert(!!$info,'宠物数据不存在');
+        PetService::getInstance()->usePet($info);
+        $this->writeJson(Status::CODE_OK, [], "上阵成功.");
+    }
+
+    /**
+     * @Api(name="noUsePet",path="/Api/User/UserPet/noUsePet")
+     * @ApiDescription("宠物下场")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @Param(name="userPetId",lengthMax="11",required="")
+     * @ApiSuccessParam(name="result.userPetId",description="")
+     */
+    public function noUsePet()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $model = new UserPetModel();
+        $info = $model->where('userId',$this->who->userId)->get(['userPetId' => $param['userPetId']]);
+        Assert::assert(!!$info,'宠物数据不存在');
+        PetService::getInstance()->noUsePet($info);
+        $this->writeJson(Status::CODE_OK, [], "上阵成功.");
     }
 
 
