@@ -62,7 +62,7 @@ class BackpackService extends BaseService
         } elseif ($goodsModel->type == 1) {
             $backpackInfo = $this->addGold($userId, $num);
         } elseif ($goodsModel->type == 2) {
-            $backpackInfo = $this->addGold($userId, $num);
+            $backpackInfo = $this->addMoney($userId, $num);
         } else {
             $backpackInfo = UserBackpackModel::create()->getInfoByCode($userId, $goodsModel->code);
             if (empty($backpackInfo)) {
