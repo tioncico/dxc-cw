@@ -314,7 +314,7 @@ class UserPet extends UserBase
         $model = new UserPetModel();
         $info = $model->where('userId',$this->who->userId)->get(['userPetId' => $param['userPetId']]);
         Assert::assert(!!$info,'宠物数据不存在');
-        PetService::getInstance()->usePet($info);
+        PetService::getInstance()->noUsePet($info);
         $this->writeJson(Status::CODE_OK, [], "上阵成功.");
     }
 

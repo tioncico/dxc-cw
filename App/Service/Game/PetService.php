@@ -95,4 +95,14 @@ class PetService
         });
         return $info;
     }
+    public function noUsePet(UserPetModel $userPetInfo)
+    {
+        $info = BaseModel::transaction(function () use ($userPetInfo) {
+            //将宠物更新为已上阵
+            $userPetInfo->update(['isUse' => 0]);
+            GameResponse::getInstance()->addPet($userPetInfo, 0);
+            return $userPetInfo;
+        });
+        return $info;
+    }
 }
