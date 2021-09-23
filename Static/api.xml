@@ -322,4 +322,29 @@
     <message dir="SC" name="SC_NoUsePet" comment="不返回数据,全局数据返回宠物变更信息">
     </message>
 
+    <!-- 商店模块 -->
+    <message dir="CS" name="CS_GetShopGoodsList" router="/Api/User/ShopGoods/getList" comment="获取商品列表">
+    </message>
+    <message dir="SC" name="SC_GetShopGoodsList" comment="返回商品列表">
+        <field name="list" type="ShopGoodsInfo[]" comment="商城商品列表"></field>
+    </message>
+    <struct name="ShopGoodsInfo" comment="商城商品">
+        <field name="shopGoodsId" type="number" comment="商品id"></field>
+        <field name="goodsCode" type="number" comment="物品code"></field>
+        <field name="goodsName" type="number" comment="物品名"></field>
+        <field name="limit" type="number" comment="限制购买次数"></field>
+        <field name="limitType" type="number" comment=" 限制类型 0永久,1每日,2每周,3每月"></field>
+        <field name="price" type="number" comment="价格"></field>
+        <field name="priceType" type="number" comment="价格类型  1金币,2钻石"></field>
+        <field name="stock" type="number" comment="库存,-1表示无限,0表示没有"></field>
+        <field name="addTime" type="number" comment="创建时间"></field>
+        <field name="limitDayBuyNum" type="number" comment="在限制时间内,玩家购买了多少次"></field>
+        <field name="goodsInfo" type="GoodsInfo" comment="物品详情"></field>
+    </struct>
+    <message dir="CS" name="CS_BuyShopGoods" router="/Api/User/ShopGoods/buy" comment="购买商品">
+        <field name="shopGoodsId" type="number" comment="商品id"></field>
+    </message>
+    <message dir="SC" name="SC_BuyShopGoods" comment="没有返回数据">
+    </message>
+
 </root>

@@ -68,9 +68,10 @@ class ShopGoodsModel extends BaseModel
         }
         return $this->hasOne(UserBuyShopGoodsOrderModel::class, function (QueryBuilder $query) {
             $query->where("date", date('Ymd'));
-            $query->fields("sum(num) as num");
+            $query->fields("sum(num) as num,shopGoodsId");
+            $query->groupBy('shopGoodsId');
             return $query;
-        }, 'shopGoodsId', 'shopGoodsIdByToday');
+        }, 'shopGoodsIdByToday', 'shopGoodsId');
     }
 
     public function byInfoIn7Day($userId = -1)
@@ -81,9 +82,10 @@ class ShopGoodsModel extends BaseModel
         return $this->hasOne(UserBuyShopGoodsOrderModel::class, function (QueryBuilder $query) {
             $beginWeek = mktime(0, 0, 0, date("m"), date("d") - date("w") + 1, date("Y"));
             $query->where("date", date('Ymd', $beginWeek), '>=');
-            $query->fields("sum(num) as num");
+            $query->groupBy('shopGoodsId');
+            $query->fields("sum(num) as num,shopGoodsId");
             return $query;
-        }, 'shopGoodsId', 'shopGoodsIdBy7Day');
+        }, 'shopGoodsIdBy7Day', 'shopGoodsId');
     }
 
     public function byInfoIn30Day($userId = -1)
@@ -94,9 +96,17 @@ class ShopGoodsModel extends BaseModel
         return $this->hasOne(UserBuyShopGoodsOrderModel::class, function (QueryBuilder $query) {
             $beginThisMonth = mktime(0, 0, 0, date('m'), 1, date('Y'));
             $query->where("date", date('Ymd', $beginThisMonth), '>=');
-            $query->fields("sum(num) as num");
+            $query->groupBy('shopGoodsId');
+            $query->fields("sum(num) as num,shopGoodsId");
             return $query;
-        }, 'shopGoodsId', 'shopGoodsIdBy30Day');
+        }, 'shopGoodsIdBy30Day', 'shopGoodsId');
+    }
+
+    public function goodsInfo()
+    {
+        return $this->hasOne(GoodsModel::class, function (QueryBuilder $query) {
+            return $query;
+        }, 'goodsCode', 'code');
     }
 }
 

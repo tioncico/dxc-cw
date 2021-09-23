@@ -182,31 +182,31 @@ class ShopGoods extends UserBase
 		if(limitType=1,shopGoodsId,null) as shopGoodsIdByToday,
 		if(limitType=2,shopGoodsId,null) as shopGoodsIdBy7Day,
 		if(limitType=3,shopGoodsId,null) as shopGoodsIdBy30Day
-		")->with(['todayBuyInfo','byInfoIn7Day','byInfoIn30Day',],false)->get(['shopGoodsId' => $param['shopGoodsId']]);
-        Assert::assert(!!$info,'商品不存在');
+		")->with(['todayBuyInfo' => $this->who->userId, 'byInfoIn7Day' => $this->who->userId, 'byInfoIn30Day' => $this->who->userId,], false)->get(['shopGoodsId' => $param['shopGoodsId']]);
+        Assert::assert(!!$info, '商品不存在');
 
         //判断金币或者钻石是否足够
         $price = $info->price * $num;
-        if ($info->priceType==1){
+        if ($info->priceType == 1) {
             $goldInfo = UserBackpackModel::create()->lockForUpdate()->getUseMoneyInfo($this->who->userId);
-            Assert::assert($goldInfo->num>=$price,"金币数量不足");
-        }else{
+            Assert::assert($goldInfo->num >= $price, "金币数量不足");
+        } else {
             $moneyInfo = UserBackpackModel::create()->lockForUpdate()->getUseGoldInfo($this->who->userId);
-            Assert::assert($moneyInfo->num>=$price,"钻石数量不足");
+            Assert::assert($moneyInfo->num >= $price, "钻石数量不足");
         }
         //判断是否已经超出购买限制
-        if ($info->limitType==1){
-            Assert::assert($info->todayBuyInfo->num+$num<=$info->limit,"购买超出限制");
+        if ($info->limitType == 1) {
+            Assert::assert($info->todayBuyInfo['num'] + $num <= $info->limit, "购买超出限制");
         }
-        if ($info->limitType==2){
-            Assert::assert($info->byInfoIn7Day->num+$num<=$info->limit,"购买超出限制");
+        if ($info->limitType == 2) {
+            Assert::assert($info->byInfoIn7Day['num'] + $num <= $info->limit, "购买超出限制");
         }
-        if ($info->limitType==3){
-            Assert::assert($info->byInfoIn30Day->num+$num<=$info->limit,"购买超出限制");
+        if ($info->limitType == 3) {
+            Assert::assert($info->byInfoIn30Day['num'] + $num <= $info->limit, "购买超出限制");
         }
 
 
-        ShopGoodsService::getInstance()->buyGoods($this->who->userId,$info,$param['num']);
+        ShopGoodsService::getInstance()->buyGoods($this->who->userId, $info, $param['num']);
         $this->writeJson(Status::CODE_OK, [], "购买成功.");
     }
 
@@ -239,12 +239,25 @@ class ShopGoods extends UserBase
         $page = (int)($param['page'] ?? 1);
         $pageSize = (int)($param['pageSize'] ?? 9999);
         $model = new ShopGoodsModel();
-        $data = $model->with(['todayBuyInfo','byInfoIn7Day','byInfoIn30Day',],false)->getList($page, $pageSize,"
+        $data = $model->with(['todayBuyInfo' => $this->who->userId, 'byInfoIn7Day' => $this->who->userId, 'byInfoIn30Day' => $this->who->userId, 'goodsInfo'], false)->getList($page, $pageSize, "
 		*,
 		if(limitType=1,shopGoodsId,null) as shopGoodsIdByToday,
 		if(limitType=2,shopGoodsId,null) as shopGoodsIdBy7Day,
 		if(limitType=3,shopGoodsId,null) as shopGoodsIdBy30Day
 		");
+        foreach ($data['list'] as $key => $value) {
+            $value->limitDayBuyNum = 0;
+            if ($value->limitType == 1) {
+                $value->limitDayBuyNum = $value->todayBuyInfo['num'];
+            }
+            if ($value->limitType == 2) {
+                $value->limitDayBuyNum = $value->byInfoIn7Day['num'];
+            }
+            if ($value->limitType == 3) {
+                $value->limitDayBuyNum = $value->byInfoIn30Day['num'];
+            }
+        }
+
         $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
     }
 
