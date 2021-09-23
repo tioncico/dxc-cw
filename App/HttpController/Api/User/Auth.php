@@ -103,6 +103,27 @@ class Auth extends UserBase
     }
 
     /**
+     * @Api(name="changePassword",path="/Api/User/Auth/changePassword")
+     * @Param(name="oldPassword",required="",lengthMin="8",lengthMax="30")
+     * @Param(name="password",required="",lengthMin="8",lengthMax="30")
+     * @ApiDescription("修改密码")
+     * @author xdd
+     * Time: 16:03
+     */
+    function changePassword()
+    {
+        $param = $this->request()->getRequestParam();
+        $userInfo = $this->who();
+        //判断旧密码是否正确
+        Assert::assert($userInfo->password===$userInfo::hashPassword($param['oldPassword']),"原始密码错误");
+        $userInfo->update([
+            'password'=>$userInfo::hashPassword($param['password'])
+        ]);
+
+        $this->writeJson(Status::CODE_OK, [], "更新密码成功");
+    }
+
+    /**
      * @Api(path="/Api/User/Auth/getInfo",name="getInfo")
      */
     function getInfo()

@@ -114,6 +114,13 @@
         <field name="inviteServerInfo" type="ServerInfo" comment="推荐服务器id"></field>
     </message>
 
+    <message dir="CS" name="CS_ChangePassword" router="/Api/User/Auth/changePassword" comment="修改密码">
+        <field name="oldPassword" type="string" comment="旧密码"></field>
+        <field name="password" type="string" comment="新密码,要求8-18位"></field>
+    </message>
+    <message dir="SC" name="SC_ChangePassword" comment="没有返回">
+    </message>
+
     <!-- 角色模块 -->
     <message dir="CS" name="CS_UserCreate" router="/Api/User/Game/add" comment="创建角色">
         <field name="name" type="string" comment="名称"></field>
