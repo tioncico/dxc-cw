@@ -71,8 +71,8 @@ class GlobalEvent
         // 注册Actor管理器
         $server = \EasySwoole\EasySwoole\ServerManager::getInstance()->getSwooleServer();
         Actor::getInstance()->register(MapActor::class);
-        Actor::getInstance()->setTempDir(EASYSWOOLE_TEMP_DIR)
-            ->setListenAddress('0.0.0.0')->setListenPort('9900')->attachServer($server);
+        Actor::getInstance()->register(UserActor::class);
+        Actor::getInstance()->setTempDir(EASYSWOOLE_TEMP_DIR)->setListenAddress('0.0.0.0')->setListenPort('9900')->attachServer($server);
 
 
     }

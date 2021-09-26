@@ -20,6 +20,11 @@ abstract class BaseActor extends AbstractActor
         $actorId = $this->actorId();
         echo "mapActor {$actorId} onMessage\n";
         $actionName = $msg->getAction();
+        if ($actionName == 'getProperty') {
+            $propertyName = $msg->getData();
+            return $this->$propertyName;
+        }
+
         return $this->$actionName($msg->getData());
     }
 
@@ -34,6 +39,16 @@ abstract class BaseActor extends AbstractActor
         var_dump((string)$throwable);
         $actorId = $this->actorId();
         echo "mapActor {$actorId} onException\n";
+    }
+
+    public static function sendAction($actorId, $action, $data)
+    {
+        return static::client()->send($actorId, new Command(['action' => $action, 'data' => $data]));
+    }
+
+    public static function getProperty($actorId, $propertyName)
+    {
+        return static::client()->send($actorId, new Command(['action' => "getProperty", 'data' => $propertyName]));
     }
 
 }
