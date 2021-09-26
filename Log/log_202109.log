@@ -1,0 +1,60 @@
+[2021-09-12 17:59:22][trigger][error]:[Uncaught Swoole\Error: API must be called in the coroutine in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/mysqli/src/Client.php:110
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/mysqli/src/Client.php(110): Swoole\Coroutine\MySQL->connect(Array)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqlPool.php(18): EasySwoole\Mysqli\Client->connect()
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php(304): EasySwoole\ORM\Db\MysqlPool->createObject()
+#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php(111): EasySwoole\Pool\AbstractPool->initObject()
+#4 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/pool/src/AbstractPool.php(402): EasySwoole\Pool\AbstractPool->getObj(3)
+#5 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/Connection.php(26): EasySwoole\Pool\AbstractPool->defer at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/mysqli/src/Client.php line:110]
+[2021-09-12 18:53:45][trigger][notice]:[Undefined index: mapList at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/HttpController/Api/User/Map.php line:164]
+[2021-09-12 18:53:45][trigger][warning]:[Invalid argument supplied for foreach() at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/HttpController/Api/User/Map.php line:164]
+[2021-09-12 18:53:59][trigger][notice]:[Undefined index: mapList at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/HttpController/Api/User/Map.php line:165]
+[2021-09-12 18:54:00][trigger][warning]:[Invalid argument supplied for foreach() at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/HttpController/Api/User/Map.php line:165]
+[2021-09-12 18:54:19][trigger][notice]:[Undefined index: mapList at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/HttpController/Api/User/Map.php line:165]
+[2021-09-12 18:54:19][trigger][warning]:[Invalid argument supplied for foreach() at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/HttpController/Api/User/Map.php line:165]
+[2021-09-16 21:22:42][trigger][error]:[Uncaught EasySwoole\ORM\Exception\Exception: SQLSTATE[23000] [1062] Duplicate entry '1' for key 'PRIMARY' [INSERT  INTO `user_equipment_backpack_list` (`backpackId`, `userId`, `isUse`, `strengthenLevel`, `goodsCode`, `goodsName`, `equipmentType`, `suitCode`, `rarityLevel`, `level`, `attributeDescription`, `attributeEntryDescription`, `extraAttributeDescription`, `suitAttribute2Description`, `suitAttribute3Description`, `suitAttribute5Description`, `hp`, `mp`, `attack`, `defense`, `endurance`, `intellect`, `strength`, `criticalRate`, `criticalStrikeDamage`, `hitRate`, `dodgeRate`, `penetrate`, `attackSpeed`, `userElement`, `attackElement`, `jin`, `mu`, `tu`, `sui`, `huo`, `light`, `dark`, `luck`)  VALUES (1, 1, 0, 1, 'eq_0001', '新手之帽', 2, '0', 2, 1, 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php:78
+Stack trace:
+#0 /Users/tioncico/Ph at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
+[2021-09-16 21:36:00][trigger][notice]:[Undefined variable: equipmentInfo at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/EquipmentService.php line:35]
+[2021-09-17 19:36:31][trigger][error]:[Uncaught EasySwoole\ORM\Exception\Exception: SQLSTATE[22003] [1264] Out of range value for column 'num' at row 1 [UPDATE `user_backpack_list` SET `num` = num+99999999999999999 WHERE  `backpackId` = 12 ] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php:78
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/DbManager.php(137): EasySwoole\ORM\Db\MysqliClient->query(Object(EasySwoole\Mysqli\QueryBuilder), false)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(882): EasySwoole\ORM\DbManager->query(Object(EasySwoole\Mysqli\QueryBuilder), false, 'default')
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(722): EasySwoole\ORM\AbstractModel->query(Object(EasySwoole\Mysqli\QueryBuilder))
+#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/BackpackService.php(24): EasySwoole\ORM\AbstractModel->update(Array)
+#4 /Us at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
+[2021-09-17 19:50:08][trigger][error]:[Uncaught Swoole\Exception: failed to listen server port[0.0.0.0:9501], Error: Address already in use[48] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/ServerManager.php:62
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/ServerManager.php(62): Swoole\Server->__construct('0.0.0.0', 9501, 2, 1)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/Core.php(104): EasySwoole\EasySwoole\ServerManager->createSwooleServer(9501, 3, '0.0.0.0', Array, 2, 1)
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/Command/DefaultCommand/Server.php(112): EasySwoole\EasySwoole\Core->createServer()
+#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/Command/DefaultCommand/Server.php(52): EasySwoole\EasySwoole\Command\DefaultCommand\Server->start()
+#4 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/command/src/Comman at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/ServerManager.php line:62]
+[2021-09-20 17:21:35][trigger][error]:[Uncaught TypeError: Argument 2 passed to App\Service\Game\MailService::sendMail() must be of the type string, array given, called in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/add.php on line 28 and defined in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/MailService.php:17
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/add.php(28): App\Service\Game\MailService->sendMail(1829, Array)
+#1 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/MailService.php line:17]
+[2021-09-20 17:29:04][trigger][warning]:[array_values() expects parameter 1 to be array, null given at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/GoodsChangeResponse.php line:56]
+[2021-09-20 17:29:04][trigger][warning]:[array_values() expects parameter 1 to be array, null given at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/GoodsChangeResponse.php line:51]
+[2021-09-20 17:29:11][trigger][warning]:[array_values() expects parameter 1 to be array, null given at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/GoodsChangeResponse.php line:56]
+[2021-09-20 17:29:11][trigger][warning]:[array_values() expects parameter 1 to be array, null given at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/GoodsChangeResponse.php line:51]
+[2021-09-21 09:37:47][trigger][error]:[Uncaught TypeError: Argument 2 passed to App\Service\Game\EquipmentService::addUserEquipment() must be an instance of App\Model\Game\GoodsModel, null given, called in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/add.php on line 27 and defined in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/EquipmentService.php:70
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/add.php(27): App\Service\Game\EquipmentService->addUserEquipment(1, NULL)
+#1 {main}
+  thrown at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/App/Service/Game/EquipmentService.php line:70]
+[2021-09-22 21:36:06][trigger][error]:[Uncaught EasySwoole\ORM\Exception\Exception: SQLSTATE[23000] [1062] Duplicate entry 'material00045' for key 'code' [INSERT  INTO `goods_list` (`name`, `code`, `baseCode`, `type`, `description`, `gold`, `isSale`, `level`, `rarityLevel`, `extraData`)  VALUES ('银钥匙', 'material00045', '', 5, '银钥匙,可用于开启地下城中的银宝箱', 0, 0, 1, 1, '')] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php:78
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/DbManager.php(137): EasySwoole\ORM\Db\MysqliClient->query(Object(EasySwoole\Mysqli\QueryBuilder), false)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(882): EasySwoole\ORM\DbManager->query(Object(EasySwoole\Mysqli\QueryBuilder), false, 'default')
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/AbstractModel.php(429): EasySwoole\ORM\AbstractModel->query(Object(EasySwoole\Mysqli at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/orm/src/Db/MysqliClient.php line:78]
+[2021-09-22 21:51:10][trigger][notice]:[Trying to get property 'code' of non-object at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/BaseTest.php line:34]
+[2021-09-24 15:16:08][trigger][error]:[Uncaught Swoole\Exception: failed to listen server port[0.0.0.0:9501], Error: Address already in use[48] in /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/ServerManager.php:62
+Stack trace:
+#0 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/ServerManager.php(62): Swoole\Server->__construct('0.0.0.0', 9501, 2, 1)
+#1 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/Core.php(104): EasySwoole\EasySwoole\ServerManager->createSwooleServer(9501, 3, '0.0.0.0', Array, 2, 1)
+#2 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/Command/DefaultCommand/Server.php(112): EasySwoole\EasySwoole\Core->createServer()
+#3 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/Command/DefaultCommand/Server.php(52): EasySwoole\EasySwoole\Command\DefaultCommand\Server->start()
+#4 /Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/command/src/Comman at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/vendor/easyswoole/easyswoole/src/ServerManager.php line:62]
+[2021-09-24 15:17:14][trigger][notice]:[Trying to get property 'code' of non-object at file:/Users/tioncico/PhpstormProjects/tioncico/new/mwxz/UnitTest/BaseTest.php line:34]

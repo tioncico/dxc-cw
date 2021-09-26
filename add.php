@@ -16,6 +16,8 @@ use App\Model\Game\MapModel;
 use App\Model\Game\MonsterModel;
 use App\Model\Game\PetModel;
 use App\Model\Game\ShopGoodsModel;
+use App\Model\Game\Task\GameTaskMasterModel;
+use App\Model\Game\Task\GameTaskModel;
 use \App\Service\Game\Attribute;
 use \App\Service\Game\Fight\Fight;
 use \App\Actor\MapActor;
@@ -24,7 +26,17 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
+    $data = [
+        'taskMasterId'=>1,
+        'code'=>'002',
+        'order'=>'1',
+        'completeNum'=>1,
+        'name'=>'满级!',
+        'description'=>'升到60级',
+        'param'=>'[60]',
+    ];
+    $model = new GameTaskModel($data);
+    $model->save();
 
-    ShopGoodsModel::create()->addData(GoodsModel::create()->getInfoByCode('material00002'),100);
     \Swoole\Timer::clearAll();
 });

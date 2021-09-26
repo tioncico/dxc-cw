@@ -1,0 +1,29 @@
+{
+  "name": "easyswoole/oss",
+  "description": "Coroutine version of Memcache client",
+  "type": "library",
+  "license": "Apache-2.0",
+  "autoload": {
+    "psr-4": {
+      "EasySwoole\\Oss\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "EasySwoole\\Oss\\Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "easyswoole/spl": "^1.3",
+    "easyswoole/http-client": "^1.4",
+    "easyswoole/component": "^2.2"
+  },
+  "require-dev": {
+    "easyswoole/swoole-ide-helper": "1.3.2",
+    "easyswoole/phpunit": ">=1.0.0",
+    "aliyuncs/oss-sdk-php": "2.4.1",
+    "qcloud/cos-sdk-v5": "2.1.1",
+    "guzzlehttp/psr7": "1.6.1",
+    "qiniu/php-sdk": "^7.2"
+  }
+}
