@@ -285,6 +285,16 @@ class EquipmentService extends BaseService
         ]);
     }
 
+    /**
+     * 更新装备属性介绍
+     * updateEquipmentAttributeDescription
+     * @param UserEquipmentBackpackModel $userEquipmentBackpackInfo
+     * @throws \EasySwoole\Mysqli\Exception\Exception
+     * @throws \EasySwoole\ORM\Exception\Exception
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 10:24 上午
+     */
     protected function updateEquipmentAttributeDescription(UserEquipmentBackpackModel $userEquipmentBackpackInfo)
     {
         $descriptionArr = [];
