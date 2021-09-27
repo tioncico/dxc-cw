@@ -73,9 +73,6 @@
     </struct>
 
 
-
-
-
     <!-- 账号模块 -->
     <message dir="CS" name="CS_GetServerList" router="/Api/Common/Server/getList" comment="获取服务器列表">
     </message>
@@ -353,5 +350,52 @@
     </message>
     <message dir="SC" name="SC_BuyShopGoods" comment="没有返回数据">
     </message>
+
+    <!-- 主线任务模块 -->
+    <message dir="CS" name="CS_GetTaskList" router="/Api/User/Task/GameTask/getList" comment="获取任务列表">
+    </message>
+    <message dir="SC" name="SC_GetTaskList" comment="返回任务列表">
+        <field name="list" type="MasterTaskInfo[]" comment="主线任务数据"></field>
+    </message>
+    <struct name="MasterTaskInfo" comment="主线任务">
+        <field name="taskMasterId" type="number" comment="主线id"></field>
+        <field name="type" type="number" comment="任务类型,1主线任务"></field>
+        <field name="name" type="number" comment="任务名"></field>
+        <field name="description" type="number" comment="任务介绍"></field>
+        <field name="order" type="number" comment="排序"></field>
+        <field name="userTaskCompleteInfo" type="UserTaskCompleteInfo" comment="用户当前主线任务进度"></field>
+        <field name="taskList" type="TaskInfo[]" comment="任务信息"></field>
+    </struct>
+
+    <struct name="UserTaskCompleteInfo" comment="用户当前主线任务进度">
+        <field name="userId" type="number" comment="用户id"></field>
+        <field name="taskMasterId" type="number" comment="主线id"></field>
+        <field name="nowTaskId" type="number" comment="当前做完的主线任务"></field>
+    </struct>
+
+    <struct name="TaskInfo" comment="任务信息">
+        <field name="taskId" type="number" comment="任务id"></field>
+        <field name="taskMasterId" type="number" comment="主线id"></field>
+        <field name="code" type="number" comment="任务code,用于标识这个任务的完成类型"></field>
+        <field name="order" type="number" comment="任务排序"></field>
+        <field name="completeNum" type="number" comment="需要完成多少次(暂时作废)"></field>
+        <field name="name" type="number" comment="任务名"></field>
+        <field name="description" type="number" comment="任务介绍"></field>
+        <field name="param" type="number" comment="任务参数,json格式,假设code 001(表示为需要穿戴a件品质为b的c级以上的橙装),那就是 [1,6,0],表示需要穿戴1件0级以上的橙装"></field>
+        <field name="goodsList" type="RewardGoodsInfo[]" comment="任务奖励"></field>
+    </struct>
+
+    <struct name="RewardGoodsInfo" extends="GoodsInfo" comment="任务奖励物品信息">
+        <field name="taskRewardId" type="number" comment="奖励id"></field>
+        <field name="taskId" type="number" comment="任务id"></field>
+        <field name="num" type="number" comment="奖励数量"></field>
+    </struct>
+
+    <message dir="CS" name="CS_CompleteTask" router="/Api/User/Task/GameTask/complete" comment="完成任务">
+    </message>
+    <message dir="SC" name="SC_CompleteTask" comment="任务完成进度">
+        <field name="userTaskCompleteInfo" type="UserTaskCompleteInfo" comment="任务完成数据"></field>
+    </message>
+
 
 </root>

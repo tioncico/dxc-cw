@@ -3,6 +3,8 @@
 namespace App\Model\Game\Task;
 
 use App\Model\BaseModel;
+use App\Model\Game\GoodsModel;
+use EasySwoole\Mysqli\QueryBuilder;
 
 /**
  * GameTaskRewardModel
@@ -12,6 +14,9 @@ use App\Model\BaseModel;
  * @property int $taskId // 任务id
  * @property string $goodsCode // 物品code
  * @property int $num // 数量
+ *
+ *
+ * @property GoodsModel $goodsInfo // 数量
  */
 class GameTaskRewardModel extends BaseModel
 {
@@ -49,5 +54,13 @@ class GameTaskRewardModel extends BaseModel
 		$model->save();
 		return $model;
 	}
+
+
+    public function goodsInfo()
+    {
+        return $this->hasOne(GoodsModel::class, function (QueryBuilder $query) {
+            return $query;
+        }, 'goodsCode', 'code');
+    }
 }
 

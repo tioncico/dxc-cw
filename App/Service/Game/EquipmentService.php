@@ -22,6 +22,19 @@ class EquipmentService extends BaseService
 {
     use Singleton;
 
+    public function getUserEquipmentList($userId)
+    {
+        $list = UserEquipmentBackpackModel::create()->where('isUse', 1)->where('userId', $userId)->all();
+        $userEquipmentList = [];
+        /**
+         * @var $value UserEquipmentBackpackModel
+         */
+        foreach ($list as $value) {
+            $userEquipmentList[$value->equipmentType] = $value;
+        }
+        return $userEquipmentList;
+    }
+
     /**
      * 分解装备
      * decomposeEquipment
@@ -38,7 +51,7 @@ class EquipmentService extends BaseService
         //装备强化属性
         //分解材料数量 = 装备等级*装备品级*装备强化等级*5
         $goodsList = BaseModel::transaction(function () use ($equipmentInfo) {
-            $materialNum = intval($equipmentInfo->level * $equipmentInfo->rarityLevel * ($equipmentInfo->strengthenLevel+1) * 5);
+            $materialNum = intval($equipmentInfo->level * $equipmentInfo->rarityLevel * ($equipmentInfo->strengthenLevel + 1) * 5);
             //增加物品
             $materialInfo = GoodsModel::create()->getInfoByCode('material00001');
             $backpackInfo = BackpackService::getInstance()->addGoods($equipmentInfo->userId, $materialInfo, $materialNum);
@@ -278,10 +291,10 @@ class EquipmentService extends BaseService
 
         $descriptionArr = [];
         foreach ($goodsEquipmentAttributeEntryInfoArr as $goodsEquipmentAttributeEntryInfo) {
-            $descriptionArr[] = $this->handleUbb($goodsEquipmentAttributeEntryInfo->level,$goodsEquipmentAttributeEntryInfo->description);
+            $descriptionArr[] = $this->handleUbb($goodsEquipmentAttributeEntryInfo->level, $goodsEquipmentAttributeEntryInfo->description);
         }
         $userEquipmentBackpackInfo->update([
-            'attributeEntryDescription' => implode("\n",$descriptionArr),
+            'attributeEntryDescription' => implode("\n", $descriptionArr),
         ]);
     }
 
@@ -300,11 +313,11 @@ class EquipmentService extends BaseService
         $descriptionArr = [];
         foreach ($this->getAttributeName() as $key => $name) {
             if ($userEquipmentBackpackInfo->$key > 0) {
-                $descriptionArr[] = $this->handleUbb(1,"{$name}+{$userEquipmentBackpackInfo->$key}");
+                $descriptionArr[] = $this->handleUbb(1, "{$name}+{$userEquipmentBackpackInfo->$key}");
             }
         }
         $userEquipmentBackpackInfo->update([
-            'attributeDescription' =>implode("\n",$descriptionArr),
+            'attributeDescription' => implode("\n", $descriptionArr),
         ]);
     }
 
@@ -358,6 +371,6 @@ class EquipmentService extends BaseService
             6 => 'FF0000',//红色
             7 => 'FF0000',//深红
         ];
-return "[color={$arr[$level]}]{$description}[/color]";
+        return "[color={$arr[$level]}]{$description}[/color]";
     }
 }

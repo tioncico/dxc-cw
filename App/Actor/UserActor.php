@@ -13,6 +13,7 @@ use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserPetModel;
 use App\Model\Game\UserSkillModel;
 use App\Model\User\UserModel;
+use App\Service\Game\EquipmentService;
 use EasySwoole\Actor\ActorConfig;
 use Swoole\Coroutine\Channel;
 
@@ -46,7 +47,7 @@ class UserActor extends BaseActor
         //初始化用户信息
         $this->userBaseAttribute = UserBaseAttributeModel::create()->getInfo($userId);
         $this->userAttribute = UserAttributeModel::create()->getInfo($userId);
-        $this->userEquipmentList = UserEquipmentBackpackModel::create()->where('isUse', 1)->where('userId', $userId)->all();
+        $this->userEquipmentList = EquipmentService::getInstance()->getUserEquipmentList($userId);
         $this->userSkillList = UserSkillModel::create()->where('isUse', 1)->where('userId', $userId)->all();
         $this->userPetList = UserPetModel::create()->where('isUse', 1)->where('userId', $userId)->all();
     }
