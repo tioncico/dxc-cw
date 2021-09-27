@@ -185,10 +185,10 @@ class UserBackpack extends UserBase
         $page = (int)($param['page'] ?? 1);
         $pageSize = (int)($param['pageSize'] ?? 9999);
         $model = new UserBackpackModel();
-        if ($param['goodsType']) {
+        if (isset($param['goodsType'])) {
             $model->where('goodsType', $param['goodsType']);
         }
-        if ($param['code']) {
+        if (isset($param['code'])) {
             $model->where('code', $param['goodsType']);
         }
         $data = $model->with(['goodsInfo', 'userEquipmentInfo', 'strengthenInfo'], false)->where('userId', $this->who->userId)->getList($page, $pageSize);
