@@ -46,10 +46,10 @@ class UserActor extends BaseActor
     public function __construct(Channel $mailBox, string $actorId, $arg)
     {
         parent::__construct($mailBox, $actorId, $arg);
-        var_dump(1);
         $userId = $arg['userId'];
         //初始化用户信息
         $this->userBaseAttribute = UserBaseAttributeModel::create()->getInfo($userId);
+        var_dump($this->userBaseAttribute);
         $this->userAttribute = UserAttributeModel::create()->getInfo($userId);
         $this->userEquipmentList = EquipmentService::getInstance()->getUserEquipmentList($userId);
         $this->userSkillList = SkillService::getInstance()->getUserSkillList($userId);

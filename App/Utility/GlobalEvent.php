@@ -50,6 +50,7 @@ class GlobalEvent
             //删除mapActor对象
             UserRelationMap::getInstance()->clear();
             UserRelationUserActor::getInstance()->clear();
+
             Timer::clearAll();
             DbManager::getInstance()->getConnection()->__getClientPool()->reset();
             RedisPool::getInstance()->getPool(RedisClient::REDIS_POOL_NAME)->reset();
@@ -85,7 +86,9 @@ class GlobalEvent
             //5分钟玩家不活跃,则删除actor
             UserLastRequestCache::getInstance()->chunkUserExpire(function ($userId){
                 $actorId = UserRelationUserActor::getInstance()->getUserActor($userId);
-                UserActor::client()->exit($actorId);
+                if ($actorId){
+                    UserActor::client()->exit($actorId);
+                }
                 UserRelationUserActor::getInstance()->delUserActor($userId);
             },5*60);
         });
