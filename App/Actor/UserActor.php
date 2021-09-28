@@ -22,6 +22,7 @@ use Swoole\Coroutine\Channel;
 
 class UserActor extends BaseActor
 {
+    protected $userId;
     /**@var UserBaseAttributeModel */
     protected $userBaseAttribute;//用户基础信息
 
@@ -46,23 +47,18 @@ class UserActor extends BaseActor
     public function __construct(Channel $mailBox, string $actorId, $arg)
     {
         parent::__construct($mailBox, $actorId, $arg);
-        $userId = $arg['userId'];
+        $this->userId = $arg['userId'];
+    }
+
+    protected function onStart()
+    {
+        $userId = $this->userId;
         //初始化用户信息
         $this->userBaseAttribute = UserBaseAttributeModel::create()->getInfo($userId);
         $this->userAttribute = UserAttributeModel::create()->getInfo($userId);
         $this->userEquipmentList = EquipmentService::getInstance()->getUserEquipmentList($userId);
         $this->userSkillList = SkillService::getInstance()->getUserSkillList($userId);
         $this->userPetList = PetService::getInstance()->getUserPetList($userId);
-
-        var_dump(json_encode($this->userBaseAttribute));
-        var_dump(json_encode($this->userAttribute));
-        var_dump(json_encode($this->userEquipmentList));
-        var_dump(json_encode($this->userSkillList));
-        var_dump(json_encode($this->userPetList));
-    }
-
-    protected function onStart()
-    {
 
 
     }
