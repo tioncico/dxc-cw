@@ -46,6 +46,7 @@ class UserActor extends BaseActor
     public function __construct(Channel $mailBox, string $actorId, $arg)
     {
         parent::__construct($mailBox, $actorId, $arg);
+        var_dump(1);
         $userId = $arg['userId'];
         //初始化用户信息
         $this->userBaseAttribute = UserBaseAttributeModel::create()->getInfo($userId);
@@ -66,7 +67,7 @@ class UserActor extends BaseActor
         $actorId = UserRelationUserActor::getInstance()->getUserActor($userId);
         if (empty($actorId)) {
             //创建actor
-            $actorId = MapActor::client()->create(['userId' => $userId]);   // 00101000000000000000001
+            $actorId = UserActor::client()->create(['userId' => $userId]);   // 00101000000000000000001
             //创建关联关系
             UserRelationUserActor::getInstance()->addUserActor($userId, $actorId);
         }

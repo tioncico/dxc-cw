@@ -49,6 +49,7 @@ class GlobalEvent
             UserFdMap::getInstance()->clear();
             //删除mapActor对象
             UserRelationMap::getInstance()->clear();
+            UserRelationUserActor::getInstance()->clear();
             Timer::clearAll();
             DbManager::getInstance()->getConnection()->__getClientPool()->reset();
             RedisPool::getInstance()->getPool(RedisClient::REDIS_POOL_NAME)->reset();
