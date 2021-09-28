@@ -49,11 +49,16 @@ class UserActor extends BaseActor
         $userId = $arg['userId'];
         //初始化用户信息
         $this->userBaseAttribute = UserBaseAttributeModel::create()->getInfo($userId);
-        var_dump($this->userBaseAttribute);
         $this->userAttribute = UserAttributeModel::create()->getInfo($userId);
         $this->userEquipmentList = EquipmentService::getInstance()->getUserEquipmentList($userId);
         $this->userSkillList = SkillService::getInstance()->getUserSkillList($userId);
         $this->userPetList = PetService::getInstance()->getUserPetList($userId);
+
+        var_dump(json_encode($this->userBaseAttribute));
+        var_dump(json_encode($this->userAttribute));
+        var_dump(json_encode($this->userEquipmentList));
+        var_dump(json_encode($this->userSkillList));
+        var_dump(json_encode($this->userPetList));
     }
 
     protected function onStart()
