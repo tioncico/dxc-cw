@@ -112,7 +112,7 @@ class EquipmentService extends BaseService
     {
         //查看该部位是不是有旧装备存在
         $userUseEquipmentList = UserActor::getProperty(UserActor::getUserActorId($userEquipmentBackpackModel->userId), 'userEquipmentList');
-        var_dump(json_encode($userEquipmentBackpackModel),"555555555555");
+        var_dump(json_encode($userEquipmentBackpackModel),json_encode($userUseEquipmentList),json_encode($userEquipmentBackpackModel->equipmentType),"555555555555");
         $oldUserUseEquipment = $userUseEquipmentList[$userEquipmentBackpackModel->equipmentType];
         return BaseModel::transaction(function () use ($userUseEquipmentList,$userEquipmentBackpackModel, $oldUserUseEquipment) {
             if ($oldUserUseEquipment) {
