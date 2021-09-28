@@ -75,7 +75,6 @@ class UserService extends BaseService
     {
         //获取用户基础信息
         $userBaseAttributeInfo = UserActor::getProperty(UserActor::getUserActorId($userId), 'userBaseAttribute');;
-        var_dump($userBaseAttributeInfo);
         $userBaseAttributeBean = new Attribute($userBaseAttributeInfo->toArray());
         $userAttributeBean = clone $userBaseAttributeBean;
         //获取用户穿戴装备信息
