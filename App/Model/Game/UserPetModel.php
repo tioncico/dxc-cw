@@ -3,6 +3,7 @@
 namespace App\Model\Game;
 
 use App\Model\BaseModel;
+use EasySwoole\Mysqli\QueryBuilder;
 
 /**
  * UserPetModel
@@ -147,5 +148,7 @@ class UserPetModel extends BaseModel
 		$model->save();
 		return $model;
 	}
+
+
 }
 

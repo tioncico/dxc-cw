@@ -95,6 +95,7 @@ class PetService
         });
         return $info;
     }
+
     public function noUsePet(UserPetModel $userPetInfo)
     {
         $info = BaseModel::transaction(function () use ($userPetInfo) {
@@ -104,5 +105,19 @@ class PetService
             return $userPetInfo;
         });
         return $info;
+    }
+
+    public function getUserPetList($userId)
+    {
+        //获取用户携带的3只宠物
+        $userPetList = [];
+        $list = UserPetModel::create()->where('userId', $userId)->where('isUse', 1)->all();
+        /**
+         * @var UserPetModel $value
+         */
+        foreach ($list as $value) {
+            $userPetList[$value->userPetId] = $value;
+        }
+        return $userPetList;
     }
 }

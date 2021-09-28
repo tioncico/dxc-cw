@@ -4,6 +4,7 @@
 namespace App\Service\Game;
 
 
+use App\Actor\UserActor;
 use App\Model\BaseModel;
 use App\Model\Game\GoodsEquipmentAttributeEntryModel;
 use App\Model\Game\GoodsEquipmentModel;
@@ -110,12 +111,16 @@ class EquipmentService extends BaseService
     public function useEquipment(UserEquipmentBackpackModel $userEquipmentBackpackModel)
     {
         //查看该部位是不是有旧装备存在
-        $oldUserUseEquipment = UserEquipmentBackpackModel::create()->where('equipmentType', $userEquipmentBackpackModel->equipmentType)->where('userId', $userEquipmentBackpackModel->userId)->where('isUse', 1)->get();
-        return BaseModel::transaction(function () use ($userEquipmentBackpackModel, $oldUserUseEquipment) {
+        $userUseEquipmentList = UserActor::getProperty(UserActor::getUserActorId($userEquipmentBackpackModel->userId), 'userEquipmentList');
+
+        $oldUserUseEquipment = $userUseEquipmentList[$userEquipmentBackpackModel->equipmentType];
+        return BaseModel::transaction(function () use ($userUseEquipmentList,$userEquipmentBackpackModel, $oldUserUseEquipment) {
             if ($oldUserUseEquipment) {
                 $oldUserUseEquipment->update(['isUse' => 0]);
             }
             $userEquipmentBackpackModel->update(['isUse' => 1]);
+            $userUseEquipmentList[$userEquipmentBackpackModel->equipmentType] = $userEquipmentBackpackModel;
+            UserActor::setProperty(UserActor::getUserActorId($userEquipmentBackpackModel->userId), 'userEquipmentList',$userUseEquipmentList);
             //更新用户属性
             return UserService::getInstance()->countUserAttribute($userEquipmentBackpackModel->userId);
         });

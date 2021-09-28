@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\WebSocket\Cache;
+namespace App\Utility\Cache;
 
 
 use App\Utility\RedisClient;

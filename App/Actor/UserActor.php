@@ -7,6 +7,7 @@ namespace App\Actor;
 use App\Actor\Cache\UserRelationMap;
 use App\Actor\Cache\UserRelationUserActor;
 use App\Model\Game\MapModel;
+use App\Model\Game\SkillModel;
 use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserBaseAttributeModel;
 use App\Model\Game\UserEquipmentBackpackModel;
@@ -14,6 +15,8 @@ use App\Model\Game\UserPetModel;
 use App\Model\Game\UserSkillModel;
 use App\Model\User\UserModel;
 use App\Service\Game\EquipmentService;
+use App\Service\Game\PetService;
+use App\Service\Game\SkillService;
 use EasySwoole\Actor\ActorConfig;
 use Swoole\Coroutine\Channel;
 
@@ -48,8 +51,8 @@ class UserActor extends BaseActor
         $this->userBaseAttribute = UserBaseAttributeModel::create()->getInfo($userId);
         $this->userAttribute = UserAttributeModel::create()->getInfo($userId);
         $this->userEquipmentList = EquipmentService::getInstance()->getUserEquipmentList($userId);
-        $this->userSkillList = UserSkillModel::create()->where('isUse', 1)->where('userId', $userId)->all();
-        $this->userPetList = UserPetModel::create()->where('isUse', 1)->where('userId', $userId)->all();
+        $this->userSkillList = SkillService::getInstance()->getUserSkillList($userId);
+        $this->userPetList = PetService::getInstance()->getUserPetList($userId);
     }
 
     protected function onStart()

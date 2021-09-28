@@ -51,4 +51,9 @@ abstract class BaseActor extends AbstractActor
         return static::client()->send($actorId, new Command(['action' => "getProperty", 'data' => $propertyName]));
     }
 
+    public static function setProperty($actorId, $propertyName,$data)
+    {
+        return static::client()->send($actorId, new Command(['action' => "setProperty", 'data' => ['propertyName'=>$propertyName,'data'=>$data]]));
+    }
+
 }

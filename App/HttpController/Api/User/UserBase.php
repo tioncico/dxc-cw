@@ -8,6 +8,7 @@
 
 namespace App\HttpController\Api\User;
 
+use App\Actor\UserActor;
 use App\HttpController\Api\ApiBase;
 use App\Model\User\UserModel;
 use EasySwoole\EasySwoole\Trigger;
@@ -23,7 +24,10 @@ class UserBase extends ApiBase
      */
     public $who;
 
-    public $userActor;
+    /**
+     * @var UserActor
+     */
+    public $userActorId;
 
     const USER_TOKEN_NAME = 'user_token';
 
@@ -56,6 +60,7 @@ class UserBase extends ApiBase
             // 通过session查找用户
             $who = UserModel::create()->get(['session' => $session]);
             $this->who = $who;
+            $this->userActorId = UserActor::getUserActorId($who->userId);
             return $who;
         }
         return $this->who;

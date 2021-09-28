@@ -29,7 +29,6 @@ class UserSkillModel extends BaseModel
 {
     protected $tableName = 'user_skill_list';
 
-
     public function getList(int $page = 1, int $pageSize = 10, string $field = '*'): array
     {
         $list = $this

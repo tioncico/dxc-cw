@@ -4,8 +4,11 @@
 namespace App\Utility;
 
 use App\Actor\Cache\UserRelationMap;
+use App\Actor\Cache\UserRelationUserActor;
+use App\Actor\Command;
 use App\Actor\MapActor;
 use App\Actor\UserActor;
+use App\Utility\Cache\UserLastRequestCache;
 use App\WebSocket\Cache\UserFdMap;
 use App\WebSocket\Event;
 use EasySwoole\Actor\Actor;
@@ -74,7 +77,18 @@ class GlobalEvent
         Actor::getInstance()->register(UserActor::class);
         Actor::getInstance()->setTempDir(EASYSWOOLE_TEMP_DIR)->setListenAddress('0.0.0.0')->setListenPort('9900')->attachServer($server);
 
+        //定时任务
+        $tick = new TickProcess();
 
+        $tick->addTask(5*60, function () {
+            //5分钟玩家不活跃,则删除actor
+            UserLastRequestCache::getInstance()->chunkUserExpire(function ($userId){
+                $actorId = UserRelationUserActor::getInstance()->getUserActor($userId);
+                UserActor::client()->exit($actorId);
+                UserRelationUserActor::getInstance()->delUserActor($userId);
+            },5*60);
+        });
+        Manager::getInstance()->addProcess($tick);
     }
 
     /**
