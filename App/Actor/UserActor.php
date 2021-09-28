@@ -71,7 +71,6 @@ class UserActor extends BaseActor
             //创建关联关系
             UserRelationUserActor::getInstance()->addUserActor($userId, $actorId);
         }
-        var_dump($actorId);
         return $actorId;
     }
 }
