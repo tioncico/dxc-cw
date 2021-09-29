@@ -27,9 +27,5 @@ Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
 
-    GameTaskModel::create()->chunk(function (GameTaskModel $taskModel){
-        \App\Model\Game\Task\GameTaskRewardModel::create()->addData($taskModel->taskId,"task_{$taskModel->taskMasterId}_{$taskModel->order}",1);
-    });
-
     \Swoole\Timer::clearAll();
 });

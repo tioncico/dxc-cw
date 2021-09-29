@@ -76,7 +76,6 @@ class GlobalEvent
         // 注册Actor管理器
         $server = \EasySwoole\EasySwoole\ServerManager::getInstance()->getSwooleServer();
         Actor::getInstance()->register(MapActor::class);
-        Actor::getInstance()->register(UserActor::class);
         Actor::getInstance()->setTempDir(EASYSWOOLE_TEMP_DIR)->setListenAddress('0.0.0.0')->setListenPort('9900')->attachServer($server);
 
         //定时任务
@@ -84,13 +83,13 @@ class GlobalEvent
 
         $tick->addTask(5*60, function () {
             //5分钟玩家不活跃,则删除actor
-            UserLastRequestCache::getInstance()->chunkUserExpire(function ($userId){
-                $actorId = UserRelationUserActor::getInstance()->getUserActor($userId);
-                if ($actorId){
-                    UserActor::client()->exit($actorId);
-                }
-                UserRelationUserActor::getInstance()->delUserActor($userId);
-            },5*60);
+//            UserLastRequestCache::getInstance()->chunkUserExpire(function ($userId){
+//                $actorId = UserRelationUserActor::getInstance()->getUserActor($userId);
+//                if ($actorId){
+//                    UserActor::client()->exit($actorId);
+//                }
+//                UserRelationUserActor::getInstance()->delUserActor($userId);
+//            },5*60);
         });
         Manager::getInstance()->addProcess($tick);
     }
