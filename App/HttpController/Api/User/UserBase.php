@@ -60,7 +60,6 @@ class UserBase extends ApiBase
             // 通过session查找用户
             $who = UserModel::create()->get(['session' => $session]);
             $this->who = $who;
-            $this->userActorId = UserActor::getUserActorId($who->userId);
             return $who;
         }
         return $this->who;
