@@ -10,6 +10,7 @@ use App\Model\Game\UserBaseAttributeModel;
 use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserLevelConfigModel;
 use App\Service\BaseService;
+use App\Utility\Cache\UserCache;
 use EasySwoole\Component\Singleton;
 use EasySwoole\Mysqli\QueryBuilder;
 
@@ -73,11 +74,11 @@ class UserService extends BaseService
     public function countUserAttribute($userId):UserAttributeModel
     {
         //获取用户基础信息
-        $userBaseAttributeInfo = UserBaseAttributeModel::create()->getInfo($userId);
+        $userBaseAttributeInfo = UserCache::getInstance()->getUserBaseAttribute($userId);
         $userBaseAttributeBean = new Attribute($userBaseAttributeInfo->toArray());
         $userAttributeBean = clone $userBaseAttributeBean;
         //获取用户穿戴装备信息
-        $userEquipmentBackpackList = UserEquipmentBackpackModel::create()->with(['strengthenInfo', 'equipmentAttributeEntryList'])->where('userId', $userId)->where('isUse', 1)->all();
+        $userEquipmentBackpackList = UserCache::getInstance()->getUserEquipmentList($userId);
 
         /**
          * @var $userEquipment UserEquipmentBackpackModel
@@ -118,9 +119,11 @@ class UserService extends BaseService
             }
             //随机属性只在进图的时候加
         }
+        $userAttributeModel = UserCache::getInstance()->getUserAttribute($userId);
+        $userAttributeModel->update($userAttributeBean->toArray());
+        UserCache::getInstance()->setUserAttribute($userId,$userAttributeModel);
 
-        UserAttributeModel::create()->where('userId', $userBaseAttributeInfo->userId)->update($userAttributeBean->toArray());
-        return UserAttributeModel::create()->getInfo($userBaseAttributeInfo->userId);
+        return $userAttributeModel;
     }
 
 }

@@ -22,8 +22,6 @@ abstract class BaseActor extends AbstractActor
         $actionName = $msg->getAction();
         if ($actionName == 'getProperty') {
             $propertyName = $msg->getData();
-            var_dump($propertyName);
-            var_dump(json_encode($this->$propertyName));
             return $this->$propertyName;
         }
         if ($actionName == 'setProperty') {
@@ -42,7 +40,6 @@ abstract class BaseActor extends AbstractActor
 
     protected function onException(\Throwable $throwable)
     {
-        var_dump((string)$throwable);
         $actorId = $this->actorId();
         echo "mapActor {$actorId} onException\n";
     }

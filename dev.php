@@ -12,11 +12,11 @@ return [
         'SOCK_TYPE'      => SWOOLE_TCP,
         'RUN_MODEL'      => SWOOLE_PROCESS,
         'SETTING'        => [
-            'worker_num'    => 8,
-            'reload_async'  => true,
-            'package_max_length'       => 1024 * 1024 * 200,
-            'max_wait_time' => 3,
-            'document_root' => EASYSWOOLE_ROOT . '/Static/',
+            'worker_num'            => 8,
+            'reload_async'          => true,
+            'package_max_length'    => 1024 * 1024 * 200,
+            'max_wait_time'         => 3,
+            'document_root'         => EASYSWOOLE_ROOT . '/Static/',
             'enable_static_handler' => true,
         ],
         'TASK'           => [
@@ -36,8 +36,9 @@ return [
         'charset'  => 'utf8mb4',
     ],
     "REDIS"       => [//redis
-        'host' => '127.0.0.1',
-        'port' => 6379,
+        'host'      => '127.0.0.1',
+        'port'      => 6379,
+        'serialize' => \EasySwoole\Redis\Config\RedisConfig::SERIALIZE_PHP,
     ],
     "ALI_OSS"     => [//阿里云oss
         "KEY"       => '213',

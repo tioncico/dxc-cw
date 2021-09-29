@@ -15,6 +15,7 @@ use App\Model\Game\UserGoodsEquipmentAttributeEntryModel;
 use App\Model\Game\UserGoodsEquipmentStrengthenAttributeModel;
 use App\Service\BaseService;
 use App\Service\GameResponse;
+use App\Utility\Cache\UserCache;
 use App\Utility\Rand\Bean;
 use App\Utility\Rand\Rand;
 use EasySwoole\Component\Singleton;
@@ -111,7 +112,9 @@ class EquipmentService extends BaseService
     public function useEquipment(UserEquipmentBackpackModel $userEquipmentBackpackModel)
     {
         //查看该部位是不是有旧装备存在
-        $oldUserUseEquipment = UserEquipmentBackpackModel::create()->where('equipmentType', $userEquipmentBackpackModel->equipmentType)->where('userId', $userEquipmentBackpackModel->userId)->where('isUse', 1)->get();
+        $userEquipmentList = UserCache::getInstance()->getUserEquipmentList($userEquipmentBackpackModel->userId);
+        $oldUserUseEquipment = $userEquipmentList[$userEquipmentBackpackModel->equipmentType];
+
         return BaseModel::transaction(function () use ($userEquipmentBackpackModel, $oldUserUseEquipment) {
             if ($oldUserUseEquipment) {
                 $oldUserUseEquipment->update(['isUse' => 0]);
