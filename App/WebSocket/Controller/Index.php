@@ -9,12 +9,12 @@
 namespace App\WebSocket\Controller;
 
 use App\Actor\Cache\UserRelationMap;
-use App\Actor\Command;
-use App\Actor\MapActor;
+use App\Actor\GameActor;
 use App\Model\Game\MapModel;
 use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserMapModel;
 use App\Utility\Assert\Assert;
+use App\WebSocket\Command;
 use EasySwoole\EasySwoole\ServerManager;
 use EasySwoole\EasySwoole\Task\TaskManager;
 use EasySwoole\Mysqli\QueryBuilder;
@@ -89,51 +89,54 @@ class Index extends BaseController
         $actorId = UserRelationMap::getInstance()->getUserMap($userId);
         Assert::assert(!$actorId, '你已进入地图');
         //创建地图actor
-        $actorId = MapActor::client()->create(['userId' => $userId, 'mapId' => $mapId]);   // 00101000000000000000001
+        $actorId = GameActor::client()->create(['userId' => $userId, 'mapId' => $mapId]);   // 00101000000000000000001
         //创建关联关系
         UserRelationMap::getInstance()->addUserMap($userId, $actorId);
-        MapActor::client()->send($actorId, new Command(['action' => 'mapInfo']));
-
-        $this->responseMsg(200, "进入地图成功");
+        $this->actorSend('mapInfo');
+//        $this->responseMsg(200, "进入地图成功");
     }
 
     public function mapInfo()
     {
         $userId = $this->userId();
         $actorId = UserRelationMap::getInstance()->getUserMap($userId);
-        MapActor::client()->send($actorId, new Command(['action' => 'mapInfo']));
+        GameActor::client()->send($actorId, new Command(['action' => 'mapInfo']));
     }
 
     public function fight()
     {
-        $userId = $this->userId();
-        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
-        Assert::assert(!!$actorId, '不在地图中');
-
-        MapActor::client()->send($actorId, new Command(['action' => 'fight']));
-    }
-
-    public function nextLevelMap(){
-        $userId = $this->userId();
-        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
-        Assert::assert(!!$actorId, '不在地图中');
-
-        MapActor::client()->send($actorId, new Command(['action' => 'nextLevelMap']));
-    }
-    public function exitMap(){
-        $userId = $this->userId();
-        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
-        Assert::assert(!!$actorId, '不在地图中');
-
-        MapActor::client()->send($actorId, new Command(['action' => 'exitMap']));
-    }
-
-    public function useSkill(){
         $param = $this->getParam();
         $userId = $this->userId();
         $actorId = UserRelationMap::getInstance()->getUserMap($userId);
         Assert::assert(!!$actorId, '不在地图中');
 
-        MapActor::client()->send($actorId, new Command(['action' => 'useUserSkill','data'=>['skillCode'=>$param['skillCode']]]));
+        $this->actorSend(Command::CS_FIGHT, ['x' => $param['x'], 'y' => $param['y']]);
+
+    }
+
+    public function nextLevelMap()
+    {
+        $userId = $this->userId();
+        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
+        Assert::assert(!!$actorId, '不在地图中');
+
+        GameActor::client()->send($actorId, new Command(['action' => 'nextLevelMap']));
+    }
+
+    public function exitMap()
+    {
+        $userId = $this->userId();
+        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
+        Assert::assert(!!$actorId, '不在地图中');
+        $this->actorSend(\App\WebSocket\Command::CS_EXIT_MAP);
+    }
+
+    public function useSkill()
+    {
+        $param = $this->getParam();
+        $userId = $this->userId();
+        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
+        Assert::assert(!!$actorId, '不在地图中');
+        GameActor::client()->send($actorId, new Command(['action' => 'useUserSkill', 'data' => ['skillCode' => $param['skillCode']]]));
     }
 }

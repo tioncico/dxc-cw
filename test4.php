@@ -11,12 +11,12 @@ include "./vendor/autoload.php";
 
 use \App\Service\Game\Attribute;
 use \App\Service\Game\Fight\Fight;
-use \App\Actor\MapActor;
+use \App\Actor\GameActor;
 Co::set(['hook_flags'=> SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
     $ws = new \UnitTest\WebSocket();
-//    $ws->intoMap();
+    $ws->intoMap();
 //    sleep(1);
 //    $ws->fight();
 //    sleep(1);

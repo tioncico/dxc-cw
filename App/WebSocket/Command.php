@@ -14,9 +14,14 @@ use EasySwoole\Spl\SplBean;
 class Command extends SplBean
 {
     protected $action;
+    protected $requestId;
     protected $code;
     protected $data;
     protected $msg;
+
+    const SC_ACTION_GAME_INFO = 'gameInfo';
+    const CS_EXIT_MAP = 'exitMap';
+    const CS_FIGHT = 'fight';
 
     /**
      * @return mixed
@@ -80,6 +85,22 @@ class Command extends SplBean
     public function setMsg($msg): void
     {
         $this->msg = $msg;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequestId()
+    {
+        return $this->requestId;
+    }
+
+    /**
+     * @param mixed $requestId
+     */
+    public function setRequestId($requestId): void
+    {
+        $this->requestId = $requestId;
     }
 
 

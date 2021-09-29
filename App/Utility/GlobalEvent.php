@@ -6,7 +6,7 @@ namespace App\Utility;
 use App\Actor\Cache\UserRelationMap;
 use App\Actor\Cache\UserRelationUserActor;
 use App\Actor\Command;
-use App\Actor\MapActor;
+use App\Actor\GameActor;
 use App\Actor\UserActor;
 use App\Utility\Cache\UserLastRequestCache;
 use App\WebSocket\Cache\UserFdMap;
@@ -75,7 +75,7 @@ class GlobalEvent
 
         // 注册Actor管理器
         $server = \EasySwoole\EasySwoole\ServerManager::getInstance()->getSwooleServer();
-        Actor::getInstance()->register(MapActor::class);
+        Actor::getInstance()->register(GameActor::class);
         Actor::getInstance()->setTempDir(EASYSWOOLE_TEMP_DIR)->setListenAddress('0.0.0.0')->setListenPort('9900')->attachServer($server);
 
         //定时任务

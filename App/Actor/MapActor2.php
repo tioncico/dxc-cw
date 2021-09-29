@@ -24,7 +24,7 @@ use EasySwoole\Actor\ActorConfig;
 use Swoole\Coroutine\Channel;
 use function AlibabaCloud\Client\value;
 
-class MapActor extends BaseActor
+class MapActor2 extends BaseActor
 {
     /**
      * @var UserModel
@@ -51,7 +51,6 @@ class MapActor extends BaseActor
 
     /**@var MapMonsterModel */
     protected $monster;
-
 
     /**
      * 进入地图步骤

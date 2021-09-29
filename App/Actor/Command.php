@@ -13,6 +13,7 @@ use EasySwoole\Spl\SplBean;
  */
 class Command extends SplBean
 {
+    protected $requestId;
     protected $action;
     protected $code;
     protected $data;
@@ -80,6 +81,22 @@ class Command extends SplBean
     public function setMsg($msg): void
     {
         $this->msg = $msg;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequestId()
+    {
+        return $this->requestId;
+    }
+
+    /**
+     * @param mixed $requestId
+     */
+    public function setRequestId($requestId): void
+    {
+        $this->requestId = $requestId;
     }
 
 

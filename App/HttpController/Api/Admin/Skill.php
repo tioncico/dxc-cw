@@ -39,25 +39,22 @@ class Skill extends AdminBase
 	 * @ApiSuccessParam(name="msg",description="api提示信息")
 	 * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
 	 * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
-	 * @Param(name="skillId",alias="技能id",description="技能id",lengthMax="11",required="")
 	 * @Param(name="name",alias="技能名",description="技能名",lengthMax="255",optional="")
 	 * @Param(name="level",alias="技能初始等级",description="技能初始等级",lengthMax="11",optional="")
 	 * @Param(name="type",alias=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",lengthMax="1",optional="")
 	 * @Param(name="rarityLevel",alias="技能稀有度1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话",description="技能稀有度1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话",lengthMax="11",optional="")
 	 * @Param(name="maxLevel",alias="最大等级",description="最大等级",lengthMax="255",optional="")
-	 * @Param(name="coolingTime",alias="冷却时间",description="冷却时间",lengthMax="11",optional="")
-	 * @Param(name="manaCost",alias="耗蓝",description="耗蓝",lengthMax="255",optional="")
+	 * @Param(name="coolingTime",alias="冷却时间算法",description="冷却时间算法",lengthMax="11",optional="")
+	 * @Param(name="manaCost",alias="耗蓝算法",description="耗蓝算法",lengthMax="32",optional="")
 	 * @Param(name="entryCode",alias="词条code",description="词条code",lengthMax="32",optional="")
 	 * @Param(name="description",alias="技能介绍",description="技能介绍",lengthMax="255",optional="")
 	 * @Param(name="param",alias="参数",description="参数",lengthMax="255",optional="")
-	 * @Param(name="qualification",alias="资质参数",description="资质参数",lengthMax="255",optional="")
-	 * @Param(name="manaCostQualification",alias="耗蓝资质",description="耗蓝资质",lengthMax="11",optional="")
+	 * @Param(name="paramNum",alias="参数数量",description="参数数量",lengthMax="11",optional="")
 	 */
 	public function add()
 	{
 		$param = ContextManager::getInstance()->get('param');
 		$data = [
-		    'skillId'=>$param['skillId'],
 		    'name'=>$param['name'] ?? '',
 		    'level'=>$param['level'] ?? '',
 		    'type'=>$param['type'] ?? '',
@@ -68,8 +65,7 @@ class Skill extends AdminBase
 		    'entryCode'=>$param['entryCode'] ?? '',
 		    'description'=>$param['description'] ?? '',
 		    'param'=>$param['param'] ?? '',
-		    'qualification'=>$param['qualification'] ?? '',
-		    'manaCostQualification'=>$param['manaCostQualification'] ?? '',
+		    'paramNum'=>$param['paramNum'] ?? '',
 		];
 		$model = new SkillModel($data);
 		$model->save();
@@ -93,13 +89,12 @@ class Skill extends AdminBase
 	 * @Param(name="type",alias=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",lengthMax="1",optional="")
 	 * @Param(name="rarityLevel",alias="技能稀有度1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话",description="技能稀有度1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话",lengthMax="11",optional="")
 	 * @Param(name="maxLevel",alias="最大等级",description="最大等级",lengthMax="255",optional="")
-	 * @Param(name="coolingTime",alias="冷却时间",description="冷却时间",lengthMax="11",optional="")
-	 * @Param(name="manaCost",alias="耗蓝",description="耗蓝",lengthMax="255",optional="")
+	 * @Param(name="coolingTime",alias="冷却时间算法",description="冷却时间算法",lengthMax="11",optional="")
+	 * @Param(name="manaCost",alias="耗蓝算法",description="耗蓝算法",lengthMax="32",optional="")
 	 * @Param(name="entryCode",alias="词条code",description="词条code",lengthMax="32",optional="")
 	 * @Param(name="description",alias="技能介绍",description="技能介绍",lengthMax="255",optional="")
 	 * @Param(name="param",alias="参数",description="参数",lengthMax="255",optional="")
-	 * @Param(name="qualification",alias="资质参数",description="资质参数",lengthMax="255",optional="")
-	 * @Param(name="manaCostQualification",alias="耗蓝资质",description="耗蓝资质",lengthMax="11",optional="")
+	 * @Param(name="paramNum",alias="参数数量",description="参数数量",lengthMax="11",optional="")
 	 */
 	public function update()
 	{
@@ -122,8 +117,7 @@ class Skill extends AdminBase
 		$updateData['entryCode']=$param['entryCode'] ?? $info->entryCode;
 		$updateData['description']=$param['description'] ?? $info->description;
 		$updateData['param']=$param['param'] ?? $info->param;
-		$updateData['qualification']=$param['qualification'] ?? $info->qualification;
-		$updateData['manaCostQualification']=$param['manaCostQualification'] ?? $info->manaCostQualification;
+		$updateData['paramNum']=$param['paramNum'] ?? $info->paramNum;
 		$info->update($updateData);
 		$this->writeJson(Status::CODE_OK, $info, "更新数据成功");
 	}
@@ -146,24 +140,19 @@ class Skill extends AdminBase
 	 * @ApiSuccessParam(name="result.type",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发")
 	 * @ApiSuccessParam(name="result.rarityLevel",description="技能稀有度1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
 	 * @ApiSuccessParam(name="result.maxLevel",description="最大等级")
-	 * @ApiSuccessParam(name="result.coolingTime",description="冷却时间")
-	 * @ApiSuccessParam(name="result.manaCost",description="耗蓝")
+	 * @ApiSuccessParam(name="result.coolingTime",description="冷却时间算法")
+	 * @ApiSuccessParam(name="result.manaCost",description="耗蓝算法")
 	 * @ApiSuccessParam(name="result.entryCode",description="词条code")
 	 * @ApiSuccessParam(name="result.description",description="技能介绍")
 	 * @ApiSuccessParam(name="result.param",description="参数")
-	 * @ApiSuccessParam(name="result.qualification",description="资质参数")
-	 * @ApiSuccessParam(name="result.manaCostQualification",description="耗蓝资质")
+	 * @ApiSuccessParam(name="result.paramNum",description="参数数量")
 	 */
 	public function getOne()
 	{
 		$param = ContextManager::getInstance()->get('param');
 		$model = new SkillModel();
 		$info = $model->get(['skillId' => $param['skillId']]);
-		if ($info) {
-		    $this->writeJson(Status::CODE_OK, $info, "获取数据成功.");
-		} else {
-		    $this->writeJson(Status::CODE_BAD_REQUEST, [], '数据不存在');
-		}
+		$this->writeJson(Status::CODE_OK, $info, "获取数据成功.");
 	}
 
 
@@ -185,13 +174,12 @@ class Skill extends AdminBase
 	 * @ApiSuccessParam(name="result[].type",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发")
 	 * @ApiSuccessParam(name="result[].rarityLevel",description="技能稀有度1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
 	 * @ApiSuccessParam(name="result[].maxLevel",description="最大等级")
-	 * @ApiSuccessParam(name="result[].coolingTime",description="冷却时间")
-	 * @ApiSuccessParam(name="result[].manaCost",description="耗蓝")
+	 * @ApiSuccessParam(name="result[].coolingTime",description="冷却时间算法")
+	 * @ApiSuccessParam(name="result[].manaCost",description="耗蓝算法")
 	 * @ApiSuccessParam(name="result[].entryCode",description="词条code")
 	 * @ApiSuccessParam(name="result[].description",description="技能介绍")
 	 * @ApiSuccessParam(name="result[].param",description="参数")
-	 * @ApiSuccessParam(name="result[].qualification",description="资质参数")
-	 * @ApiSuccessParam(name="result[].manaCostQualification",description="耗蓝资质")
+	 * @ApiSuccessParam(name="result[].paramNum",description="参数数量")
 	 */
 	public function getList()
 	{
@@ -199,6 +187,7 @@ class Skill extends AdminBase
 		$page = (int)($param['page'] ?? 1);
 		$pageSize = (int)($param['pageSize'] ?? 20);
 		$model = new SkillModel();
+
 		$data = $model->getList($page, $pageSize);
 		$this->writeJson(Status::CODE_OK, $data, '获取列表成功');
 	}
@@ -223,6 +212,7 @@ class Skill extends AdminBase
 		$info = $model->get(['skillId' => $param['skillId']]);
 		if (!$info) {
 		    $this->writeJson(Status::CODE_OK, $info, "数据不存在.");
+		    return false;
 		}
 
 		$info->destroy();

@@ -58,14 +58,16 @@ class WebSocket
         $data = ['action' => 'exitMap'];
         $this->push($data);
     }
+
     public function useSkill()
     {
-        $data = ['action' => 'useSkill','skillCode'=>'0002'];
+        $data = ['action' => 'useSkill', 'skillCode' => '0002'];
         $this->push($data);
     }
+
     public function useSkill2()
     {
-        $data = ['action' => 'useSkill','skillCode'=>'0003'];
+        $data = ['action' => 'useSkill', 'skillCode' => '0003'];
         $this->push($data);
     }
 
@@ -89,6 +91,7 @@ class WebSocket
 
     public function push($data)
     {
+        $data['requestId'] = time();
         $this->wsClient->push(json_encode($data));
     }
 
@@ -96,10 +99,10 @@ class WebSocket
     {
         go(function () {
             while (1) {
-                $response  = $this->wsClient->recv(0);
-                if ($response){
+                $response = $this->wsClient->recv(0);
+                if ($response) {
 
-                    echo json_encode(json_decode($response->data,true),JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES). PHP_EOL;
+                    echo json_encode(json_decode($response->data, true), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL;
                 }
             }
             \co::sleep(0.1);

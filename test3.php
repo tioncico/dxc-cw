@@ -14,7 +14,7 @@ use App\Model\Game\GoodsEquipmentModel;
 use App\Model\Game\Task\GameTaskMasterModel;
 use \App\Service\Game\Attribute;
 use \App\Service\Game\Fight\Fight;
-use \App\Actor\MapActor;
+use \App\Actor\GameActor;
 use EasySwoole\Actor\Actor;
 
 go(function () {
