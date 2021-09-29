@@ -290,7 +290,7 @@ class Mail extends UserBase
      * @ApiSuccessParam(name="msg",description="api提示信息")
      * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
      * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
-     * @Param(name="id",lengthMax="11",description="邮件id",required="")
+     * @Param(name="id",lengthMax="11",description="邮件id",optional="")
      */
     public function read()
     {
