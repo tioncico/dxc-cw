@@ -4,7 +4,6 @@
 namespace App\Service\Game;
 
 
-use App\Actor\UserActor;
 use App\Model\BaseModel;
 use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserBaseAttributeModel;
@@ -71,15 +70,14 @@ class UserService extends BaseService
         return $userBaseAttributeInfo;
     }
 
-    public function countUserAttribute($userId): UserAttributeModel
+    public function countUserAttribute($userId):UserAttributeModel
     {
         //获取用户基础信息
-        $userBaseAttributeInfo = UserActor::getProperty(UserActor::getUserActorId($userId), 'userBaseAttribute');;
+        $userBaseAttributeInfo = UserBaseAttributeModel::create()->getInfo($userId);
         $userBaseAttributeBean = new Attribute($userBaseAttributeInfo->toArray());
         $userAttributeBean = clone $userBaseAttributeBean;
         //获取用户穿戴装备信息
-        $userEquipmentBackpackList = UserActor::getProperty(UserActor::getUserActorId($userId), 'userEquipmentList');
-
+        $userEquipmentBackpackList = UserEquipmentBackpackModel::create()->with(['strengthenInfo', 'equipmentAttributeEntryList'])->where('userId', $userId)->where('isUse', 1)->all();
 
         /**
          * @var $userEquipment UserEquipmentBackpackModel
@@ -114,16 +112,14 @@ class UserService extends BaseService
             //强化数据
             if (isset($userEquipment->strengthenInfo)) {
                 $strengthenInfo = $userEquipment->strengthenInfo;
-                $userAttributeBean->incHp($strengthenInfo->hp ?? 0);
-                $userAttributeBean->incDefense($strengthenInfo->defense ?? 0);
-                $userAttributeBean->incAttack($strengthenInfo->attack ?? 0);
+                $userAttributeBean->incHp($strengthenInfo->hp??0);
+                $userAttributeBean->incDefense($strengthenInfo->defense??0);
+                $userAttributeBean->incAttack($strengthenInfo->attack??0);
             }
             //随机属性只在进图的时候加
         }
-        $userAttributeInfo = UserActor::getProperty(UserActor::getUserActorId($userId), 'userAttribute');;
-        $userAttributeInfo->update($userAttributeBean->toArray());
 
-        UserActor::setProperty(UserActor::getUserActorId($userId), 'userAttribute', $userAttributeInfo);;
+        UserAttributeModel::create()->where('userId', $userBaseAttributeInfo->userId)->update($userAttributeBean->toArray());
         return UserAttributeModel::create()->getInfo($userBaseAttributeInfo->userId);
     }
 
