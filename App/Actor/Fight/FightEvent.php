@@ -6,6 +6,7 @@ namespace App\Actor\Fight;
 
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Skill\SkillBean;
+use App\Actor\Skill\SkillResult;
 
 class FightEvent
 {
@@ -104,32 +105,32 @@ class FightEvent
         $this->onEvent('FIGHT_END');
     }
 
-    public function userNormalAttackBefore(Attribute $attribute)
+    public function userNormalAttackBefore(Attribute $attribute,SkillResult $skillResult)
     {
         $this->onEvent('USER_NORMAL_ATTACK_BEFORE');
     }
 
-    public function userNormalAttackAfter(Attribute $attribute)
+    public function userNormalAttackAfter(Attribute $attribute,SkillResult $skillResult)
     {
         $this->onEvent('USER_NORMAL_ATTACK_AFTER');
     }
 
-    public function petNormalAttackBefore(Attribute $attribute)
+    public function petNormalAttackBefore(Attribute $attribute,SkillResult $skillResult)
     {
         $this->onEvent('PET_NORMAL_ATTACK_BEFORE');
     }
 
-    public function petNormalAttackAfter(Attribute $attribute)
+    public function petNormalAttackAfter(Attribute $attribute,SkillResult $skillResult)
     {
         $this->onEvent('PET_NORMAL_ATTACK_AFTER');
     }
 
-    public function monsterNormalAttackBefore(Attribute $attribute)
+    public function monsterNormalAttackBefore(Attribute $attribute,SkillResult $skillResult)
     {
         $this->onEvent('MONSTER_NORMAL_ATTACK_BEFORE');
     }
 
-    public function monsterNormalAttackAfter(Attribute $attribute)
+    public function monsterNormalAttackAfter(Attribute $attribute,SkillResult $skillResult)
     {
         $this->onEvent('MONSTER_NORMAL_ATTACK_AFTER');
     }
@@ -154,32 +155,32 @@ class FightEvent
         $this->onEvent('MONSTER_BUCKLE_BLOOD_AFTER');
     }
 
-    public function userSkillBefore(Attribute $attribute,SkillBean $skillBean)
+    public function userSkillBefore(Attribute $attribute,SkillResult $skillResult)
     {
         $this->onEvent('USER_SKILL_BEFORE');
     }
 
-    public function userSkillAfter(Attribute $attribute,SkillBean $skillBean)
+    public function userSkillAfter(Attribute $attribute,SkillResult $skillResult)
     {
         $this->onEvent('USER_SKILL_AFTER');
     }
 
-    public function petSkillBefore(Attribute $attribute,SkillBean $skillBean)
+    public function petSkillBefore(Attribute $attribute,SkillResult $skillResult)
     {
         $this->onEvent('PET_SKILL_BEFORE');
     }
 
-    public function petSkillAfter(Attribute $attribute,SkillBean $skillBean)
+    public function petSkillAfter(Attribute $attribute,SkillResult $skillResult)
     {
         $this->onEvent('PET_SKILL_AFTER');
     }
 
-    public function monsterSkillBefore(Attribute $attribute,SkillBean $skillBean)
+    public function monsterSkillBefore(Attribute $attribute,SkillResult $skillResult)
     {
         $this->onEvent('MONSTER_SKILL_BEFORE');
     }
 
-    public function monsterSkillAfter(Attribute $attribute,SkillBean $skillBean)
+    public function monsterSkillAfter(Attribute $attribute,SkillResult $skillResult)
     {
         $this->onEvent('MONSTER_SKILL_AFTER');
     }

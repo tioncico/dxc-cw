@@ -12,7 +12,7 @@ class SkillBean extends SplBean
     protected $skillCode;//技能code
     protected $level;//技能等级
     protected $triggerType;//触发类型
-    protected $triggerRate;//触发类型
+    protected $triggerRate;//触发概率
     protected $coolingTime;//冷却时间计算
     protected $manaCost;//mp消耗计算
     protected $description;//介绍

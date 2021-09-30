@@ -10,6 +10,7 @@ use EasySwoole\Spl\SplBean;
 class SkillResult extends SplBean
 {
     protected $skillInfo;//技能信息
+    protected $isMiss = 0;//是否miss
     protected $effectList = [];//作用到谁的身上
 
     /**
@@ -48,5 +49,22 @@ class SkillResult extends SplBean
     {
         $this->effectList[] = $effectBean;
     }
+
+    /**
+     * @return int
+     */
+    public function getIsMiss(): int
+    {
+        return $this->isMiss;
+    }
+
+    /**
+     * @param int $isMiss
+     */
+    public function setIsMiss(int $isMiss): void
+    {
+        $this->isMiss = $isMiss;
+    }
+
 
 }

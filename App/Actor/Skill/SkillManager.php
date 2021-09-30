@@ -154,18 +154,17 @@ class SkillManager
 
     public function trigger($type, $code = null)
     {
-        $skillResult = new SkillResult();
         //如果$code为null,则触发所有技能
         if ($code === null) {
             $skillList = $this->skillList[$type];
             foreach ($skillList as $skill) {
-                $this->useSkill($skill, $skillResult);
+                $this->useSkill($skill);
             }
         } else {
             $skill = $this->skillList[$type][$code] ?? '';;
             if ($skill) {
                 //使用技能
-                $this->useSkill($skill, $skillResult);
+                $this->useSkill($skill);
             }
         }
     }
@@ -176,6 +175,10 @@ class SkillManager
         if ($skill->getTickTime() > 0) {
             return false;
         }
+        //判断释放概率
+
+
+        $skillResult = new SkillResult();
         $this->onSkillBefore($skill);
         var_dump("{$this->attributeType} 触发技能{$skill->getSkillName()}");
         //获取$skill的属性
@@ -188,62 +191,72 @@ class SkillManager
             $skillResult->addEffectResult($skillEffectResult);
         }
         $this->coolSkill($skill);
-        $this->onSkillAfter($skill);
+        $this->onSkillAfter($skillResult);
     }
 
-    protected function onSkillBefore(SkillBean $skill)
+    protected function checkUseSkillMiss(SkillBean $skill)
     {
-        if ($skill instanceof NormalAttack){
-            switch ($this->attributeType){
+        $hitRateStr = $skill->getTriggerRate();
+        $str = $this->renderVariable(null, null, $skill, $hitRateStr);
+        $harmNum = eval("return {$str} ;");
+        $skill->setTickTime($harmNum);
+
+
+    }
+
+    protected function onSkillBefore(SkillResult $skillResult)
+    {
+        if ($skillResult->getSkillInfo() instanceof NormalAttack) {
+            switch ($this->attributeType) {
                 case 1:
-                    $this->fight->getEvent()->userNormalAttackBefore($this->attribute);
+                    $this->fight->getEvent()->userNormalAttackBefore($this->attribute, $skillResult);
                     break;
                 case 2:
-                    $this->fight->getEvent()->petNormalAttackBefore($this->attribute);
+                    $this->fight->getEvent()->petNormalAttackBefore($this->attribute, $skillResult);
                     break;
                 case 3:
-                    $this->fight->getEvent()->monsterBuckleBloodBefore($this->attribute);
+                    $this->fight->getEvent()->monsterNormalAttackBefore($this->attribute, $skillResult);
                     break;
             }
-        }else{
-            switch ($this->attributeType){
+        } else {
+            switch ($this->attributeType) {
                 case 1:
-                    $this->fight->getEvent()->userSkillBefore($this->attribute,$skill);
+                    $this->fight->getEvent()->userSkillBefore($this->attribute, $skillResult);
                     break;
                 case 2:
-                    $this->fight->getEvent()->petSkillBefore($this->attribute,$skill);
+                    $this->fight->getEvent()->petSkillBefore($this->attribute, $skillResult);
                     break;
                 case 3:
-                    $this->fight->getEvent()->monsterSkillBefore($this->attribute,$skill);
+                    $this->fight->getEvent()->monsterSkillBefore($this->attribute, $skillResult);
                     break;
             }
         }
     }
 
-    protected function onSkillAfter(SkillBean $skill)
+    protected function onSkillAfter(SkillResult $skillResult)
     {
-        if ($skill instanceof NormalAttack){
-            switch ($this->attributeType){
+        if ($skillResult->getSkillInfo() instanceof NormalAttack) {
+            switch ($this->attributeType) {
                 case 1:
-                    $this->fight->getEvent()->userNormalAttackAfter($this->attribute);
+                    $this->fight->getEvent()->userNormalAttackAfter($this->attribute, $skillResult);
                     break;
                 case 2:
-                    $this->fight->getEvent()->petNormalAttackAfter($this->attribute);
+                    $this->fight->getEvent()->petNormalAttackAfter($this->attribute, $skillResult);
                     break;
                 case 3:
-                    $this->fight->getEvent()->monsterBuckleBloodAfter($this->attribute);
+                    $this->fight->getEvent()->monsterNormalAttackAfter($this->attribute, $skillResult);
                     break;
             }
-        }else{
-            switch ($this->attributeType){
+        } else {
+            switch ($this->attributeType) {
                 case 1:
-                    $this->fight->getEvent()->userSkillAfter($this->attribute,$skill);
+                    $this->fight->getEvent()->userSkillAfter($this->attribute, $skillResult);
                     break;
                 case 2:
-                    $this->fight->getEvent()->petSkillAfter($this->attribute,$skill);
+                    $this->fight->getEvent()->petSkillAfter($this->attribute, $skillResult);
                     break;
                 case 3:
-                    $this->fight->getEvent()->monsterSkillAfter($this->attribute,$skill);
+                    $this->fight->getEvent()->monsterSkillAfter($this->attribute, $skillResult);
                     break;
             }
         }
