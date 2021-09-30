@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Actor\Fight\Bean;
+use App\Actor\Skill\SkillManager;
 use App\Service\Game\Fight\Skill;
 use EasySwoole\Spl\SplBean;
 
@@ -9,6 +10,7 @@ class Attribute extends SplBean
     protected $hp = 100; //血量
     protected $mp = 100; //法力
     protected $name = null; //名称
+    protected $attributeType = null; //类型 1玩家,2宠物,3怪物
     protected $level = 1; //等级
     protected $attack = 1; //攻击力
     protected $defense = 1; //防御力
@@ -52,9 +54,9 @@ class Attribute extends SplBean
     ];
 
     /**
-     * @var Skill[][]
+     * @var SkillManager
      */
-    protected $skillList = [];
+    protected $skillManager;
 
     /**
      * @return int
@@ -256,46 +258,6 @@ class Attribute extends SplBean
     public function getEnduranceQualification()
     {
         return $this->enduranceQualification;
-    }
-
-    /**
-     * @param mixed $enduranceQualification
-     */
-    public function setEnduranceQualification($enduranceQualification): void
-    {
-        $this->enduranceQualification = $enduranceQualification;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIntellectQualification()
-    {
-        return $this->intellectQualification;
-    }
-
-    /**
-     * @param mixed $intellectQualification
-     */
-    public function setIntellectQualification($intellectQualification): void
-    {
-        $this->intellectQualification = $intellectQualification;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStrengthQualification()
-    {
-        return $this->strengthQualification;
-    }
-
-    /**
-     * @param mixed $strengthQualification
-     */
-    public function setStrengthQualification($strengthQualification): void
-    {
-        $this->strengthQualification = $strengthQualification;
     }
 
     /**
@@ -630,30 +592,38 @@ class Attribute extends SplBean
     }
 
     /**
-     * @return Fight\Skill[]
+     * @return SkillManager
      */
-    public function getSkillList(): array
+    public function getSkillManager(): SkillManager
     {
-        return $this->skillList;
+        return $this->skillManager;
     }
 
     /**
-     * @param Fight\Skill[][] $skillList
+     * @param SkillManager $skillManager
      */
-    public function setSkillList(array $skillList): void
+    public function setSkillManager(SkillManager $skillManager): void
     {
-        $this->skillList = $skillList;
+        $this->skillManager = $skillManager;
+    }
+
+    /**
+     * @return null
+     */
+    public function getAttributeType()
+    {
+        return $this->attributeType;
+    }
+
+    /**
+     * @param null $attributeType
+     */
+    public function setAttributeType($attributeType): void
+    {
+        $this->attributeType = $attributeType;
     }
 
 
-    public function addSkill(SkillAttribute $skill)
-    {
-        $this->skillList[$skill->getEntryCode()] = $skill;
-    }
-    public function getSkillByCode($code):?SkillAttribute
-    {
-        return $this->skillList[$code];
-    }
 
     public function __toString()
     {
