@@ -392,6 +392,7 @@
     </struct>
 
     <message dir="CS" name="CS_CompleteTask" router="/Api/User/Task/GameTask/complete" comment="完成任务">
+        <field name="taskId" type="number" comment="任务id"></field>
     </message>
     <message dir="SC" name="SC_CompleteTask" comment="任务完成进度">
         <field name="userTaskCompleteInfo" type="UserTaskCompleteInfo" comment="任务完成数据"></field>
