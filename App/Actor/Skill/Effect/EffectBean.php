@@ -66,5 +66,37 @@ class EffectBean extends SplBean
         $this->name = $name;
     }
 
+    /**
+     * @return int
+     */
+    public function getIsCritical(): int
+    {
+        return $this->isCritical;
+    }
+
+    /**
+     * @param int $isCritical
+     */
+    public function setIsCritical(int $isCritical): void
+    {
+        $this->isCritical = $isCritical;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCriticalRate(): string
+    {
+        return $this->criticalRate;
+    }
+
+    /**
+     * @param string $criticalRate
+     */
+    public function setCriticalRate(string $criticalRate): void
+    {
+        $this->criticalRate = $criticalRate;
+    }
+
 
 }

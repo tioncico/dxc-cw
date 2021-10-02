@@ -63,7 +63,7 @@ class Fight
             $this->petBaseAttributeList[$petAttribute->userPetId]->setAttributeType(2);
             $this->petAttributeList[$petAttribute->userPetId] = clone $this->petBaseAttributeList[$petAttribute->userPetId];
 
-            $skillManager = new SkillManager($this->petBaseAttributeList[$petAttribute->userPetId],$this->petAttributeList[$petAttribute->userPetId],$thisZ);
+            $skillManager = new SkillManager($this->petBaseAttributeList[$petAttribute->userPetId],$this->petAttributeList[$petAttribute->userPetId],$this);
             $skillManager->addSkill(new NormalAttack());
             $this->petAttributeList[$petAttribute->userPetId]->setSkillManager($skillManager);
         }
@@ -126,6 +126,7 @@ class Fight
                 //1秒定时
                 $this->event->second();
                 $i = 0;
+                fgets(STDIN);
             } else {
                 $i++;
             }

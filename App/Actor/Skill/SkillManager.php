@@ -7,10 +7,20 @@ use App\Actor\Fight\Fight;
 use App\Actor\Skill\Effect\EffectBean;
 use App\Actor\Skill\Effect\Harm;
 use App\Actor\Skill\SkillList\NormalAttack;
+use App\Actor\Skill\SkillTrait\ChangeAttribute;
+use App\Actor\Skill\SkillTrait\Event;
+use App\Actor\Skill\SkillTrait\TemplateHandle;
+use EasySwoole\EasySwoole\Logger;
 use EasySwoole\Utility\Str;
+use App\Actor\Skill\SkillTrait\EffectHarm;
 
 class SkillManager
 {
+    use EffectHarm;
+    use TemplateHandle;
+    use Event;
+    use ChangeAttribute;
+
     /**
      * @var SkillBean[][]
      */
@@ -169,18 +179,31 @@ class SkillManager
         }
     }
 
-    public function useSkill(SkillBean $skill, SkillResult $skillResult)
+    public function useSkill(SkillBean $skill)
     {
         //判断技能是否冷却
         if ($skill->getTickTime() > 0) {
             return false;
         }
-        //判断释放概率
-
-
         $skillResult = new SkillResult();
-        $this->onSkillBefore($skill);
-        var_dump("{$this->attributeType} 触发技能{$skill->getSkillName()}");
+        //判断释放概率
+        $isHit = $this->checkUseSkillMiss($skill);
+        if ($isHit) {
+            //触发事件
+            $this->onSkillBefore($skillResult);
+            Logger::getInstance()->console("{$this->attributeType} 触发技能{$skill->getSkillName()}");
+            //遍历技能效果
+            $this->ergodicSkillEffect($skill,$skillResult);
+        } else {
+            Logger::getInstance()->console("技能{$skill->getSkillName()} miss");
+            $skillResult->setIsMiss(1);
+        }
+        $this->coolSkill($skill);
+        $this->onSkillAfter($skillResult);
+    }
+
+    protected function ergodicSkillEffect(SkillBean $skill, SkillResult $skillResult)
+    {
         //获取$skill的属性
         $effectList = $skill->getEffectParam();
         foreach ($effectList as $effectBean) {
@@ -189,79 +212,30 @@ class SkillManager
             $methodName = 'effect' . Str::studly($type);
             $skillEffectResult = $this->$methodName($targetBaseAttribute, $targetAttribute, $skill, $effectBean);
             $skillResult->addEffectResult($skillEffectResult);
+            //触发属性相关
+            $this->changeAttribute($targetAttribute,$skillEffectResult);
         }
-        $this->coolSkill($skill);
-        $this->onSkillAfter($skillResult);
     }
 
     protected function checkUseSkillMiss(SkillBean $skill)
     {
         $hitRateStr = $skill->getTriggerRate();
-        $str = $this->renderVariable(null, null, $skill, $hitRateStr);
-        $harmNum = eval("return {$str} ;");
-        $skill->setTickTime($harmNum);
-
-
-    }
-
-    protected function onSkillBefore(SkillResult $skillResult)
-    {
-        if ($skillResult->getSkillInfo() instanceof NormalAttack) {
-            switch ($this->attributeType) {
-                case 1:
-                    $this->fight->getEvent()->userNormalAttackBefore($this->attribute, $skillResult);
-                    break;
-                case 2:
-                    $this->fight->getEvent()->petNormalAttackBefore($this->attribute, $skillResult);
-                    break;
-                case 3:
-                    $this->fight->getEvent()->monsterNormalAttackBefore($this->attribute, $skillResult);
-                    break;
-            }
+        $rate = $this->evalRenderVariable(null, null, $skill, $hitRateStr);
+        $num = mt_rand(1, 100);
+        if ($num <= $rate) {
+            return true;
         } else {
-            switch ($this->attributeType) {
-                case 1:
-                    $this->fight->getEvent()->userSkillBefore($this->attribute, $skillResult);
-                    break;
-                case 2:
-                    $this->fight->getEvent()->petSkillBefore($this->attribute, $skillResult);
-                    break;
-                case 3:
-                    $this->fight->getEvent()->monsterSkillBefore($this->attribute, $skillResult);
-                    break;
-            }
+            return false;
         }
     }
 
-    protected function onSkillAfter(SkillResult $skillResult)
-    {
-        if ($skillResult->getSkillInfo() instanceof NormalAttack) {
-            switch ($this->attributeType) {
-                case 1:
-                    $this->fight->getEvent()->userNormalAttackAfter($this->attribute, $skillResult);
-                    break;
-                case 2:
-                    $this->fight->getEvent()->petNormalAttackAfter($this->attribute, $skillResult);
-                    break;
-                case 3:
-                    $this->fight->getEvent()->monsterNormalAttackAfter($this->attribute, $skillResult);
-                    break;
-            }
-        } else {
-            switch ($this->attributeType) {
-                case 1:
-                    $this->fight->getEvent()->userSkillAfter($this->attribute, $skillResult);
-                    break;
-                case 2:
-                    $this->fight->getEvent()->petSkillAfter($this->attribute, $skillResult);
-                    break;
-                case 3:
-                    $this->fight->getEvent()->monsterSkillAfter($this->attribute, $skillResult);
-                    break;
-            }
-        }
-    }
-
+    /**
+     * 冷却技能
+     * coolSkill
+     * @param SkillBean $skill
+     * @author tioncico
+     * Time: 9:27 上午
+     */
     public function coolSkill(SkillBean $skill)
     {
         $coolingTimeStr = $skill->getCoolingTime();
@@ -270,6 +244,13 @@ class SkillManager
         $skill->setTickTime($harmNum);
     }
 
+    /**
+     * 降低技能冷却
+     * decCoolSkill
+     * @param $num
+     * @author tioncico
+     * Time: 9:27 上午
+     */
     public function decCoolSkill($num)
     {
         foreach ($this->skillList as $skillCodeList) {
@@ -277,30 +258,21 @@ class SkillManager
                 if ($skill->getTickTime() > 0) {
                     $skill->incTickTime(-$num);
                     if ($skill->getTickTime() <= 0) {
-                        var_dump("{$skill->getSkillName()} 技能冷却完成");
+                        Logger::getInstance()->console("{$skill->getSkillName()} 技能冷却完成");
                     }
                 }
             }
         }
     }
 
-    public function effectHarm(Attribute $targetBaseAttribute, Attribute $targetAttribute, SkillBean $skillInfo, Harm $effectBean)
-    {
-        $skillEffectResult = new SkillEffectResult();
-        $elementStr = $this->renderVariable($targetBaseAttribute, $targetAttribute, $skillInfo, $effectBean->getElement());
-        $element = eval("return {$elementStr} ;");
-        $skillEffectResult->setAttackElement($element);
-        $str = $this->renderVariable($targetBaseAttribute, $targetAttribute, $skillInfo, $effectBean->getCountStr());
-        $harmNum = eval("return {$str} ;");
-        if ($effectBean->getHarmType() == 'hp') {
-            $skillEffectResult->setBuckleBloodNum($harmNum);
-        } else {
-            $skillEffectResult->setHarmNum($harmNum);
-        }
-        $skillEffectResult->setTargetType($this->getEffectTargetType($effectBean->getTarget()));
-        return $skillEffectResult;
-    }
-
+    /**
+     * 获取释放目标类型
+     * getEffectTargetType
+     * @param $targetType
+     * @return int
+     * @author tioncico
+     * Time: 9:27 上午
+     */
     protected function getEffectTargetType($targetType)
     {
         if ($targetType == 'self') {
@@ -318,61 +290,14 @@ class SkillManager
         }
     }
 
-    public function renderVariable(?Attribute $targetBaseAttribute, ?Attribute $targetAttribute, ?SkillBean $skillInfo, $str)
-    {
-        $arr = $this->replaceVariableArr($targetBaseAttribute, $targetAttribute, $skillInfo);
-        $str = str_replace(array_keys($arr), array_values($arr), $str);
-        return $str;
-    }
-
-    public function replaceVariableArr(?Attribute $targetBaseAttribute, ?Attribute $targetAttribute, ?SkillBean $skillInfo)
-    {
-        //获取到所有 {$xx} 包裹的数据
-        $arr = [];
-        foreach (['self' => $this->attribute, 'enemy' => $targetAttribute, 'selfBase' => $this->baseAttribute, 'enemyBase' => $targetBaseAttribute] as $field => $data) {
-            if (empty($data)) {
-                continue;
-            }
-            $attributeArr = [
-                "{\${$field}.hp}"                   => $data->getHp(),
-                "{\${$field}.mp}"                   => $data->getMp(),
-                "{\${$field}.level}"                => $data->getLevel(),
-                "{\${$field}.attack}"               => $data->getAttack(),
-                "{\${$field}.defense}"              => $data->getDefense(),
-                "{\${$field}.criticalRate}"         => $data->getCriticalRate(),
-                "{\${$field}.criticalStrikeDamage}" => $data->getCriticalStrikeDamage(),
-                "{\${$field}.hitRate}"              => $data->getHitRate(),
-                "{\${$field}.dodgeRate}"            => $data->getDodgeRate(),
-                "{\${$field}.penetrate}"            => $data->getPenetrate(),
-                "{\${$field}.attackSpeed}"          => $data->getAttackSpeed(),
-                "{\${$field}.userElement}"          => $data->getUserElement(),
-                "{\${$field}.attackElement}"        => $data->getAttackElement(),
-                "{\${$field}.jin}"                  => $data->getJin(),
-                "{\${$field}.mu}"                   => $data->getMu(),
-                "{\${$field}.tu}"                   => $data->getTu(),
-                "{\${$field}.sui}"                  => $data->getSui(),
-                "{\${$field}.huo}"                  => $data->getHuo(),
-                "{\${$field}.light}"                => $data->getLight(),
-                "{\${$field}.dark}"                 => $data->getDark(),
-                "{\${$field}.luck}"                 => $data->getLuck(),
-            ];
-            $arr = array_merge($arr, $attributeArr);
-        }
-        $skillData = [
-            '{$skillInfo.skillCode}'   => $skillInfo->getSkillCode(),
-            '{$skillInfo.level}'       => $skillInfo->getLevel(),
-            '{$skillInfo.triggerType}' => $skillInfo->getTriggerType(),
-            '{$skillInfo.triggerRate}' => $skillInfo->getTriggerRate(),
-            '{$skillInfo.coolingTime}' => $skillInfo->getCoolingTime(),
-            '{$skillInfo.manaCost}'    => $skillInfo->getManaCost(),
-            '{$skillInfo.tickTime}'    => $skillInfo->getTickTime(),
-        ];
-
-        $arr = array_merge($arr, $skillData);
-        return $arr;
-
-    }
-
+    /**
+     * 获取技能指向目标
+     * getTargetAttribute
+     * @param $targetType
+     * @return array
+     * @author tioncico
+     * Time: 9:26 上午
+     */
     protected function getTargetAttribute($targetType)
     {
         if ($targetType == 'self') {
@@ -389,5 +314,4 @@ class SkillManager
             }
         }
     }
-
 }

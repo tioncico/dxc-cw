@@ -8,10 +8,12 @@ use EasySwoole\Spl\SplBean;
 
 class SkillEffectResult extends SplBean
 {
+    protected $effectType = "";//效果类型
     protected $effectName = "";//效果名称
     protected $targetType = 0;//0自身,1玩家,2怪物
     protected $harmNum = 0;//初始伤害
     protected $buckleBloodNum = 0;//强制扣血
+    protected $isCritical = 0;//是否暴击
     protected $attackElement = null;//攻击元素
     protected $buffList = [];//附带buff
     protected $propertyChangeList = [];//元素变更情况,例如mp-10
@@ -31,7 +33,6 @@ class SkillEffectResult extends SplBean
     {
         $this->effectName = $effectName;
     }
-
 
 
     /**
@@ -92,6 +93,23 @@ class SkillEffectResult extends SplBean
     }
 
     /**
+     * @return int
+     */
+    public function getIsCritical(): int
+    {
+        return $this->isCritical;
+    }
+
+    /**
+     * @param int $isCritical
+     */
+    public function setIsCritical(int $isCritical): void
+    {
+        $this->isCritical = $isCritical;
+    }
+
+
+    /**
      * @param null $attackElement
      */
     public function setAttackElement($attackElement): void
@@ -130,6 +148,23 @@ class SkillEffectResult extends SplBean
     {
         $this->propertyChangeList = $propertyChangeList;
     }
+
+    /**
+     * @return string
+     */
+    public function getEffectType(): string
+    {
+        return $this->effectType;
+    }
+
+    /**
+     * @param string $effectType
+     */
+    public function setEffectType(string $effectType): void
+    {
+        $this->effectType = $effectType;
+    }
+
 
 
 }

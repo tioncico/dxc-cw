@@ -49,7 +49,7 @@ class Push implements TaskInterface
 
     function onException(\Throwable $throwable, int $taskId, int $workerIndex)
     {
-//        var_dump($throwable);
+        Logger::getInstance()->console($throwable);
     }
 
     /**

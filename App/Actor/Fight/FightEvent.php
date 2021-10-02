@@ -64,7 +64,7 @@ class FightEvent
 
     public function onEvent($event,...$data)
     {
-//        var_dump("触发事件{$event}");
+//        Logger::getInstance()->console("触发事件{$event}");
         foreach ($this->container[$event] as $name => $callable) {
             call_user_func($callable, $name,...$data);
         }
