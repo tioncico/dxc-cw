@@ -94,11 +94,36 @@ class GameActor extends BaseActor
         $x = $param['x'] ?? 0;
         $y = $param['y'] ?? 0;
         $monster = $this->map->nowMapGrid[$x][$y] ?? '';
+
         Assert::assert($monster instanceof MapMonsterModel, "怪物未找到");
-        $fight = new Fight($this->user->userAttribute, $this->user->userPetList, $monster,function ($event,...$data) {
-            MsgPushEvent::getInstance()->msgPush($this->userId, $event, 200, "发送游戏数据",$data);
+        $fight = new Fight($this->user->userAttribute, $this->user->userPetList, $monster, function ($event, ...$data) {
+            MsgPushEvent::getInstance()->msgPush($this->userId, $event, 200, "发送游戏数据", $data);
         });
-        $fight->getEvent()->register('MONSTER_DIE','reward',function ()use($monster){
+        $this->fight = $fight;
+        $this->rewardEvent($monster);
+        $this->fightEndEvent();
+        $this->delMonsterEvent($x, $y);
+        $fight->startFight();
+    }
+
+    protected function fightEndEvent()
+    {
+        $this->fight->getEvent()->register('FIGHT_END', 'delFightObj', function () {
+            $this->fight = null;
+        });
+    }
+
+    protected function delMonsterEvent($x, $y)
+    {
+        $this->fight->getEvent()->register('MONSTER_DIE', 'deleteMonster', function () use ($x, $y) {
+            $this->map->nowMapGrid[$x][$y] = null;
+            Logger::getInstance()->log("{$x},{$y}怪物死亡,删除");
+        });
+    }
+
+    protected function rewardEvent(MapMonsterModel $monster)
+    {
+        $this->fight->getEvent()->register('MONSTER_DIE', 'reward', function () use ($monster) {
             //计算奖励
             $reward = new Reward($this->user->userAttribute->userId, $this->user->userAttribute, $this->map->mapInfo, $monster);
             $reward->rewardCount();
@@ -115,15 +140,13 @@ class GameActor extends BaseActor
             }
             Logger::getInstance()->log($msg);
         });
-        $this->fight = $fight;
-        $fight->startFight();
     }
 
     protected function onException(\Throwable $throwable)
     {
         $actorId = $this->actorId();
         Trigger::getInstance()->throwable($throwable);
-        MsgPushEvent::getInstance()->msgPush($this->userId, \App\WebSocket\Command::SC_ACTION_ERROR, 400,$throwable->getMessage());
+        MsgPushEvent::getInstance()->msgPush($this->userId, \App\WebSocket\Command::SC_ACTION_ERROR, 400, $throwable->getMessage());
 
         echo "mapActor {$actorId} onException\n";
     }

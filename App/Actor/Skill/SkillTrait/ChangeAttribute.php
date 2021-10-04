@@ -22,6 +22,6 @@ trait ChangeAttribute
         //扣除血量
         $buckleBloodNum = $effectResult->getBuckleBloodNum();
         $targetAttribute->incHp(-$buckleBloodNum);
-        Logger::getInstance()->console("真正扣血{$buckleBloodNum}  {$targetAttribute->getName()} hp:{$targetAttribute->getHp()}");
+        Logger::getInstance()->console("实际扣血{$buckleBloodNum}  {$targetAttribute->getName()} hp:{$targetAttribute->getHp()}");
     }
 }

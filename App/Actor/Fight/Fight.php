@@ -42,6 +42,9 @@ class Fight
      */
     protected $monsterAttribute;
     public $state = 0; //1战斗开始,2战斗结束
+    /**
+     * @var FightEvent
+     */
     protected $event;
     protected $callback;
 
@@ -143,6 +146,7 @@ class Fight
                 $i++;
             }
         }
+        $this->event->fightEnd();
     }
 
     /**
