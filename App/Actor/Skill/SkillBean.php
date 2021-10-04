@@ -16,10 +16,11 @@ class SkillBean extends SplBean
     protected $coolingTime;//冷却时间计算
     protected $manaCost;//mp消耗计算
     protected $description;//介绍
+
     /**
      * @var EffectBean[]
      */
-    protected $effectParam;//效果数组
+    protected $effectParam=[];//效果数组
     protected $tickTime = 0.00;//冷却时间
 
     /**

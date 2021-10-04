@@ -10,6 +10,7 @@ use App\Actor\Skill\SkillList\NormalAttack;
 use App\Actor\Skill\SkillTrait\ChangeAttribute;
 use App\Actor\Skill\SkillTrait\Event;
 use App\Actor\Skill\SkillTrait\TemplateHandle;
+use App\Utility\Assert\Assert;
 use EasySwoole\EasySwoole\Logger;
 use EasySwoole\Utility\Str;
 use App\Actor\Skill\SkillTrait\EffectHarm;
@@ -155,6 +156,7 @@ class SkillManager
         $this->attribute = $attribute;
         $this->fight = $fight;
         $this->attributeType = $attribute->getAttributeType();
+        $this->addSkill(new NormalAttack());
     }
 
     public function addSkill(SkillBean $skillBean)
@@ -185,7 +187,11 @@ class SkillManager
         if ($skill->getTickTime() > 0) {
             return false;
         }
+        if ($monaCostNum = $this->checkManaCost($skill)===false){
+            Assert::assert("魔法不足");
+        }
         $skillResult = new SkillResult();
+        $skillResult->setManaCostNum($monaCostNum);
         Logger::getInstance()->log("{$this->attribute->getName()}{$skill->getSkillName()} 触发");
         //判断释放概率
         $isHit = $this->checkUseSkillMiss($skill);
@@ -193,13 +199,24 @@ class SkillManager
             //触发事件
             $this->onSkillBefore($skillResult);
             //遍历技能效果
-            $this->ergodicSkillEffect($skill,$skillResult);
+            $this->ergodicSkillEffect($skill, $skillResult);
         } else {
             Logger::getInstance()->console("技能{$skill->getSkillName()} miss");
             $skillResult->setIsMiss(1);
         }
         $this->coolSkill($skill);
         $this->onSkillAfter($skillResult);
+    }
+
+    protected function checkManaCost(SkillBean $skill)
+    {
+        $manaCostNum = $this->evalRenderVariable(null, null, $skill, $skill->getManaCost());
+        if ($manaCostNum > $this->attribute->getMp()) {
+            return false;
+        } else {
+            $this->attribute->incMp(-$manaCostNum);
+            return $manaCostNum;
+        }
     }
 
     protected function ergodicSkillEffect(SkillBean $skill, SkillResult $skillResult)
@@ -213,7 +230,7 @@ class SkillManager
             $skillEffectResult = $this->$methodName($targetBaseAttribute, $targetAttribute, $skill, $effectBean);
             $skillResult->addEffectResult($skillEffectResult);
             //触发属性相关
-            $this->changeAttribute($targetAttribute,$skillEffectResult);
+            $this->changeAttribute($targetAttribute, $skillEffectResult);
         }
     }
 
@@ -239,8 +256,7 @@ class SkillManager
     public function coolSkill(SkillBean $skill)
     {
         $coolingTimeStr = $skill->getCoolingTime();
-        $str = $this->renderVariable(null, null, $skill, $coolingTimeStr);
-        $harmNum = eval("return {$str} ;");
+        $harmNum = $this->evalRenderVariable(null, null, $skill, $coolingTimeStr);
         $skill->setTickTime($harmNum);
     }
 

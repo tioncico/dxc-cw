@@ -25,6 +25,9 @@ class Map
      */
     public $nowMapLevel;//当前地图层数
 
+    /**
+     * @var MapMonsterModel[][]
+     */
     public $nowMapGrid = [
 
     ];//当前地图宫格情况 type 0没有数据,1怪物,2宝箱,3buff

@@ -11,7 +11,25 @@ class SkillResult extends SplBean
 {
     protected $skillInfo;//技能信息
     protected $isMiss = 0;//是否miss
+    protected $manaCostNum = 0;//耗蓝
     protected $effectList = [];//作用到谁的身上
+
+    /**
+     * @return int
+     */
+    public function getManaCostNum(): int
+    {
+        return $this->manaCostNum;
+    }
+
+    /**
+     * @param int $manaCostNum
+     */
+    public function setManaCostNum(int $manaCostNum): void
+    {
+        $this->manaCostNum = $manaCostNum;
+    }
+
 
     /**
      * @return mixed

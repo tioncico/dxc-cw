@@ -10,7 +10,7 @@ trait FightEventHandle
     public function registerEvent()
     {
         $this->event = new FightEvent(function ($event,...$data){
-//                call_user_func($this->callback,$event,...$data);
+                call_user_func($this->callback,$event,...$data);
         });
         //普通攻击
         $this->event->register('SECOND_01', 'normalAttack', function () {

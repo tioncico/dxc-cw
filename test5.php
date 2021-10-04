@@ -6,19 +6,30 @@
  * Date: 2020-05-20
  * Time: 10:26
  */
+
+use App\Actor\Data\Map;
+use App\Actor\Data\User;
+use App\Actor\Fight\Bean\Attribute;
+use App\Actor\Fight\Fight;
+use App\WebSocket\MsgPushEvent;
+
 include "./vendor/autoload.php";
 \EasySwoole\EasySwoole\Core::getInstance()->initialize();
 
 go(function () {
-    $user = \App\Model\Game\UserAttributeModel::create()->getInfo(1);
-    $user->criticalRate=90;
-    var_dump($user->toArray());
-    $monster = \App\Model\Game\MapMonsterModel::create()->get();
-    var_dump($monster->toArray());
-    $fight = new \App\Actor\Fight\Fight($user, [],$monster );
-    $fight->startFight(function (){
+    $user = new User(1);
+    $map = new Map(1);
 
+    $x = $param['x'] ?? 0;
+    $y = $param['y'] ?? 0;
+    $monster = $map->nowMapGrid[$x][$y] ?? '';
+    $fight = new Fight($user, new Attribute($monster->toArray()), function ($event, ...$data)use($user) {
+        MsgPushEvent::getInstance()->msgPush(1, $event, 200, "发送游戏数据", $data);
+        var_dump(1);
+        var_dump($user->getUserNowAttribute()->getSkillList());
+        $user->getUserNowAttribute()->getSkillManager()->useSkill($user->getUserNowAttribute()->getSkillList()['0002']);
     });
+    $fight->startFight();
 
     \Swoole\Timer::clearAll();
 });

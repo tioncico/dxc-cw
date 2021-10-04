@@ -40,23 +40,14 @@ class Attribute extends SplBean
      */
     protected $buffList = [// 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发,10释放技能前触发,11释放技能后触发
         0  => [],
-        1  => [],
-        2  => [],
-        3  => [],
-        4  => [],
-        5  => [],
-        6  => [],
-        7  => [],
-        8  => [],
-        9  => [],
-        10 => [],
-        11 => [],
     ];
 
     /**
      * @var SkillManager
      */
     protected $skillManager;
+
+    protected $skillList=[];
 
     /**
      * @return int
@@ -660,6 +651,23 @@ class Attribute extends SplBean
 攻击次数:{$this->attackTimes}
 ";
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSkillList()
+    {
+        return $this->skillList;
+    }
+
+    /**
+     * @param mixed $skillList
+     */
+    public function setSkillList($skillList): void
+    {
+        $this->skillList = $skillList;
+    }
+
 
 
 }

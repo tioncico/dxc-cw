@@ -4,6 +4,7 @@
 namespace App\Actor\Fight;
 
 
+use App\Actor\Data\User;
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Skill\SkillManager;
 use App\Actor\Skill\SkillList\NormalAttack;
@@ -48,32 +49,36 @@ class Fight
     protected $event;
     protected $callback;
 
-    public function __construct(UserAttributeModel $userAttribute, $petAttributeList, MapMonsterModel $monsterAttribute, callable $callback)
+    public function __construct(User $user, Attribute $monsterAttribute, callable $callback)
     {
-        $this->initUserAttribute($userAttribute);
+        $this->initUserAttribute($user);
         $this->initMonsterAttribute($monsterAttribute);
-        $this->initPetAttribute($petAttributeList);
+//        $this->initPetAttribute($petAttributeList);
         $this->registerEvent();
         $this->callback = $callback;
     }
 
-    protected function initUserAttribute(UserAttributeModel $userAttribute)
+    protected function initUserAttribute(User $user)
     {
-        $this->userBaseAttribute = new Attribute($userAttribute->toArray());
+        $this->userBaseAttribute = $user->userAttribute;
         $this->userBaseAttribute->setAttributeType(1);
-        $this->userAttribute = clone $this->userBaseAttribute;
+        $this->userAttribute = $user->getUserNowAttribute();
         $skillManager = new SkillManager($this->userBaseAttribute, $this->userAttribute, $this);
-        $skillManager->addSkill(new NormalAttack());
+        foreach ($this->userAttribute->getSkillList() as $skill){
+            $skillManager->addSkill($skill);
+        }
         $this->userAttribute->setSkillManager($skillManager);
     }
 
-    protected function initMonsterAttribute(MapMonsterModel $monsterAttribute)
+    protected function initMonsterAttribute(Attribute $monsterAttribute)
     {
-        $this->monsterBaseAttribute = new Attribute($monsterAttribute->toArray());;
+        $this->monsterBaseAttribute = $monsterAttribute;
         $this->monsterBaseAttribute->setAttributeType(3);
         $this->monsterAttribute = clone $this->monsterBaseAttribute;
         $skillManager = new SkillManager($this->monsterBaseAttribute, $this->monsterAttribute, $this);
-        $skillManager->addSkill(new NormalAttack());
+        foreach ($this->monsterAttribute->getSkillList() as $skill){
+            $skillManager->addSkill($skill);
+        }
         $this->monsterAttribute->setSkillManager($skillManager);
 
     }
@@ -89,7 +94,9 @@ class Fight
             $this->petAttributeList[$petAttribute->userPetId] = clone $this->petBaseAttributeList[$petAttribute->userPetId];
 
             $skillManager = new SkillManager($this->petBaseAttributeList[$petAttribute->userPetId], $this->petAttributeList[$petAttribute->userPetId], $this);
-            $skillManager->addSkill(new NormalAttack());
+            foreach ($this->petAttributeList[$petAttribute->userPetId]->getSkillList() as $skill){
+                $skillManager->addSkill($skill);
+            }
             $this->petAttributeList[$petAttribute->userPetId]->setSkillManager($skillManager);
         }
     }

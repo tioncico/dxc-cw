@@ -6,6 +6,7 @@ namespace App\Actor\Skill\SkillTrait;
 
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Skill\SkillBean;
+use EasySwoole\EasySwoole\Logger;
 
 trait TemplateHandle
 {
@@ -24,7 +25,12 @@ trait TemplateHandle
     public function renderVariable(?Attribute $targetBaseAttribute, ?Attribute $targetAttribute, ?SkillBean $skillInfo, $str)
     {
         $arr = $this->replaceVariableArr($targetBaseAttribute, $targetAttribute, $skillInfo);
+
         $str = str_replace(array_keys($arr), array_values($arr), $str);
+        if ($str == '1/0') {
+            debug_print_backtrace();
+            var_dump(get_class($this->attribute));
+        }
         return $str;
     }
 
@@ -48,6 +54,7 @@ trait TemplateHandle
     {
         //获取到所有 {$xx} 包裹的数据
         $arr = [];
+//        var_dump($this->attribute);
         foreach (['self' => $this->attribute, 'enemy' => $targetAttribute, 'selfBase' => $this->baseAttribute, 'enemyBase' => $targetBaseAttribute] as $field => $data) {
             if (empty($data)) {
                 continue;

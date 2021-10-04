@@ -34,7 +34,7 @@ class SkillService extends BaseService
          * @var UserSkillModel $value
          */
         foreach ($list as $value) {
-            $userSkillList[$value->type][$value->entryCode] = $value;
+            $userSkillList[$value->entryCode] = $value;
         }
         return $userSkillList;
     }

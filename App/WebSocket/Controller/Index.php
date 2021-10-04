@@ -30,46 +30,18 @@ use EasySwoole\Socket\Bean\Response;
  */
 class Index extends BaseController
 {
-    function hello()
-    {
-        TaskManager::getInstance()->async(function () {
-            $server = ServerManager::getInstance()->getSwooleServer();
-            $fdList = $server->getClientList();
-            var_dump($fdList);
-        });
-    }
 
-    public function who()
-    {
-        $this->response()->setMessage('your fd is ' . $this->caller()->getClient()->getFd());
-    }
-
-    function delay()
-    {
-        $this->response()->setMessage('this is delay action');
-        $client = $this->caller()->getClient();
-
-        // 异步推送, 这里直接 use fd也是可以的
-        TaskManager::getInstance()->async(function () use ($client) {
-            $server = ServerManager::getInstance()->getSwooleServer();
-            $i = 0;
-            while ($i < 5) {
-                sleep(1);
-                $server->push($client->getFd(), 'push in http at ' . date('H:i:s'));
-                $i++;
-            }
-        });
-    }
-
-
-    function getMapActorId()
-    {
-        $userId = $this->userId();
-        //获取地图actorId
-        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
-        $this->responseMsg('getMapActorId', ['actorId' => $actorId]);
-    }
-
+    /**
+     * 进入地下城
+     * intoMap
+     * @throws \App\Utility\Assert\AssertException
+     * @throws \EasySwoole\Actor\Exception\InvalidActor
+     * @throws \EasySwoole\Mysqli\Exception\Exception
+     * @throws \EasySwoole\ORM\Exception\Exception
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 4:12 下午
+     */
     public function intoMap()
     {
         $userId = $this->userId();
@@ -96,6 +68,13 @@ class Index extends BaseController
 //        $this->responseMsg(200, "进入地图成功");
     }
 
+    /**
+     * 地图信息
+     * mapInfo
+     * @throws \EasySwoole\Actor\Exception\InvalidActor
+     * @author tioncico
+     * Time: 4:12 下午
+     */
     public function mapInfo()
     {
         $userId = $this->userId();
@@ -103,6 +82,27 @@ class Index extends BaseController
         GameActor::client()->send($actorId, new Command(['action' => 'mapInfo']));
     }
 
+    /**
+     * 玩家信息
+     * mapInfo
+     * @throws \EasySwoole\Actor\Exception\InvalidActor
+     * @author tioncico
+     * Time: 4:12 下午
+     */
+    public function userInfo()
+    {
+        $userId = $this->userId();
+        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
+        GameActor::client()->send($actorId, new Command(['action' => 'mapInfo']));
+    }
+
+    /**
+     * 战斗
+     * fight
+     * @throws \App\Utility\Assert\AssertException
+     * @author tioncico
+     * Time: 4:13 下午
+     */
     public function fight()
     {
         $param = $this->getParam();
@@ -114,6 +114,14 @@ class Index extends BaseController
 
     }
 
+    /**
+     * 下一层
+     * nextLevelMap
+     * @throws \App\Utility\Assert\AssertException
+     * @throws \EasySwoole\Actor\Exception\InvalidActor
+     * @author tioncico
+     * Time: 4:13 下午
+     */
     public function nextLevelMap()
     {
         $userId = $this->userId();
@@ -123,6 +131,13 @@ class Index extends BaseController
         GameActor::client()->send($actorId, new Command(['action' => 'nextLevelMap']));
     }
 
+    /**
+     * 退出地下城
+     * exitMap
+     * @throws \App\Utility\Assert\AssertException
+     * @author tioncico
+     * Time: 4:13 下午
+     */
     public function exitMap()
     {
         $userId = $this->userId();
@@ -131,6 +146,14 @@ class Index extends BaseController
         $this->actorSend(\App\WebSocket\Command::CS_EXIT_MAP);
     }
 
+    /**
+     * 使用技能
+     * useSkill
+     * @throws \App\Utility\Assert\AssertException
+     * @throws \EasySwoole\Actor\Exception\InvalidActor
+     * @author tioncico
+     * Time: 4:13 下午
+     */
     public function useSkill()
     {
         $param = $this->getParam();
@@ -139,4 +162,36 @@ class Index extends BaseController
         Assert::assert(!!$actorId, '不在地图中');
         GameActor::client()->send($actorId, new Command(['action' => 'useUserSkill', 'data' => ['skillCode' => $param['skillCode']]]));
     }
+
+    /**
+     * 打开箱子
+     * openBox
+     * @author tioncico
+     * Time: 4:14 下午
+     */
+    public function openBox(){
+
+    }
+
+    /**
+     * 逃跑
+     * stopFight
+     * @author tioncico
+     * Time: 4:14 下午
+     */
+    public function stopFight(){
+
+    }
+
+
+    /**
+     * 复活
+     * revive
+     * @author tioncico
+     * Time: 4:14 下午
+     */
+    public function revive(){
+
+    }
+
 }

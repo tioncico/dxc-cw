@@ -7,6 +7,7 @@ namespace App\Actor;
 use App\Actor\Cache\UserRelationMap;
 use App\Actor\Data\Map;
 use App\Actor\Data\User;
+use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Fight\Fight;
 use App\Actor\Fight\FightReward;
 use App\Model\Game\GoodsModel;
@@ -27,14 +28,17 @@ class GameActor extends BaseActor
 {
     protected $userId;
     protected $mapId;
+
     /**
      * @var User
      */
     protected $user;
+
     /**
      * @var Map
      */
     protected $map;
+
     protected $fight;
 
     /**
@@ -76,12 +80,9 @@ class GameActor extends BaseActor
     public function exitMap()
     {
         //判断是否结束战斗或者未开始
-//        if ($this->fight->getState() == 1) {
-//            MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 400, "战斗未结束,无法退出");
-//            return;
-//        }
+        Assert::assert(empty($this->fight), "战斗未结束,无法退出");
         //清理用户地图数据
-        UserRelationMap::getInstance()->delUserMap($this->user->userId);
+        UserRelationMap::getInstance()->delUserMap($this->userId);
         //清理类数据
         $this->user = null;
         $this->map = null;
@@ -96,14 +97,22 @@ class GameActor extends BaseActor
         $monster = $this->map->nowMapGrid[$x][$y] ?? '';
 
         Assert::assert($monster instanceof MapMonsterModel, "怪物未找到");
-        $fight = new Fight($this->user->userAttribute, $this->user->userPetList, $monster, function ($event, ...$data) {
-            MsgPushEvent::getInstance()->msgPush($this->userId, $event, 200, "发送游戏数据", $data);
+        $fight = new Fight($this->user, new Attribute($monster->toArray()), function ($event, ...$data) {
+//            MsgPushEvent::getInstance()->msgPush($this->userId, $event, 200, "发送游戏数据", $data);
         });
         $this->fight = $fight;
         $this->rewardEvent($monster);
         $this->fightEndEvent();
         $this->delMonsterEvent($x, $y);
         $fight->startFight();
+    }
+
+    public function useUserSkill($param)
+    {
+        $skillCode = $param['skillCode'];
+        $skillInfo = $this->user->getUserNowAttribute()->getSkillList()[$skillCode]??null;
+        Assert::assert(!!$skillInfo,"技能不存在");
+        $this->user->getUserNowAttribute()->getSkillManager()->useSkill($skillInfo);
     }
 
     protected function fightEndEvent()
