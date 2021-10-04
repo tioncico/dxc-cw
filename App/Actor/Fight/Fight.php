@@ -11,25 +11,47 @@ use App\Model\Game\MapMonsterModel;
 use App\Model\Game\MonsterModel;
 use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserPetModel;
+use EasySwoole\EasySwoole\Logger;
 
 class Fight
 {
+    use FightEventHandle;
+    /**
+     * @var Attribute
+     */
     protected $userAttribute;
+    /**
+     * @var Attribute
+     */
     protected $userBaseAttribute;
+    /**
+     * @var Attribute[]
+     */
     protected $petAttributeList = [];
+
+    /**
+     * @var Attribute[]
+     */
     protected $petBaseAttributeList = [];
+    /**
+     * @var Attribute
+     */
     protected $monsterBaseAttribute;
+    /**
+     * @var Attribute
+     */
     protected $monsterAttribute;
     public $state = 0; //1战斗开始,2战斗结束
     protected $event;
+    protected $callback;
 
-    public function __construct(UserAttributeModel $userAttribute, $petAttributeList, MapMonsterModel $monsterAttribute)
+    public function __construct(UserAttributeModel $userAttribute, $petAttributeList, MapMonsterModel $monsterAttribute, callable $callback)
     {
-        $this->event = new FightEvent();
         $this->initUserAttribute($userAttribute);
         $this->initMonsterAttribute($monsterAttribute);
         $this->initPetAttribute($petAttributeList);
         $this->registerEvent();
+        $this->callback = $callback;
     }
 
     protected function initUserAttribute(UserAttributeModel $userAttribute)
@@ -37,7 +59,7 @@ class Fight
         $this->userBaseAttribute = new Attribute($userAttribute->toArray());
         $this->userBaseAttribute->setAttributeType(1);
         $this->userAttribute = clone $this->userBaseAttribute;
-        $skillManager = new SkillManager($this->userBaseAttribute, $this->userAttribute,$this);
+        $skillManager = new SkillManager($this->userBaseAttribute, $this->userAttribute, $this);
         $skillManager->addSkill(new NormalAttack());
         $this->userAttribute->setSkillManager($skillManager);
     }
@@ -47,7 +69,7 @@ class Fight
         $this->monsterBaseAttribute = new Attribute($monsterAttribute->toArray());;
         $this->monsterBaseAttribute->setAttributeType(3);
         $this->monsterAttribute = clone $this->monsterBaseAttribute;
-        $skillManager = new SkillManager($this->monsterBaseAttribute, $this->monsterAttribute,$this);
+        $skillManager = new SkillManager($this->monsterBaseAttribute, $this->monsterAttribute, $this);
         $skillManager->addSkill(new NormalAttack());
         $this->monsterAttribute->setSkillManager($skillManager);
 
@@ -63,40 +85,29 @@ class Fight
             $this->petBaseAttributeList[$petAttribute->userPetId]->setAttributeType(2);
             $this->petAttributeList[$petAttribute->userPetId] = clone $this->petBaseAttributeList[$petAttribute->userPetId];
 
-            $skillManager = new SkillManager($this->petBaseAttributeList[$petAttribute->userPetId],$this->petAttributeList[$petAttribute->userPetId],$this);
+            $skillManager = new SkillManager($this->petBaseAttributeList[$petAttribute->userPetId], $this->petAttributeList[$petAttribute->userPetId], $this);
             $skillManager->addSkill(new NormalAttack());
             $this->petAttributeList[$petAttribute->userPetId]->setSkillManager($skillManager);
         }
     }
 
-    public function registerEvent()
-    {
-        //普通攻击
-        $this->event->register('SECOND_01', 'normalAttack', function () {
-            $this->normalAttack();
-        });
-        //全局技能冷却
-        $this->event->register('SECOND_01', 'skillCool', function () {
-            $this->userAttribute->getSkillManager()->decCoolSkill(0.1);
-            $this->monsterAttribute->getSkillManager()->decCoolSkill(0.1);
-            foreach ($this->petAttributeList as $petAttribute){
-                $petAttribute->getSkillManager()->decCoolSkill(0.1);
-            }
-        });
-
-
-    }
 
     public function normalAttack()
     {
         $this->userAttribute->getSkillManager()->trigger('0', '0001');
         $this->monsterAttribute->getSkillManager()->trigger('0', '0001');
         foreach ($this->petAttributeList as $petAttribute) {
+//            Logger::getInstance()->log("宠物{$petAttribute->getName()}普通攻击");
             $petAttribute->getSkillManager()->trigger('0', '0001');
         }
     }
 
-    public function startFight(callable $callBack)
+    public function pushFightResult($command, ...$data)
+    {
+        call_user_func($this->callback, $command, ...$data);
+    }
+
+    public function startFight()
     {
         $this->state = 1;
         $i = 0;
@@ -108,16 +119,16 @@ class Fight
                 $this->event->fightEnd();
                 break;
             }
-            //用户死亡
-            if ($this->userAttribute->isDie()) {
-                $this->state = 1;
-                $this->event->userDie();
-                break;
-            }
             //怪物死亡
             if ($this->monsterAttribute->isDie()) {
                 $this->state = 1;
                 $this->event->monsterDie();
+                break;
+            }
+            //用户死亡
+            if ($this->userAttribute->isDie()) {
+                $this->state = 1;
+                $this->event->userDie();
                 break;
             }
             $this->event->second01();
@@ -126,7 +137,8 @@ class Fight
                 //1秒定时
                 $this->event->second();
                 $i = 0;
-                fgets(STDIN);
+//                fgets(STDIN);
+                echo 1;
             } else {
                 $i++;
             }

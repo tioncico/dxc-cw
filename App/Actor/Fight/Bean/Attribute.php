@@ -134,6 +134,9 @@ class Attribute extends SplBean
     public function incHp(int $hp)
     {
         $this->hp += $hp;
+        if ($this->hp<=0){
+            $this->setIsDie(true);
+        }
     }
 
     /**

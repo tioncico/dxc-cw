@@ -5,6 +5,7 @@ namespace App\Actor;
 
 
 use EasySwoole\Actor\AbstractActor;
+use EasySwoole\EasySwoole\Trigger;
 
 abstract class BaseActor extends AbstractActor
 {
@@ -41,22 +42,13 @@ abstract class BaseActor extends AbstractActor
     protected function onException(\Throwable $throwable)
     {
         $actorId = $this->actorId();
+        Trigger::getInstance()->throwable($throwable);
         echo "mapActor {$actorId} onException\n";
     }
 
     public static function sendAction($actorId, $action, $data)
     {
         return static::client()->send($actorId, new Command(['action' => $action, 'data' => $data]));
-    }
-
-    public static function getProperty($actorId, $propertyName)
-    {
-        return static::client()->send($actorId, new Command(['action' => "getProperty", 'data' => $propertyName]));
-    }
-
-    public static function setProperty($actorId, $propertyName,$data)
-    {
-        return static::client()->send($actorId, new Command(['action' => "setProperty", 'data' => ['propertyName'=>$propertyName,'data'=>$data]]));
     }
 
 }

@@ -186,12 +186,12 @@ class SkillManager
             return false;
         }
         $skillResult = new SkillResult();
+        Logger::getInstance()->log("{$this->attribute->getName()}{$skill->getSkillName()} 触发");
         //判断释放概率
         $isHit = $this->checkUseSkillMiss($skill);
         if ($isHit) {
             //触发事件
             $this->onSkillBefore($skillResult);
-            Logger::getInstance()->console("{$this->attributeType} 触发技能{$skill->getSkillName()}");
             //遍历技能效果
             $this->ergodicSkillEffect($skill,$skillResult);
         } else {
@@ -258,7 +258,7 @@ class SkillManager
                 if ($skill->getTickTime() > 0) {
                     $skill->incTickTime(-$num);
                     if ($skill->getTickTime() <= 0) {
-                        Logger::getInstance()->console("{$skill->getSkillName()} 技能冷却完成");
+                        Logger::getInstance()->console("{$this->attribute->getName()}{$skill->getSkillName()} 技能冷却完成");
                     }
                 }
             }

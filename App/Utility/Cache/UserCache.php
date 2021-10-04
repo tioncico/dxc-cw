@@ -4,8 +4,7 @@
 namespace App\Utility\Cache;
 
 
-use App\Actor\Cache\UserRelationUserActor;
-use App\Actor\UserActor;
+use App\Model\Game\SkillModel;
 use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserBaseAttributeModel;
 use App\Model\Game\UserEquipmentBackpackModel;
@@ -14,10 +13,14 @@ use App\Model\Game\UserSkillModel;
 use App\Service\Game\EquipmentService;
 use App\Service\Game\PetService;
 use App\Service\Game\SkillService;
+use App\Utility\RedisClient;
+use EasySwoole\Component\Singleton;
 
 class UserCache
 {
-    protected $userId;
+    use Singleton;
+
+
     /**@var UserBaseAttributeModel */
     protected $userBaseAttribute;//用户基础信息
 
@@ -33,34 +36,112 @@ class UserCache
     /**@var UserEquipmentBackpackModel */
     protected $userEquipmentList;//用户装备列表 装备部位键值对
 
-    public function __construct(Channel $mailBox, string $actorId, $arg)
+    public function getUserBaseAttribute($userId): UserBaseAttributeModel
     {
-        parent::__construct($mailBox, $actorId, $arg);
-        $this->userId = $arg['userId'];
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId) {
+            $data = $redisClient->get($this->getKey("baseAttribute", $userId));
+            if (empty($data)) {
+                $data = UserBaseAttributeModel::create()->getInfo($userId);
+                $this->setUserBaseAttribute($userId, $data);
+            }
+            return $data;
+        });
     }
 
-    protected function onStart()
+    public function getUserAttribute($userId): UserAttributeModel
     {
-        $userId = $this->userId;
-        //初始化用户信息
-        $this->userBaseAttribute = UserBaseAttributeModel::create()->getInfo($userId);
-        $this->userAttribute = UserAttributeModel::create()->getInfo($userId);
-        $this->userEquipmentList = EquipmentService::getInstance()->getUserEquipmentList($userId);
-        $this->userSkillList = SkillService::getInstance()->getUserSkillList($userId);
-        $this->userPetList = PetService::getInstance()->getUserPetList($userId);
-
-
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId) {
+            $data = $redisClient->get($this->getKey("attribute", $userId));
+            if (empty($data)) {
+                $data = UserAttributeModel::create()->getInfo($userId);
+                $this->setUserAttribute($userId, $data);
+            }
+            return $data;
+        });
     }
 
-    public static function getUserActorId($userId)
+    /**
+     * getUserSkillList
+     * @param $userId
+     * @return UserSkillModel[]
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 2:19 下午
+     */
+    public function getUserSkillList($userId)
     {
-        $actorId = UserRelationUserActor::getInstance()->getUserActor($userId);
-        if (empty($actorId)) {
-            //创建actor
-            $actorId = UserActor::client()->create(['userId' => $userId]);   // 00101000000000000000001
-            //创建关联关系
-            UserRelationUserActor::getInstance()->addUserActor($userId, $actorId);
-        }
-        return $actorId;
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId) {
+            $data = $redisClient->get($this->getKey("skillList", $userId));
+            if (empty($data)) {
+                $data = SkillService::getInstance()->getUserSkillList($userId);
+                $this->setUserSkillList($userId, $data);
+            }
+            return $data;
+        });
     }
+
+    public function getUserPetList($userId)
+    {
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId) {
+            $data = $redisClient->get($this->getKey("petList", $userId));
+            if (empty($data)) {
+                $data = PetService::getInstance()->getUserPetList($userId);
+                $this->setUserPetList($userId, $data);
+            }
+            return $data;
+        });
+    }
+
+    public function getUserEquipmentList($userId)
+    {
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId) {
+            $data = $redisClient->get($this->getKey("equipmentList", $userId));
+            if (empty($data)) {
+                $data = EquipmentService::getInstance()->getUserEquipmentList($userId);
+                $this->setUserPetList($userId, $data);
+            }
+            return $data;
+        });
+    }
+
+    public function setUserBaseAttribute($userId, $data)
+    {
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId, $data) {
+            return $redisClient->set($this->getKey("baseAttribute", $userId), $data, 60 * 30);
+        });
+    }
+
+    public function setUserAttribute($userId, $data)
+    {
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId, $data) {
+            return $redisClient->set($this->getKey("attribute", $userId), $data, 60 * 30);
+        });
+    }
+
+    public function setUserSkillList($userId, $data)
+    {
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId, $data) {
+            return $redisClient->set($this->getKey("skillList", $userId), $data, 60 * 30);
+        });
+    }
+
+    public function setUserPetList($userId, $data)
+    {
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId, $data) {
+            return $redisClient->set($this->getKey("petList", $userId), $data, 60 * 30);
+        });
+    }
+
+    public function setUserEquipmentList($userId, $data)
+    {
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId, $data) {
+            return $redisClient->set($this->getKey("equipmentList", $userId), $data, 60 * 30);
+        });
+    }
+
+    protected function getKey($property, $userId)
+    {
+        return "user_{$userId}_$property";
+    }
+
 }

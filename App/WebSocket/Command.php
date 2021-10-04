@@ -20,6 +20,7 @@ class Command extends SplBean
     protected $msg;
 
     const SC_ACTION_GAME_INFO = 'gameInfo';
+    const SC_ACTION_ERROR = 'error';
     const CS_EXIT_MAP = 'exitMap';
     const CS_FIGHT = 'fight';
 

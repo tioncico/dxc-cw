@@ -12,9 +12,19 @@ use App\Utility\Rand\Rand;
 
 class Map
 {
+    /**
+     * @var MapModel
+     */
     public $mapInfo;//地图信息
+    /**
+     * @var MapMonsterModel
+     */
     public $mapMonsterList;//地图怪物信息
+    /**
+     * @var int
+     */
     public $nowMapLevel;//当前地图层数
+
     public $nowMapGrid = [
 
     ];//当前地图宫格情况 type 0没有数据,1怪物,2宝箱,3buff
@@ -66,6 +76,7 @@ class Map
         $monsterList = $this->randMapMonster(1, mt_rand(($this->mapInfo->monsterNum * 0.5), $this->mapInfo->monsterNum));
 
         $randResultList = (new Rand($randList))->randValue(count($monsterList), false);
+        $this->nowMapGrid[0][0] = array_shift($monsterList);
         foreach ($randResultList as $value) {
             $bean = $value['info'];
             $this->nowMapGrid[$bean->getValue()[0]][$bean->getValue()[1]] = [
@@ -108,4 +119,70 @@ class Map
             'nowMapGrid'=>$this->nowMapGrid,
         ];
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMapInfo()
+    {
+        return $this->mapInfo;
+    }
+
+    /**
+     * @param mixed $mapInfo
+     */
+    public function setMapInfo($mapInfo): void
+    {
+        $this->mapInfo = $mapInfo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMapMonsterList()
+    {
+        return $this->mapMonsterList;
+    }
+
+    /**
+     * @param mixed $mapMonsterList
+     */
+    public function setMapMonsterList($mapMonsterList): void
+    {
+        $this->mapMonsterList = $mapMonsterList;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNowMapLevel()
+    {
+        return $this->nowMapLevel;
+    }
+
+    /**
+     * @param mixed $nowMapLevel
+     */
+    public function setNowMapLevel($nowMapLevel): void
+    {
+        $this->nowMapLevel = $nowMapLevel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getNowMapGrid(): array
+    {
+        return $this->nowMapGrid;
+    }
+
+    /**
+     * @param array $nowMapGrid
+     */
+    public function setNowMapGrid(array $nowMapGrid): void
+    {
+        $this->nowMapGrid = $nowMapGrid;
+    }
+
+
 }

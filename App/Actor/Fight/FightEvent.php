@@ -10,6 +10,7 @@ use App\Actor\Skill\SkillResult;
 
 class FightEvent
 {
+    protected $callback;
     protected $container = [
         'FIGHT_START'                  => [],
         'FIGHT_END'                    => [],
@@ -57,6 +58,10 @@ class FightEvent
 //- 战斗结束前触发 91
 //- 战斗结束后触发 92
 //
+    public function __construct(?callable $callback=null){
+        $this->callback = $callback;
+    }
+
     public function register($event, $name, callable $callback)
     {
         $this->container[$event][$name] = $callback;
@@ -64,6 +69,9 @@ class FightEvent
 
     public function onEvent($event,...$data)
     {
+        if (is_callable($this->callback)){
+            call_user_func($this->callback, $event,...$data);
+        }
 //        Logger::getInstance()->console("触发事件{$event}");
         foreach ($this->container[$event] as $name => $callable) {
             call_user_func($callable, $name,...$data);

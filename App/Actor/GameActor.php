@@ -7,22 +7,19 @@ namespace App\Actor;
 use App\Actor\Cache\UserRelationMap;
 use App\Actor\Data\Map;
 use App\Actor\Data\User;
+use App\Actor\Fight\Fight;
+use App\Actor\Fight\FightReward;
 use App\Model\Game\GoodsModel;
 use App\Model\Game\MapModel;
 use App\Model\Game\MapMonsterModel;
 use App\Model\Game\UserAttributeModel;
-use App\Model\Game\UserSkillModel;
-use App\Model\User\UserModel;
-use App\Service\Game\Attribute;
-use App\Service\Game\Fight\Fight;
-use App\Service\Game\Fight\FightResult;
 use App\Service\Game\Fight\Reward;
-use App\Service\Game\SkillAttribute;
-use App\Utility\Rand\Bean;
-use App\Utility\Rand\Rand;
+use App\Utility\Assert\Assert;
 use App\WebSocket\MsgPushEvent;
 use EasySwoole\Actor\AbstractActor;
 use EasySwoole\Actor\ActorConfig;
+use EasySwoole\EasySwoole\Logger;
+use EasySwoole\EasySwoole\Trigger;
 use Swoole\Coroutine\Channel;
 use function AlibabaCloud\Client\value;
 
@@ -30,19 +27,17 @@ class GameActor extends BaseActor
 {
     protected $userId;
     protected $mapId;
+    /**
+     * @var User
+     */
     protected $user;
+    /**
+     * @var Map
+     */
     protected $map;
+    protected $fight;
 
     /**
-     * 进入地图步骤
-     * 初始化用户属性
-     * 初始化用户装备属性,用户装备额外属性,用户装备高级属性,用户装备套装属性
-     * 初始化用户宠物属性
-     * 初始化用户技能
-     * 初始化宠物技能
-     * 初始化地图数据
-     * 初始化地图怪物,地图怪物技能
-     * 初始化地图随机事件(开箱子,新怪物)
      * MapActor constructor.
      * @param Channel $mailBox
      * @param string  $actorId
@@ -70,14 +65,16 @@ class GameActor extends BaseActor
         $this->map = new Map($this->map);
     }
 
-    public function mapInfo(){
-        MsgPushEvent::getInstance()->msgPush($this->userId, \App\WebSocket\Command::SC_ACTION_GAME_INFO, 200, "发送游戏初始化信息",[
-            'userInfo'=>$this->user->toArray(),
-            'mapInfo'=>$this->map->toArray()
+    public function mapInfo()
+    {
+        MsgPushEvent::getInstance()->msgPush($this->userId, \App\WebSocket\Command::SC_ACTION_GAME_INFO, 200, "发送游戏初始化信息", [
+            'userInfo' => $this->user->toArray(),
+            'mapInfo'  => $this->map->toArray()
         ]);
     }
 
-    public function exitMap(){
+    public function exitMap()
+    {
         //判断是否结束战斗或者未开始
 //        if ($this->fight->getState() == 1) {
 //            MsgPushEvent::getInstance()->msgPush($this->user->userId, 'fightEnd', 400, "战斗未结束,无法退出");
@@ -91,10 +88,44 @@ class GameActor extends BaseActor
         $this->exit();
     }
 
-    public function fight(){
-
+    public function fight($param)
+    {
+        Assert::assert(empty($this->fight), "战斗已开始");
+        $x = $param['x'] ?? 0;
+        $y = $param['y'] ?? 0;
+        $monster = $this->map->nowMapGrid[$x][$y] ?? '';
+        Assert::assert($monster instanceof MapMonsterModel, "怪物未找到");
+        $fight = new Fight($this->user->userAttribute, $this->user->userPetList, $monster,function ($event,...$data) {
+            MsgPushEvent::getInstance()->msgPush($this->userId, $event, 200, "发送游戏数据",$data);
+        });
+        $fight->getEvent()->register('MONSTER_DIE','reward',function ()use($monster){
+            //计算奖励
+            $reward = new Reward($this->user->userAttribute->userId, $this->user->userAttribute, $this->map->mapInfo, $monster);
+            $reward->rewardCount();
+            $reward->addUserData();
+            $msg = "金币+{$reward->getGold()},经验+{$reward->getExp()}";
+            if ($reward->getGoodsList()) {
+                /**
+                 * @var $goodsInfo GoodsModel
+                 */
+                foreach ($reward->getGoodsList() as $value) {
+                    $goodsInfo = $value['goodsInfo'];
+                    $msg .= "  {$goodsInfo->name}*{$value['num']}";
+                }
+            }
+            Logger::getInstance()->log($msg);
+        });
+        $this->fight = $fight;
+        $fight->startFight();
     }
 
+    protected function onException(\Throwable $throwable)
+    {
+        $actorId = $this->actorId();
+        Trigger::getInstance()->throwable($throwable);
+        MsgPushEvent::getInstance()->msgPush($this->userId, \App\WebSocket\Command::SC_ACTION_ERROR, 400,$throwable->getMessage());
 
+        echo "mapActor {$actorId} onException\n";
+    }
 
 }
