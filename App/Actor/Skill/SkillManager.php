@@ -8,6 +8,7 @@ use App\Actor\Skill\Effect\EffectBean;
 use App\Actor\Skill\Effect\Harm;
 use App\Actor\Skill\SkillList\NormalAttack;
 use App\Actor\Skill\SkillTrait\ChangeAttribute;
+use App\Actor\Skill\SkillTrait\EffectAddBuff;
 use App\Actor\Skill\SkillTrait\Event;
 use App\Actor\Skill\SkillTrait\TemplateHandle;
 use App\Utility\Assert\Assert;
@@ -21,6 +22,7 @@ class SkillManager
     use TemplateHandle;
     use Event;
     use ChangeAttribute;
+    use EffectAddBuff;
 
     /**
      * @var SkillBean[][]

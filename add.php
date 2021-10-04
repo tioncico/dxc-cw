@@ -30,15 +30,14 @@ go(function () {
     $data = [
         'name'=>'雷霆一击',
         'level'=>1,
-        'type'=>0,
+        'triggerType'=>0,
+        'triggerRate'=>100,
         'rarityLevel'=>1,
         'maxLevel'=>10,
         'coolingTime'=>'10',
-        'manaCost'=>'20+($trigger_skillLevel*10)',
-        'entryCode'=>'0002',
-        'description'=>'蓄力攻击一次,造成 100+(100+[技能等级]*10)%攻击力伤害',
-        'param'=>'["100+(100+{$trigger_skillLevel}*10)*{$trigger_attack}/100"]',
-        'paramNum'=>1,
+        'manaCost'=>'10',
+        'description'=>'雷霆一击,对敌人造成伤害,并附带5秒[感电]效果',
+        'effectParam'=>null,
     ];
     $model = new SkillModel($data);
     $model->save();

@@ -3,6 +3,7 @@
 namespace App\HttpController\Api\User;
 
 use App\Model\Game\UserBackpackModel;
+use App\Model\Game\UserExtraLimitModel;
 use App\Service\Game\UseGoodsService;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
@@ -192,6 +193,7 @@ class UserBackpack extends UserBase
             $model->where('code', $param['goodsType']);
         }
         $data = $model->with(['goodsInfo', 'userEquipmentInfo', 'strengthenInfo'], false)->where('userId', $this->who->userId)->getList($page, $pageSize);
+        $data['maxNum'] = UserExtraLimitModel::create()->getBackPackNum($this->who->userId);
         $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
     }
 

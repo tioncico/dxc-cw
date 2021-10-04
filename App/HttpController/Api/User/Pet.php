@@ -3,6 +3,7 @@
 namespace App\HttpController\Api\User;
 
 use App\Model\Game\PetModel;
+use App\Model\Game\UserExtraLimitModel;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiDescription;
@@ -302,7 +303,8 @@ class Pet extends UserBase
 		$pageSize = (int)($param['pageSize'] ?? 20);
 		$model = new PetModel();
 		$data = $model->getList($page, $pageSize);
-		$this->writeJson(Status::CODE_OK, $data, '获取列表成功');
+        $data['maxNum'] = UserExtraLimitModel::create()->getPetNum($this->who->userId);
+        $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
 	}
 
 

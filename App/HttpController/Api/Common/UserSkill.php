@@ -1,6 +1,6 @@
 <?php
 
-namespace App\HttpController\Api\Admin;
+namespace App\HttpController\Api\Common;
 
 use App\Model\Game\UserSkillModel;
 use EasySwoole\Component\Context\ContextManager;
@@ -23,14 +23,14 @@ use EasySwoole\Validate\Validate;
  * UserSkill
  * Class UserSkill
  * Create With ClassGeneration
- * @ApiGroup(groupName="/Api/Admin.UserSkill")
+ * @ApiGroup(groupName="/Api/Common.UserSkill")
  * @ApiGroupAuth(name="")
  * @ApiGroupDescription("")
  */
-class UserSkill extends AdminBase
+class UserSkill extends CommonBase
 {
 	/**
-	 * @Api(name="add",path="/Api/Admin/UserSkill/add")
+	 * @Api(name="add",path="/Api/Common/UserSkill/add")
 	 * @ApiDescription("新增数据")
 	 * @Method(allow={GET,POST})
 	 * @InjectParamsContext(key="param")
@@ -80,7 +80,7 @@ class UserSkill extends AdminBase
 
 
 	/**
-	 * @Api(name="update",path="/Api/Admin/UserSkill/update")
+	 * @Api(name="update",path="/Api/Common/UserSkill/update")
 	 * @ApiDescription("更新数据")
 	 * @Method(allow={GET,POST})
 	 * @InjectParamsContext(key="param")
@@ -136,7 +136,7 @@ class UserSkill extends AdminBase
 
 
 	/**
-	 * @Api(name="getOne",path="/Api/Admin/UserSkill/getOne")
+	 * @Api(name="getOne",path="/Api/Common/UserSkill/getOne")
 	 * @ApiDescription("获取一条数据")
 	 * @Method(allow={GET,POST})
 	 * @InjectParamsContext(key="param")
@@ -172,7 +172,7 @@ class UserSkill extends AdminBase
 
 
 	/**
-	 * @Api(name="getList",path="/Api/Admin/UserSkill/getList")
+	 * @Api(name="getList",path="/Api/Common/UserSkill/getList")
 	 * @ApiDescription("获取数据列表")
 	 * @Method(allow={GET,POST})
 	 * @InjectParamsContext(key="param")
@@ -212,7 +212,7 @@ class UserSkill extends AdminBase
 
 
 	/**
-	 * @Api(name="delete",path="/Api/Admin/UserSkill/delete")
+	 * @Api(name="delete",path="/Api/Common/UserSkill/delete")
 	 * @ApiDescription("删除数据")
 	 * @Method(allow={GET,POST})
 	 * @InjectParamsContext(key="param")

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Actor\Fight\Bean;
+use App\Actor\Buff\BuffBean;
 use App\Actor\Skill\SkillManager;
 use App\Service\Game\Fight\Skill;
 use EasySwoole\Spl\SplBean;
@@ -36,7 +37,7 @@ class Attribute extends SplBean
     protected $attackTimes = 1;//攻击次数
     protected $isDie = false;
     /**
-     * @var Buff[]
+     * @var BuffBean[]
      */
     protected $buffList = [// 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发,10释放技能前触发,11释放技能后触发
         0  => [],
@@ -556,7 +557,7 @@ class Attribute extends SplBean
         $this->buffList = $buffList;
     }
 
-    public function getBuffByTypeAndCode(int $type, string $code)
+    public function getBuffByTypeAndCode(int $type, string $code):?BuffBean
     {
         if (isset($this->buffList[$type][$code])) {
             $oldBuffInfo = $this->buffList[$type][$code];
@@ -570,18 +571,18 @@ class Attribute extends SplBean
         }
     }
 
-    public function addBuff(Buff $buff)
+    public function addBuff(BuffBean $buff,int $layer=1)
     {
         //判断是否存在该buff并且没有过期
-        if ($oldBuffInfo = $this->getBuffByTypeAndCode($buff->getType(), $buff->getCode())) {
+        if ($oldBuffInfo = $this->getBuffByTypeAndCode($buff->getTriggerType(), $buff->getBuffCode())) {
             //没有过期,则判断是否可以叠加层数
-            if ($oldBuffInfo->getStackLayer() > 1 && $oldBuffInfo->getNowStackLayer() < $oldBuffInfo->getStackLayer()) {
-                $oldBuffInfo->incNowStackLayer(1);
+            if ($oldBuffInfo->getMaxBuffLayer() > 1 && $oldBuffInfo->getBuffLayer() < $oldBuffInfo->getMaxBuffLayer()) {
+                $oldBuffInfo->incBuffLayer($layer);
             }
             //刷新过期时间
             $oldBuffInfo->setExpireTime($buff->getExpireTime());
         } else {
-            $this->buffList[$buff->getType()][$buff->getCode()] = $buff;
+            $this->buffList[$buff->getTriggerType()][$buff->getBuffCode()] = $buff;
         }
     }
 

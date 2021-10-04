@@ -5,6 +5,7 @@ namespace App\Service\Game;
 
 
 use App\Model\BaseModel;
+use App\Model\Game\SkillModel;
 use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserBaseAttributeModel;
 use App\Model\Game\UserEquipmentBackpackModel;
@@ -37,6 +38,13 @@ class SkillService extends BaseService
             $userSkillList[$value->entryCode] = $value;
         }
         return $userSkillList;
+    }
+
+    public function userAddSkill($userId,SkillModel $skillModel){
+
+
+
+
     }
 
 }

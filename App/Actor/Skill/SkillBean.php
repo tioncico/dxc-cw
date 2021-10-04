@@ -24,6 +24,7 @@ class SkillBean extends SplBean
     protected $tickTime = 0.00;//冷却时间
 
     /**
+     *
      * @return mixed
      */
     public function getSkillName()
