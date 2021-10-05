@@ -2,7 +2,11 @@
 
 namespace App\HttpController\Api\User;
 
+use App\Model\BaseModel;
+use App\Model\Game\GoodsModel;
+use App\Model\Game\UserExtraLimitModel;
 use App\Model\Game\UserPetModel;
+use App\Service\Game\BackpackService;
 use App\Service\Game\PetService;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
@@ -19,6 +23,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\InjectParamsContext;
 use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\Param;
 use EasySwoole\Http\Message\Status;
+use EasySwoole\Mysqli\QueryBuilder;
 use EasySwoole\Validate\Validate;
 
 /**
@@ -289,8 +294,8 @@ class UserPet extends UserBase
     {
         $param = ContextManager::getInstance()->get('param');
         $model = new UserPetModel();
-        $info = $model->where('userId',$this->who->userId)->get(['userPetId' => $param['userPetId']]);
-        Assert::assert(!!$info,'宠物数据不存在');
+        $info = $model->where('userId', $this->who->userId)->get(['userPetId' => $param['userPetId']]);
+        Assert::assert(!!$info, '宠物数据不存在');
         PetService::getInstance()->usePet($info);
         $this->writeJson(Status::CODE_OK, [], "上阵成功.");
     }
@@ -312,8 +317,8 @@ class UserPet extends UserBase
     {
         $param = ContextManager::getInstance()->get('param');
         $model = new UserPetModel();
-        $info = $model->where('userId',$this->who->userId)->get(['userPetId' => $param['userPetId']]);
-        Assert::assert(!!$info,'宠物数据不存在');
+        $info = $model->where('userId', $this->who->userId)->get(['userPetId' => $param['userPetId']]);
+        Assert::assert(!!$info, '宠物数据不存在');
         PetService::getInstance()->noUsePet($info);
         $this->writeJson(Status::CODE_OK, [], "上阵成功.");
     }
@@ -378,7 +383,16 @@ class UserPet extends UserBase
         if (isset($param['type'])) {
             $model->where('type', $param['type']);
         }
-        $data = $model->order('isUse','desc')->order('level','desc')->getList($page, $pageSize);
+        $data = $model->order('isUse', 'desc')->order('level', 'desc')->getList($page, $pageSize);
+        $data['maxNum'] = UserExtraLimitModel::create()->getPetNum($this->who->userId);
+        $data['addMaxNumGoodsList'] = [
+            [
+                'onceUpNum' => 5,
+                'num'=>50,
+                'goodsInfo'=>GoodsModel::create()->getInfoByCode('money'),
+            ]
+        ];
+
         $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
     }
 
@@ -407,6 +421,33 @@ class UserPet extends UserBase
 
         $info->destroy();
         $this->writeJson(Status::CODE_OK, [], "删除成功.");
+    }
+
+    /**
+     * @Api(name="addPetMaxNum",path="/Api/User/UserPet/addPetNum")
+     * @ApiDescription("新增宠物数量上限")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
+     * @Param(name="userPetId",lengthMax="11",required="")
+     */
+    public function addPetNum()
+    {
+        $goodsInfo = GoodsModel::create()->getInfoByCode('money');
+        $goodsNum = 50;
+        $info = UserExtraLimitModel::create()->getInfo($this->who->userId);
+        BaseModel::transaction(function () use ($goodsInfo, $goodsNum, $info) {
+            BackpackService::getInstance()->decGoods($this->who->userId, $goodsInfo, $goodsNum);
+            $info->update([
+                'petNum' => QueryBuilder::inc(5)
+            ]);
+        });
+
+        $this->writeJson(Status::CODE_OK,  ['maxNum' => $info->petNum], "扩充成功.");
     }
 }
 
