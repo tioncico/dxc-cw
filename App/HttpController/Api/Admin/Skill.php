@@ -41,15 +41,15 @@ class Skill extends AdminBase
 	 * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
 	 * @Param(name="name",alias="技能名",description="技能名",lengthMax="255",optional="")
 	 * @Param(name="level",alias="技能初始等级",description="技能初始等级",lengthMax="11",optional="")
-	 * @Param(name="type",alias=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",lengthMax="1",optional="")
+	 * @Param(name="triggerType",alias=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",lengthMax="1",optional="")
+	 * @Param(name="triggerRate",alias="触发概率",description="触发概率",lengthMax="255",optional="")
 	 * @Param(name="rarityLevel",alias="技能稀有度1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话",description="技能稀有度1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话",lengthMax="11",optional="")
 	 * @Param(name="maxLevel",alias="最大等级",description="最大等级",lengthMax="255",optional="")
 	 * @Param(name="coolingTime",alias="冷却时间算法",description="冷却时间算法",lengthMax="11",optional="")
 	 * @Param(name="manaCost",alias="耗蓝算法",description="耗蓝算法",lengthMax="32",optional="")
 	 * @Param(name="entryCode",alias="词条code",description="词条code",lengthMax="32",optional="")
 	 * @Param(name="description",alias="技能介绍",description="技能介绍",lengthMax="255",optional="")
-	 * @Param(name="param",alias="参数",description="参数",lengthMax="255",optional="")
-	 * @Param(name="paramNum",alias="参数数量",description="参数数量",lengthMax="11",optional="")
+	 * @Param(name="effectParam",alias="效果数组",description="效果数组",lengthMax="1024",optional="")
 	 */
 	public function add()
 	{
@@ -57,15 +57,15 @@ class Skill extends AdminBase
 		$data = [
 		    'name'=>$param['name'] ?? '',
 		    'level'=>$param['level'] ?? '',
-		    'type'=>$param['type'] ?? '',
+		    'triggerType'=>$param['triggerType'] ?? '',
+		    'triggerRate'=>$param['triggerRate'] ?? '',
 		    'rarityLevel'=>$param['rarityLevel'] ?? '',
 		    'maxLevel'=>$param['maxLevel'] ?? '',
 		    'coolingTime'=>$param['coolingTime'] ?? '',
 		    'manaCost'=>$param['manaCost'] ?? '',
 		    'entryCode'=>$param['entryCode'] ?? '',
 		    'description'=>$param['description'] ?? '',
-		    'param'=>$param['param'] ?? '',
-		    'paramNum'=>$param['paramNum'] ?? '',
+		    'effectParam'=>$param['effectParam'] ?? '',
 		];
 		$model = new SkillModel($data);
 		$model->save();
@@ -86,15 +86,15 @@ class Skill extends AdminBase
 	 * @Param(name="skillId",alias="技能id",description="技能id",lengthMax="11",required="")
 	 * @Param(name="name",alias="技能名",description="技能名",lengthMax="255",optional="")
 	 * @Param(name="level",alias="技能初始等级",description="技能初始等级",lengthMax="11",optional="")
-	 * @Param(name="type",alias=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",lengthMax="1",optional="")
+	 * @Param(name="triggerType",alias=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发",lengthMax="1",optional="")
+	 * @Param(name="triggerRate",alias="触发概率",description="触发概率",lengthMax="255",optional="")
 	 * @Param(name="rarityLevel",alias="技能稀有度1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话",description="技能稀有度1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话",lengthMax="11",optional="")
 	 * @Param(name="maxLevel",alias="最大等级",description="最大等级",lengthMax="255",optional="")
 	 * @Param(name="coolingTime",alias="冷却时间算法",description="冷却时间算法",lengthMax="11",optional="")
 	 * @Param(name="manaCost",alias="耗蓝算法",description="耗蓝算法",lengthMax="32",optional="")
 	 * @Param(name="entryCode",alias="词条code",description="词条code",lengthMax="32",optional="")
 	 * @Param(name="description",alias="技能介绍",description="技能介绍",lengthMax="255",optional="")
-	 * @Param(name="param",alias="参数",description="参数",lengthMax="255",optional="")
-	 * @Param(name="paramNum",alias="参数数量",description="参数数量",lengthMax="11",optional="")
+	 * @Param(name="effectParam",alias="效果数组",description="效果数组",lengthMax="1024",optional="")
 	 */
 	public function update()
 	{
@@ -109,15 +109,15 @@ class Skill extends AdminBase
 
 		$updateData['name']=$param['name'] ?? $info->name;
 		$updateData['level']=$param['level'] ?? $info->level;
-		$updateData['type']=$param['type'] ?? $info->type;
+		$updateData['triggerType']=$param['triggerType'] ?? $info->triggerType;
+		$updateData['triggerRate']=$param['triggerRate'] ?? $info->triggerRate;
 		$updateData['rarityLevel']=$param['rarityLevel'] ?? $info->rarityLevel;
 		$updateData['maxLevel']=$param['maxLevel'] ?? $info->maxLevel;
 		$updateData['coolingTime']=$param['coolingTime'] ?? $info->coolingTime;
 		$updateData['manaCost']=$param['manaCost'] ?? $info->manaCost;
 		$updateData['entryCode']=$param['entryCode'] ?? $info->entryCode;
 		$updateData['description']=$param['description'] ?? $info->description;
-		$updateData['param']=$param['param'] ?? $info->param;
-		$updateData['paramNum']=$param['paramNum'] ?? $info->paramNum;
+		$updateData['effectParam']=$param['effectParam'] ?? $info->effectParam;
 		$info->update($updateData);
 		$this->writeJson(Status::CODE_OK, $info, "更新数据成功");
 	}
@@ -137,15 +137,15 @@ class Skill extends AdminBase
 	 * @ApiSuccessParam(name="result.skillId",description="技能id")
 	 * @ApiSuccessParam(name="result.name",description="技能名")
 	 * @ApiSuccessParam(name="result.level",description="技能初始等级")
-	 * @ApiSuccessParam(name="result.type",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发")
+	 * @ApiSuccessParam(name="result.triggerType",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发")
+	 * @ApiSuccessParam(name="result.triggerRate",description="触发概率")
 	 * @ApiSuccessParam(name="result.rarityLevel",description="技能稀有度1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
 	 * @ApiSuccessParam(name="result.maxLevel",description="最大等级")
 	 * @ApiSuccessParam(name="result.coolingTime",description="冷却时间算法")
 	 * @ApiSuccessParam(name="result.manaCost",description="耗蓝算法")
 	 * @ApiSuccessParam(name="result.entryCode",description="词条code")
 	 * @ApiSuccessParam(name="result.description",description="技能介绍")
-	 * @ApiSuccessParam(name="result.param",description="参数")
-	 * @ApiSuccessParam(name="result.paramNum",description="参数数量")
+	 * @ApiSuccessParam(name="result.effectParam",description="效果数组")
 	 */
 	public function getOne()
 	{
@@ -171,15 +171,15 @@ class Skill extends AdminBase
 	 * @ApiSuccessParam(name="result[].skillId",description="技能id")
 	 * @ApiSuccessParam(name="result[].name",description="技能名")
 	 * @ApiSuccessParam(name="result[].level",description="技能初始等级")
-	 * @ApiSuccessParam(name="result[].type",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发")
+	 * @ApiSuccessParam(name="result[].triggerType",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发")
+	 * @ApiSuccessParam(name="result[].triggerRate",description="触发概率")
 	 * @ApiSuccessParam(name="result[].rarityLevel",description="技能稀有度1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
 	 * @ApiSuccessParam(name="result[].maxLevel",description="最大等级")
 	 * @ApiSuccessParam(name="result[].coolingTime",description="冷却时间算法")
 	 * @ApiSuccessParam(name="result[].manaCost",description="耗蓝算法")
 	 * @ApiSuccessParam(name="result[].entryCode",description="词条code")
 	 * @ApiSuccessParam(name="result[].description",description="技能介绍")
-	 * @ApiSuccessParam(name="result[].param",description="参数")
-	 * @ApiSuccessParam(name="result[].paramNum",description="参数数量")
+	 * @ApiSuccessParam(name="result[].effectParam",description="效果数组")
 	 */
 	public function getList()
 	{

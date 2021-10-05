@@ -12,6 +12,7 @@ use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserLevelConfigModel;
 use App\Model\Game\UserSkillModel;
 use App\Service\BaseService;
+use App\Utility\Assert\Assert;
 use EasySwoole\Component\Singleton;
 use EasySwoole\Mysqli\QueryBuilder;
 
@@ -40,11 +41,13 @@ class SkillService extends BaseService
         return $userSkillList;
     }
 
-    public function userAddSkill($userId,SkillModel $skillModel){
-
-
-
-
+    public function userStudySkill($userId, SkillModel $skillModel)
+    {
+        $userSkillModel = new UserSkillModel();
+        $skillInfo = $userSkillModel->getUserSkillByCode($userId, $skillModel);
+        Assert::assert($skillInfo->maxLevel > $skillInfo->level, "等级已升级到满级");
+        $skillInfo->levelUp($userId, $skillModel);
+        return $skillInfo;
     }
 
 }

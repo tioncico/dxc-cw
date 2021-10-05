@@ -197,5 +197,65 @@ class UserBackpack extends UserBase
         $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
     }
 
+    /**
+     * @Api(name="新增背包格子上限",path="/Api/User/UserBackpack/addBackpackMaxNum")
+     * @ApiDescription("新增背包格子上限")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":{"page":1,"pageSize":20,"list":[{"backpackId":22,"userId":1,"goodsId":2,"goodsCode":"money","num":20,"goodsType":2,"goodsInfo":{"goodsId":2,"name":"钻石","code":"money","baseCode":null,"type":2,"description":"钻石,高级游戏货币","gold":0,"isSale":0,"level":1,"rarityLevel":5,"extraData":null}},{"backpackId":15,"userId":1,"goodsId":7,"goodsCode":"eq_0004","num":1,"goodsType":7,"goodsInfo":{"goodsId":7,"name":"新手之鞋","code":"eq_0004","baseCode":null,"type":7,"description":"新手装备","gold":0,"isSale":1,"level":1,"rarityLevel":1,"extraData":null}},{"backpackId":14,"userId":1,"goodsId":7,"goodsCode":"eq_0004","num":1,"goodsType":7,"goodsInfo":{"goodsId":7,"name":"新手之鞋","code":"eq_0004","baseCode":null,"type":7,"description":"新手装备","gold":0,"isSale":1,"level":1,"rarityLevel":1,"extraData":null}},{"backpackId":13,"userId":1,"goodsId":9,"goodsCode":"eq_0005","num":1,"goodsType":7,"goodsInfo":{"goodsId":9,"name":"新手之披","code":"eq_0005","baseCode":null,"type":7,"description":"新手装备","gold":0,"isSale":1,"level":1,"rarityLevel":1,"extraData":null}},{"backpackId":12,"userId":1,"goodsId":1,"goodsCode":"gold","num":1058,"goodsType":1,"goodsInfo":{"goodsId":1,"name":"金币","code":"gold","baseCode":null,"type":1,"description":"金币,游戏中主要货币之一","gold":0,"isSale":0,"level":1,"rarityLevel":3,"extraData":""}}],"total":5,"pageCount":1},"msg":"获取列表成功","requestId":null})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @ApiSuccessParam(name="result[].backpackId",description="背包id")
+     * @ApiSuccessParam(name="result[].userId",description="用户id")
+     * @ApiSuccessParam(name="result[].goodsId",description="物品id")
+     * @ApiSuccessParam(name="result[].goodsCode",description="物品code")
+     * @ApiSuccessParam(name="result[].num",description="数量")
+     * @ApiSuccessParam(name="result[].goodsType",description="物品类型")
+     * @ApiSuccessParam(name="result[].goodsInfo.goodsId",description="物品id")
+     * @ApiSuccessParam(name="result[].goodsInfo.name",description="物品名称")
+     * @ApiSuccessParam(name="result[].goodsInfo.code",description="物品code值")
+     * @ApiSuccessParam(name="result[].goodsInfo.baseCode",description="物品基础类型")
+     * @ApiSuccessParam(name="result[].goodsInfo.type",description="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备")
+     * @ApiSuccessParam(name="result[].goodsInfo.description",description="介绍")
+     * @ApiSuccessParam(name="result[].goodsInfo.gold",description="售出金币")
+     * @ApiSuccessParam(name="result[].goodsInfo.isSale",description="是否可售出")
+     * @ApiSuccessParam(name="result[].goodsInfo.level",description="等级")
+     * @ApiSuccessParam(name="result[].goodsInfo.rarityLevel",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
+     * @ApiSuccessParam(name="result[].goodsInfo.extraData",description="额外数据")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.backpackId",description="背包id")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.isUse",description="是否装备")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.strengthenLevel",description="强化等级")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.attributeDescription",description="属性介绍")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.attributeEntryDescription",description="随机属性介绍")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.extraAttributeDescription",description="额外词条属性介绍")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.suitAttribute2Description",description="套装2属性词条介绍")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.suitAttribute3Description",description="套装3属性词条介绍")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.suitAttribute5Description",description="套装5属性词条介绍")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.goodsCode",description="物品code")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.goodsName",description="物品名")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.equipmentType",description="装备类型")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.suitCode",description="套装code")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.rarityLevel",description="稀有度")
+     * @ApiSuccessParam(name="result[].userEquipmentInfo.level",description="装备等级")
+     */
+    public function addBackpackMaxNum()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $page = (int)($param['page'] ?? 1);
+        $pageSize = (int)($param['pageSize'] ?? 9999);
+        $model = new UserBackpackModel();
+        if (isset($param['goodsType'])) {
+            $model->where('goodsType', $param['goodsType']);
+        }
+        if (isset($param['code'])) {
+            $model->where('code', $param['goodsType']);
+        }
+        $data = $model->with(['goodsInfo', 'userEquipmentInfo', 'strengthenInfo'], false)->where('userId', $this->who->userId)->getList($page, $pageSize);
+        $data['maxNum'] = UserExtraLimitModel::create()->getBackPackNum($this->who->userId);
+        $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
+    }
+
 }
 

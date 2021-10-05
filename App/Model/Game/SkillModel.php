@@ -11,15 +11,15 @@ use App\Model\BaseModel;
  * @property int $skillId // 技能id
  * @property string $name // 技能名
  * @property int $level // 技能初始等级
- * @property int $type //  触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发
+ * @property int $triggerType //  触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发
+ * @property string $triggerRate // 触发概率
  * @property int $rarityLevel // 技能稀有度1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话
  * @property int $maxLevel // 最大等级
  * @property int $coolingTime // 冷却时间算法
  * @property string $manaCost // 耗蓝算法
  * @property string $entryCode // 词条code
  * @property string $description // 技能介绍
- * @property string $param // 参数
- * @property int $paramNum // 参数数量
+ * @property string $effectParam // 效果数组
  */
 class SkillModel extends BaseModel
 {
@@ -49,32 +49,36 @@ class SkillModel extends BaseModel
 	public function addData(
 		string $name,
 		int $level,
-		int $type,
+		int $triggerType,
+		string $triggerRate,
 		int $rarityLevel,
 		int $maxLevel,
 		int $coolingTime,
 		string $manaCost,
 		string $entryCode,
 		string $description,
-		string $param,
-		int $paramNum
+		string $effectParam
 	): self {
 		$data = [
 		    'name'=>$name,
 		    'level'=>$level,
-		    'type'=>$type,
+		    'triggerType'=>$triggerType,
+		    'triggerRate'=>$triggerRate,
 		    'rarityLevel'=>$rarityLevel,
 		    'maxLevel'=>$maxLevel,
 		    'coolingTime'=>$coolingTime,
 		    'manaCost'=>$manaCost,
 		    'entryCode'=>$entryCode,
 		    'description'=>$description,
-		    'param'=>$param,
-		    'paramNum'=>$paramNum,
+		    'effectParam'=>$effectParam,
 		];
 		$model = new self($data);
 		$model->save();
 		return $model;
 	}
+
+	public function getInfoByCode($code){
+	    return $this->where('entryCode',$code)->get();
+    }
 }
 

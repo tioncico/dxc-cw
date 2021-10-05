@@ -4,6 +4,7 @@
 namespace App\Actor\Fight;
 
 
+use App\Actor\Buff\BuffManager;
 use App\Actor\Data\User;
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Skill\SkillManager;
@@ -79,6 +80,9 @@ class Fight
         foreach ($this->monsterAttribute->getSkillList() as $skill){
             $skillManager->addSkill($skill);
         }
+        $buffManger = new BuffManager($this->monsterBaseAttribute,$monsterAttribute);
+        $this->monsterAttribute->setBuffManager($buffManger);
+
         $this->monsterAttribute->setSkillManager($skillManager);
 
     }
@@ -98,6 +102,8 @@ class Fight
                 $skillManager->addSkill($skill);
             }
             $this->petAttributeList[$petAttribute->userPetId]->setSkillManager($skillManager);
+            $buffManger = new BuffManager($this->petBaseAttributeList[$petAttribute->userPetId], $this->petAttributeList[$petAttribute->userPetId], );
+            $this->petAttributeList[$petAttribute->userPetId]->setBuffManager($buffManger);
         }
     }
 

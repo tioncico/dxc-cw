@@ -32,6 +32,22 @@ class AddBuff extends EffectBean
     /**
      * @return string
      */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
     public function getType(): string
     {
         return $this->type;
@@ -107,22 +123,6 @@ class AddBuff extends EffectBean
     public function setBuffBean(?BuffBean $buffBean): void
     {
         $this->buffBean = $buffBean;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
     }
 
 

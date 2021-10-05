@@ -2,8 +2,8 @@
 
 namespace UnitTest\User;
 
+use App\Model\Game\SkillModel;
 use EasySwoole\Utility\Random;
-use SkillModel;
 
 /**
  * SkillTest
@@ -12,7 +12,7 @@ use SkillModel;
  */
 class SkillTest extends UserBaseTestCase
 {
-	public $modelName = 'Skill';
+	public $modelName = '/Api/User/Skill';
 
 
 	public function testAdd()
@@ -20,15 +20,15 @@ class SkillTest extends UserBaseTestCase
 		$data = [];
 		$data['name'] = "测试文本".Random::character(6);
 		$data['level'] = mt_rand(10000, 99999);
-		$data['type'] = mt_rand(0, 3);
+		$data['triggerType'] = mt_rand(0, 3);
+		$data['triggerRate'] = "测试文本".Random::character(6);
 		$data['rarityLevel'] = mt_rand(10000, 99999);
 		$data['maxLevel'] = mt_rand(10000, 99999);
 		$data['coolingTime'] = mt_rand(10000, 99999);
 		$data['manaCost'] = "测试文本".Random::character(6);
 		$data['entryCode'] = "测试文本".Random::character(6);
 		$data['description'] = "测试文本".Random::character(6);
-		$data['param'] = "测试文本".Random::character(6);
-		$data['paramNum'] = mt_rand(10000, 99999);
+		$data['effectParam'] = "测试文本".Random::character(6);
 		$response = $this->request('add',$data);
 		$model = new SkillModel();
 		$model->destroy($response->result->skillId);
@@ -41,15 +41,15 @@ class SkillTest extends UserBaseTestCase
 		$data = [];
 		$data['name'] = "测试文本".Random::character(6);
 		$data['level'] = mt_rand(10000, 99999);
-		$data['type'] = mt_rand(0, 3);
+		$data['triggerType'] = mt_rand(0, 3);
+		$data['triggerRate'] = "测试文本".Random::character(6);
 		$data['rarityLevel'] = mt_rand(10000, 99999);
 		$data['maxLevel'] = mt_rand(10000, 99999);
 		$data['coolingTime'] = mt_rand(10000, 99999);
 		$data['manaCost'] = "测试文本".Random::character(6);
 		$data['entryCode'] = "测试文本".Random::character(6);
 		$data['description'] = "测试文本".Random::character(6);
-		$data['param'] = "测试文本".Random::character(6);
-		$data['paramNum'] = mt_rand(10000, 99999);
+		$data['effectParam'] = "测试文本".Random::character(6);
 		$model = new SkillModel();
 		$model->data($data)->save();
 
@@ -67,15 +67,15 @@ class SkillTest extends UserBaseTestCase
 		$data = [];
 		$data['name'] = "测试文本".Random::character(6);
 		$data['level'] = mt_rand(10000, 99999);
-		$data['type'] = mt_rand(0, 3);
+		$data['triggerType'] = mt_rand(0, 3);
+		$data['triggerRate'] = "测试文本".Random::character(6);
 		$data['rarityLevel'] = mt_rand(10000, 99999);
 		$data['maxLevel'] = mt_rand(10000, 99999);
 		$data['coolingTime'] = mt_rand(10000, 99999);
 		$data['manaCost'] = "测试文本".Random::character(6);
 		$data['entryCode'] = "测试文本".Random::character(6);
 		$data['description'] = "测试文本".Random::character(6);
-		$data['param'] = "测试文本".Random::character(6);
-		$data['paramNum'] = mt_rand(10000, 99999);
+		$data['effectParam'] = "测试文本".Random::character(6);
 		$model = new SkillModel();
 		$model->data($data)->save();
 
@@ -83,15 +83,15 @@ class SkillTest extends UserBaseTestCase
 		$update['skillId'] = $model->skillId;
 		$update['name'] = "测试文本".Random::character(6);
 		$update['level'] = mt_rand(10000, 99999);
-		$update['type'] = mt_rand(0, 3);
+		$update['triggerType'] = mt_rand(0, 3);
+		$update['triggerRate'] = "测试文本".Random::character(6);
 		$update['rarityLevel'] = mt_rand(10000, 99999);
 		$update['maxLevel'] = mt_rand(10000, 99999);
 		$update['coolingTime'] = mt_rand(10000, 99999);
 		$update['manaCost'] = "测试文本".Random::character(6);
 		$update['entryCode'] = "测试文本".Random::character(6);
 		$update['description'] = "测试文本".Random::character(6);
-		$update['param'] = "测试文本".Random::character(6);
-		$update['paramNum'] = mt_rand(10000, 99999);
+		$update['effectParam'] = "测试文本".Random::character(6);
 		$response = $this->request('update',$update);
 		$model->destroy($model->skillId);
 		//var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
@@ -113,15 +113,15 @@ class SkillTest extends UserBaseTestCase
 		$data = [];
 		$data['name'] = "测试文本".Random::character(6);
 		$data['level'] = mt_rand(10000, 99999);
-		$data['type'] = mt_rand(0, 3);
+		$data['triggerType'] = mt_rand(0, 3);
+		$data['triggerRate'] = "测试文本".Random::character(6);
 		$data['rarityLevel'] = mt_rand(10000, 99999);
 		$data['maxLevel'] = mt_rand(10000, 99999);
 		$data['coolingTime'] = mt_rand(10000, 99999);
 		$data['manaCost'] = "测试文本".Random::character(6);
 		$data['entryCode'] = "测试文本".Random::character(6);
 		$data['description'] = "测试文本".Random::character(6);
-		$data['param'] = "测试文本".Random::character(6);
-		$data['paramNum'] = mt_rand(10000, 99999);
+		$data['effectParam'] = "测试文本".Random::character(6);
 		$model = new SkillModel();
 		$model->data($data)->save();
 

@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Actor\Skill;
+namespace App\Actor\Buff;
 
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Fight\Fight;
 use App\Actor\Skill\Effect\EffectBean;
 use App\Actor\Skill\Effect\Harm;
+use App\Actor\Skill\SkillBean;
+use App\Actor\Skill\SkillEffectResult;
 use App\Actor\Skill\SkillList\NormalAttack;
 use App\Actor\Skill\SkillTrait\ChangeAttribute;
-use App\Actor\Skill\SkillTrait\Effect001;
 use App\Actor\Skill\SkillTrait\EffectAddBuff;
 use App\Actor\Skill\SkillTrait\Event;
 use App\Actor\Skill\SkillTrait\TemplateHandle;
@@ -17,19 +18,15 @@ use EasySwoole\EasySwoole\Logger;
 use EasySwoole\Utility\Str;
 use App\Actor\Skill\SkillTrait\EffectHarm;
 
-class SkillManager
+class BuffManager
 {
-    use EffectHarm;
-    use TemplateHandle;
-    use Event;
-    use ChangeAttribute;
-    use EffectAddBuff;
-    use Effect001;
-
     /**
-     * @var SkillBean[][]
+     * @var BuffBean[][]
      */
-    protected $skillList;
+    protected $buffList = [];
+
+    protected $buffCodeList = [];
+
     /**
      * @var Attribute
      */
@@ -40,11 +37,6 @@ class SkillManager
     protected $attribute;//当前信息
 
     protected $attributeType;
-
-    /**
-     * @var Fight
-     */
-    protected $fight;
 
     const VARIABLE = [
         //释放技能人当前属性
@@ -154,73 +146,59 @@ class SkillManager
         ]
     ];
 
-    public function __construct(Attribute $baseAttribute, Attribute $attribute, Fight $fight)
+    public function __construct(Attribute $baseAttribute, Attribute $attribute)
     {
         $this->baseAttribute = $baseAttribute;
         $this->attribute = $attribute;
-        $this->fight = $fight;
         $this->attributeType = $attribute->getAttributeType();
-        $this->addSkill(new NormalAttack());
     }
 
-    public function addSkill(SkillBean $skillBean)
+    public function addBuff(BuffBean $buffBean, int $layer = 1)
     {
-        $this->skillList[$skillBean->getTriggerType()][$skillBean->getSkillCode()] = $skillBean;
+        //判断是否存在该buff并且没有过期
+        $oldBuffInfo = $this->buffList[$buffBean->getTriggerType()][$buffBean->getBuffCode()] ?? null;
+        if ($oldBuffInfo) {
+            //没有过期,则判断是否可以叠加层数
+            if ($oldBuffInfo->getMaxBuffLayer() > 1 && $oldBuffInfo->getBuffLayer() < $oldBuffInfo->getMaxBuffLayer()) {
+                $oldBuffInfo->incBuffLayer($layer);
+            }
+            //刷新过期时间
+            $oldBuffInfo->setExpireTime($buffBean->getExpireTime());
+            $this->buffCodeList[$oldBuffInfo->getBuffCode()] = $oldBuffInfo;
+        } else {
+            $this->buffList[$buffBean->getTriggerType()][$buffBean->getBuffCode()] = $buffBean;
+            $this->buffCodeList[$buffBean->getBuffCode()] = $buffBean;
+        }
     }
 
-    public function trigger($type, $code = null)
+    public function trigger($type, $code = null, ?SkillEffectResult $effectResult = null)
     {
+        Logger::getInstance()->log("触发buff管理");
         //如果$code为null,则触发所有技能
         if ($code === null) {
-            $skillList = $this->skillList[$type]??[];
-            foreach ($skillList as $skill) {
-                $this->useSkill($skill);
+            $buffList = $this->buffList[$type]??[];
+            foreach ($buffList as $buff) {
+                $this->useBuff($buff, $effectResult);
             }
         } else {
-            $skill = $this->skillList[$type][$code] ?? '';;
-            if ($skill) {
+            $buff = $this->buffList[$type][$code] ?? '';;
+            if ($buff) {
                 //使用技能
-                $this->useSkill($skill);
+                $this->useBuff($buff, $effectResult);
             }
         }
     }
 
-    public function useSkill(SkillBean $skill)
+    public function getBuffInfo($code): ?BuffBean
     {
-        //判断技能是否冷却
-        if ($skill->getTickTime() > 0) {
-            return false;
-        }
-        if (($monaCostNum = $this->checkManaCost($skill)) === false) {
-            Assert::assert(false, "魔法不足");
-        }
-        $skillResult = new SkillResult();
-        $skillResult->setManaCostNum($monaCostNum);
-        Logger::getInstance()->log("{$this->attribute->getName()}{$skill->getSkillName()} 触发");
-        //判断释放概率
-        $isHit = $this->checkUseSkillMiss($skill);
-        if ($isHit) {
-            //触发事件
-            $this->onSkillBefore($skillResult);
-            //遍历技能效果
-            $this->ergodicSkillEffect($skill, $skillResult);
-        } else {
-            Logger::getInstance()->console("技能{$skill->getSkillName()} miss");
-            $skillResult->setIsMiss(1);
-        }
-        $this->coolSkill($skill);
-        $this->onSkillAfter($skillResult);
+        $buff = $this->buffCodeList[$code] ?? null;;
+        return $buff;
     }
 
-    protected function checkManaCost(SkillBean $skill)
+    public function useBuff(BuffBean $buff, SkillEffectResult $effectResult)
     {
-        $manaCostNum = $this->evalRenderVariable(null, null, $skill, $skill->getManaCost());
-        if ($manaCostNum > $this->attribute->getMp()) {
-            return false;
-        } else {
-            $this->attribute->incMp(-$manaCostNum);
-            return $manaCostNum;
-        }
+        Logger::getInstance()->log("触发buff{$buff->getBuffName()}");
+        $buff->useBuff($effectResult);
     }
 
     protected function ergodicSkillEffect(SkillBean $skill, SkillResult $skillResult)
@@ -238,49 +216,26 @@ class SkillManager
         }
     }
 
-    protected function checkUseSkillMiss(SkillBean $skill)
-    {
-        $hitRateStr = $skill->getTriggerRate();
-        $rate = $this->evalRenderVariable(null, null, $skill, $hitRateStr);
-        $num = mt_rand(1, 100);
-        if ($num <= $rate) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     /**
-     * 冷却技能
-     * coolSkill
-     * @param SkillBean $skill
-     * @author tioncico
-     * Time: 9:27 上午
-     */
-    public function coolSkill(SkillBean $skill)
-    {
-        $coolingTimeStr = $skill->getCoolingTime();
-        $coolNum = $this->evalRenderVariable(null, null, $skill, $coolingTimeStr);
-        Logger::getInstance()->log("{$this->attribute->getName()}{$skill->getSkillName()} 进入冷却{$coolNum}秒");
-        $skill->setTickTime($coolNum);
-    }
-
-    /**
-     * 降低技能冷却
-     * decCoolSkill
+     * buff过期
+     * decExpireBuff
      * @param $num
      * @author tioncico
      * Time: 9:27 上午
      */
-    public function decCoolSkill($num)
+    public function decExpireBuff($num)
     {
-        foreach ($this->skillList as $skillCodeList) {
-            foreach ($skillCodeList as $skill) {
-                if ($skill->getTickTime() > 0) {
-                    Logger::getInstance()->console("{$this->attribute->getName()}{$skill->getSkillName()} 冷却时间{$skill->getTickTime()}");
-                    $skill->incTickTime(-$num);
-                    if ($skill->getTickTime() <= 0) {
-                        Logger::getInstance()->console("{$this->attribute->getName()}{$skill->getSkillName()} 技能冷却完成");
+        foreach ($this->buffList as $buffCodeList) {
+            foreach ($buffCodeList as $buffBean) {
+                if ($buffBean instanceof BuffBean) {
+                    if ($buffBean->getExpireTime() > 0) {
+                        $buffBean->incExpireTime(-$num);
+                    }
+//                    Logger::getInstance()->console("{$this->attribute->getName()} buff[{$buffBean->getBuffName()}] 剩余时间{$buffBean->getExpireTime()}");
+                    if ($buffBean->getExpireTime() <= 0) {
+                        $this->buffList[$buffBean->getTriggerType()][$buffBean->getBuffCode()] = null;
+                        $this->buffCodeList[$buffBean->getBuffCode()] = null;
+                        Logger::getInstance()->console("{$this->attribute->getName()} buff[{$buffBean->getBuffName()}] 过期");
                     }
                 }
             }

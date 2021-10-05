@@ -27,10 +27,6 @@ trait TemplateHandle
         $arr = $this->replaceVariableArr($targetBaseAttribute, $targetAttribute, $skillInfo);
 
         $str = str_replace(array_keys($arr), array_values($arr), $str);
-        if ($str == '1/0') {
-            debug_print_backtrace();
-            var_dump(get_class($this->attribute));
-        }
         return $str;
     }
 

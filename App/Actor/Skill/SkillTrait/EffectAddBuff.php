@@ -24,14 +24,13 @@ trait EffectAddBuff
      * @author tioncico
      * Time: 9:27 上午
      */
-    public function addBuff(Attribute $targetBaseAttribute, Attribute $targetAttribute, SkillBean $skillInfo, AddBuff $effectBean)
+    public function effectAddBuff(Attribute $targetBaseAttribute, Attribute $targetAttribute, SkillBean $skillInfo, AddBuff $effectBean)
     {
-        $skillEffectResult = new SkillEffectResult(['effectName'=>$effectBean->getName(),'effectType'=>$effectBean->getType()]);
+        $skillEffectResult = new SkillEffectResult(['effectName' => $effectBean->getName(), 'effectType' => $effectBean->getType(), 'skillInfo' => $skillInfo]);
         $skillEffectResult->setTargetType($this->getEffectTargetType($effectBean->getTarget()));
         $buffBean = $effectBean->getBuffBean();
-        $targetAttribute->addBuff($buffBean,$effectBean->getBuffLayer());
-
-
+        $targetAttribute->getBuffManager()->addBuff($buffBean, $effectBean->getBuffLayer());
+        Logger::getInstance()->log("{$targetAttribute->getName()}叠加buff:[{$buffBean->getBuffName()}]");
         return $skillEffectResult;
     }
 }

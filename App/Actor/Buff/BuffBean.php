@@ -5,8 +5,10 @@ namespace App\Actor\Buff;
 
 
 use App\Actor\Skill\Effect\EffectBean;
+use App\Actor\Skill\SkillEffectResult;
+use EasySwoole\Spl\SplBean;
 
-class BuffBean
+abstract class BuffBean extends SplBean
 {
     protected $buffName;//buff 名
     protected $buffCode;//buff code
@@ -19,7 +21,7 @@ class BuffBean
     protected $coolingTime;//冷却时间计算
     protected $description;//介绍
     protected $expireType = 1;//1正常倒计时过期(战斗完直接失效) 2正常倒计时过期(退出地图直接失效) 3正常倒计时过期(一直有效)
-    protected $expireTime = 0;//倒计时(秒)
+    protected $expireTime = 0.00;//倒计时(秒)
     protected $isExpire = false;//是否过期
     /**
      * @var EffectBean[]
@@ -211,22 +213,6 @@ class BuffBean
     }
 
     /**
-     * @return int
-     */
-    public function getExpireTime(): int
-    {
-        return $this->expireTime;
-    }
-
-    /**
-     * @param int $expireTime
-     */
-    public function setExpireTime(int $expireTime): void
-    {
-        $this->expireTime = $expireTime;
-    }
-
-    /**
      * @return bool
      */
     public function isExpire(): bool
@@ -258,4 +244,29 @@ class BuffBean
         $this->effectParam = $effectParam;
     }
 
+    /**
+     * @return float
+     */
+    public function getExpireTime(): float
+    {
+        return $this->expireTime;
+    }
+
+    /**
+     * @param float $expireTime
+     */
+    public function setExpireTime(float $expireTime): void
+    {
+        $this->expireTime = $expireTime;
+    }
+
+    /**
+     * @param float $expireTime
+     */
+    public function incExpireTime(float $expireTime): void
+    {
+        $this->expireTime += $expireTime;
+    }
+
+    abstract function useBuff(SkillEffectResult $effectResult);
 }

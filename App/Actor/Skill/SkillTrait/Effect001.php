@@ -4,6 +4,7 @@
 namespace App\Actor\Skill\SkillTrait;
 
 
+use App\Actor\Buff\BuffBean;
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Fight\FightEvent;
 use App\Actor\Skill\Effect\Harm;
@@ -11,7 +12,7 @@ use App\Actor\Skill\SkillBean;
 use App\Actor\Skill\SkillEffectResult;
 use EasySwoole\EasySwoole\Logger;
 
-trait EffectHarm
+trait Effect001
 {
     /**
      * 效果,伤害
@@ -24,7 +25,7 @@ trait EffectHarm
      * @author tioncico
      * Time: 9:27 上午
      */
-    public function effectHarm(Attribute $targetBaseAttribute, Attribute $targetAttribute, SkillBean $skillInfo, Harm $effectBean)
+    public function effectEffect001(Attribute $targetBaseAttribute, Attribute $targetAttribute, SkillBean $skillInfo, \App\Actor\Skill\Effect\Effect001 $effectBean)
     {
         $skillEffectResult = new SkillEffectResult(['effectName' => $effectBean->getName(), 'effectType' => $effectBean->getType(), 'skillInfo' => $skillInfo]);
         $element = $this->evalRenderVariable($targetBaseAttribute, $targetAttribute, $skillInfo, $effectBean->getElement());
@@ -41,7 +42,14 @@ trait EffectHarm
                 $harmNum = intval($harmNum * $criticalRateHarm / 100);
             }
         }
-        $skillEffectResult->setHarmNum($harmNum);
+
+        //判断是否存在某buff效果
+        $buff = $targetAttribute->getBuffManager()->getBuffInfo($effectBean->getBuffCode());
+        if ($buff instanceof BuffBean) {
+            $num = $this->evalRenderVariable($targetBaseAttribute, $targetAttribute, $skillInfo, $effectBean->getAddMultipleNum());
+            $harmNum = intval($num / 100 * $harmNum);
+        }
+
         if ($effectBean->getHarmType() == 'hp') {
             $bloodNum = $harmNum;
         } else {
@@ -54,23 +62,5 @@ trait EffectHarm
         return $skillEffectResult;
     }
 
-    public function buckleBloodCount(int $harmNum, Attribute $targetBaseAttribute, Attribute $targetAttribute, SkillBean $skillInfo, Harm $effectBean)
-    {
-        //伤害计算 伤害-(对方防御率*1-($自身穿透率));
-        $element = $this->evalRenderVariable($targetBaseAttribute, $targetAttribute, $skillInfo, $effectBean->getElement());
-        /**
-         * @var Attribute $this ->attribute
-         */
-        if ($element > 0) {
-            $harmNum = $harmNum - ($targetAttribute->getDefense() * (100 - $this->attribute->getPenetrate()) / 100);
-        } else {
-            $harmNum = $harmNum - ($targetAttribute->getDefense() * (100 - $this->attribute->getPenetrate()) / 100);
-        }
-        if ($harmNum <= 0) {
-            $harmNum = 1;
-        }
 
-        Logger::getInstance()->console("扣血计算{$harmNum}");
-        return $harmNum;
-    }
 }

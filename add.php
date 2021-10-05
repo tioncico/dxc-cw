@@ -27,19 +27,8 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-    $data = [
-        'name'=>'雷霆一击',
-        'level'=>1,
-        'triggerType'=>0,
-        'triggerRate'=>100,
-        'rarityLevel'=>1,
-        'maxLevel'=>10,
-        'coolingTime'=>'10',
-        'manaCost'=>'10',
-        'description'=>'雷霆一击,对敌人造成伤害,并附带5秒[感电]效果',
-        'effectParam'=>null,
-    ];
-    $model = new SkillModel($data);
-    $model->save();
+ \App\Service\Game\SkillService::getInstance()->userStudySkill(1,SkillModel::create()->getInfoByCode('0006'));
+
+
     \Swoole\Timer::clearAll();
 });

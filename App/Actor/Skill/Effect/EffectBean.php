@@ -10,7 +10,7 @@ use EasySwoole\Spl\SplBean;
 
 class EffectBean extends SplBean
 {
-    protected $type;//效果类型
+    protected $type='';//效果类型
     /**
      * @var string 施加目标
      */
@@ -19,17 +19,17 @@ class EffectBean extends SplBean
     protected $name='';//效果名称
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
     /**
-     * @param mixed $type
+     * @param string $type
      */
-    public function setType($type): void
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
@@ -65,38 +65,5 @@ class EffectBean extends SplBean
     {
         $this->name = $name;
     }
-
-    /**
-     * @return int
-     */
-    public function getIsCritical(): int
-    {
-        return $this->isCritical;
-    }
-
-    /**
-     * @param int $isCritical
-     */
-    public function setIsCritical(int $isCritical): void
-    {
-        $this->isCritical = $isCritical;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCriticalRate(): string
-    {
-        return $this->criticalRate;
-    }
-
-    /**
-     * @param string $criticalRate
-     */
-    public function setCriticalRate(string $criticalRate): void
-    {
-        $this->criticalRate = $criticalRate;
-    }
-
 
 }

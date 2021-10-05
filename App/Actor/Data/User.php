@@ -4,6 +4,7 @@
 namespace App\Actor\Data;
 
 
+use App\Actor\Buff\BuffManager;
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Skill\SkillList\NormalAttack;
 use App\Actor\Skill\SkillManager;
@@ -48,7 +49,10 @@ class User
         }
         $userAttribute->setSkillList($skillObjList);
         $this->userAttribute = $userAttribute;
-        $this->getUserNowAttribute();
+        //初始化buff
+        $buffManager = new BuffManager($userAttribute,$this->getUserNowAttribute());
+        $userAttribute->setBuffManager($buffManager);
+        $this->getUserNowAttribute()->setBuffManager($buffManager);
     }
 
     public function getUserNowAttribute()

@@ -25,9 +25,10 @@ go(function () {
     $monster = $map->nowMapGrid[$x][$y] ?? '';
     $fight = new Fight($user, new Attribute($monster->toArray()), function ($event, ...$data)use($user) {
         MsgPushEvent::getInstance()->msgPush(1, $event, 200, "发送游戏数据", $data);
-        var_dump(1);
-        var_dump($user->getUserNowAttribute()->getSkillList());
-        $user->getUserNowAttribute()->getSkillManager()->useSkill($user->getUserNowAttribute()->getSkillList()['0002']);
+        if ($event=='FIGHT_START'){
+//            $user->getUserNowAttribute()->getSkillManager()->useSkill($user->getUserNowAttribute()->getSkillList()['0003']);
+            $user->getUserNowAttribute()->getSkillManager()->useSkill($user->getUserNowAttribute()->getSkillList()['0004']);
+        }
     });
     $fight->startFight();
 
