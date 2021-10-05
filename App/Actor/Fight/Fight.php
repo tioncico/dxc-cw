@@ -50,7 +50,7 @@ class Fight
     protected $event;
     protected $callback;
 
-    public function __construct(User $user, Attribute $monsterAttribute, callable $callback)
+    public function __construct(User $user, MapMonsterModel $monsterAttribute, callable $callback)
     {
         $this->initUserAttribute($user);
         $this->initMonsterAttribute($monsterAttribute);
@@ -71,8 +71,10 @@ class Fight
         $this->userAttribute->setSkillManager($skillManager);
     }
 
-    protected function initMonsterAttribute(Attribute $monsterAttribute)
+    protected function initMonsterAttribute(MapMonsterModel $monsterModel)
     {
+        $monsterAttribute = new Attribute($monsterModel->toArray());
+        $monsterAttribute->setOriginModel($monsterModel);
         $this->monsterBaseAttribute = $monsterAttribute;
         $this->monsterBaseAttribute->setAttributeType(3);
         $this->monsterAttribute = clone $this->monsterBaseAttribute;
@@ -80,11 +82,10 @@ class Fight
         foreach ($this->monsterAttribute->getSkillList() as $skill){
             $skillManager->addSkill($skill);
         }
-        $buffManger = new BuffManager($this->monsterBaseAttribute,$monsterAttribute);
-        $this->monsterAttribute->setBuffManager($buffManger);
-
         $this->monsterAttribute->setSkillManager($skillManager);
 
+        $buffManger = new BuffManager($this->monsterBaseAttribute,$monsterAttribute);
+        $this->monsterAttribute->setBuffManager($buffManger);
     }
 
     protected function initPetAttribute($petAttributeList)
@@ -138,13 +139,13 @@ class Fight
             //怪物死亡
             if ($this->monsterAttribute->isDie()) {
                 $this->state = 1;
-                $this->event->monsterDie();
+                $this->event->monsterDie($this->monsterAttribute);
                 break;
             }
             //用户死亡
             if ($this->userAttribute->isDie()) {
                 $this->state = 1;
-                $this->event->userDie();
+                $this->event->userDie($this->userAttribute);
                 break;
             }
             $this->event->second01();

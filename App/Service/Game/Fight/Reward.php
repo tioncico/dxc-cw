@@ -20,7 +20,6 @@ use App\Utility\Rand\Rand;
 class Reward
 {
     protected $mapInfo;
-    protected $userAttributeInfo;
     protected $userId;
     protected $mapMonsterInfo;
 
@@ -28,10 +27,9 @@ class Reward
     protected $exp;
     protected $goodsList;
 
-    public function __construct($userId, UserAttributeModel $userAttributeInfo, MapModel $mapInfo, MapMonsterModel $monsterInfo)
+    public function __construct($userId, MapModel $mapInfo, MapMonsterModel $monsterInfo)
     {
         $this->userId = $userId;
-        $this->userAttributeInfo = $userAttributeInfo;
         $this->mapInfo = $mapInfo;
         $this->mapMonsterInfo = $monsterInfo;
     }
@@ -111,7 +109,6 @@ class Reward
     {
         $monsterInfo = $this->mapMonsterInfo;
         $mapInfo = $this->mapInfo;
-        $userAttributeInfo = $this->userAttributeInfo;
         $mapExp = $mapInfo->exp;
         if ($monsterInfo->type == 1) {
             //经验 = 地图经验基数*(0.8至1.5)
@@ -135,7 +132,6 @@ class Reward
     {
         $monsterInfo = $this->mapMonsterInfo;
         $mapInfo = $this->mapInfo;
-        $userAttributeInfo = $this->userAttributeInfo;
         $mapGold = $mapInfo->gold;
         if ($monsterInfo->type == 1) {
             //金币 = 地图金币基数*(0.8至1.5)

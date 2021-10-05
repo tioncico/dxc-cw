@@ -48,6 +48,7 @@ class User
             }
         }
         $userAttribute->setSkillList($skillObjList);
+        $userAttribute->setOriginModel($userAttributeModel);
         $this->userAttribute = $userAttribute;
         //初始化buff
         $buffManager = new BuffManager($userAttribute,$this->getUserNowAttribute());

@@ -21,6 +21,19 @@ class Command extends SplBean
 
     const SC_ACTION_GAME_INFO = 'gameInfo';
     const SC_ACTION_ERROR = 'error';
+
+    const SC_ACTION_BOX_OPEN = 'boxOpen';
+    const SC_ACTION_FIGHT = 'fightStart';
+    const SC_ACTION_SKILL = 'fightSkill';
+    const SC_ACTION_HARM = 'fightHarm';
+    const SC_ACTION_USER_DIE = 'userDie';
+    const SC_ACTION_MONSTER_DIE = 'monsterDie';
+    const SC_ACTION_PROPERTY_CHANGE = 'property';
+    const SC_ACTION_GOODS_CHANGE = 'goodsChange';
+    const SC_ACTION_BUFF_CHANGE = 'buffChange';
+    const SC_ACTION_FIGHT_END = 'fightEnd';
+
+
     const CS_EXIT_MAP = 'exitMap';
     const CS_FIGHT = 'fight';
 

@@ -26,6 +26,7 @@ use function AlibabaCloud\Client\value;
 
 class GameActor extends BaseActor
 {
+    use GameActorEventTrait;
     protected $userId;
     protected $mapId;
 
@@ -97,11 +98,11 @@ class GameActor extends BaseActor
         $monster = $this->map->nowMapGrid[$x][$y] ?? '';
 
         Assert::assert($monster instanceof MapMonsterModel, "怪物未找到");
-        $fight = new Fight($this->user, new Attribute($monster->toArray()), function ($event, ...$data) {
+        $fight = new Fight($this->user,$monster, function ($event, ...$data) {
 //            MsgPushEvent::getInstance()->msgPush($this->userId, $event, 200, "发送游戏数据", $data);
         });
         $this->fight = $fight;
-        $this->rewardEvent($monster);
+        $this->initEvent();
         $this->fightEndEvent();
         $this->delMonsterEvent($x, $y);
         $fight->startFight();
@@ -115,39 +116,12 @@ class GameActor extends BaseActor
         $this->user->getUserNowAttribute()->getSkillManager()->useSkill($skillInfo);
     }
 
-    protected function fightEndEvent()
-    {
-        $this->fight->getEvent()->register('FIGHT_END', 'delFightObj', function () {
-            $this->fight = null;
-        });
-    }
 
     protected function delMonsterEvent($x, $y)
     {
         $this->fight->getEvent()->register('MONSTER_DIE', 'deleteMonster', function () use ($x, $y) {
             $this->map->nowMapGrid[$x][$y] = null;
             Logger::getInstance()->log("{$x},{$y}怪物死亡,删除");
-        });
-    }
-
-    protected function rewardEvent(MapMonsterModel $monster)
-    {
-        $this->fight->getEvent()->register('MONSTER_DIE', 'reward', function () use ($monster) {
-            //计算奖励
-            $reward = new Reward($this->user->userAttribute->userId, $this->user->userAttribute, $this->map->mapInfo, $monster);
-            $reward->rewardCount();
-            $reward->addUserData();
-            $msg = "金币+{$reward->getGold()},经验+{$reward->getExp()}";
-            if ($reward->getGoodsList()) {
-                /**
-                 * @var $goodsInfo GoodsModel
-                 */
-                foreach ($reward->getGoodsList() as $value) {
-                    $goodsInfo = $value['goodsInfo'];
-                    $msg .= "  {$goodsInfo->name}*{$value['num']}";
-                }
-            }
-            Logger::getInstance()->log($msg);
         });
     }
 

@@ -37,6 +37,7 @@ class Attribute extends SplBean
     protected $luck = 0;//幸运
     protected $attackTimes = 1;//攻击次数
     protected $isDie = false;
+    protected $originModel;//来源数据
     /**
      * @var BuffManager
      */
@@ -637,6 +638,20 @@ class Attribute extends SplBean
         $this->skillList = $skillList;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getOriginModel()
+    {
+        return $this->originModel;
+    }
 
+    /**
+     * @param mixed $originModel
+     */
+    public function setOriginModel($originModel): void
+    {
+        $this->originModel = $originModel;
+    }
 
 }
