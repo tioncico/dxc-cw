@@ -33,6 +33,7 @@ trait TemplateHandle
     public function evalRenderVariable(?Attribute $targetBaseAttribute, ?Attribute $targetAttribute, ?SkillBean $skillInfo, $str)
     {
         $str = $this->renderVariable($targetBaseAttribute, $targetAttribute, $skillInfo, $str);
+//        var_dump($str);
         return eval("return {$str} ;");
     }
 

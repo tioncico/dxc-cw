@@ -276,7 +276,7 @@ class SkillManager
         foreach ($this->skillList as $skillCodeList) {
             foreach ($skillCodeList as $skill) {
                 if ($skill->getTickTime() > 0) {
-                    Logger::getInstance()->console("{$this->attribute->getName()}{$skill->getSkillName()} 冷却时间{$skill->getTickTime()}");
+//                    Logger::getInstance()->console("{$this->attribute->getName()}{$skill->getSkillName()} 冷却时间{$skill->getTickTime()}");
                     $skill->incTickTime(-$num);
                     if ($skill->getTickTime() <= 0) {
                         Logger::getInstance()->console("{$this->attribute->getName()}{$skill->getSkillName()} 技能冷却完成");

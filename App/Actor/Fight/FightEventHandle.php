@@ -7,6 +7,7 @@ namespace App\Actor\Fight;
 use App\Actor\Buff\BuffManager;
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Skill\SkillEffectResult;
+use EasySwoole\EasySwoole\Logger;
 
 trait FightEventHandle
 {
@@ -15,6 +16,11 @@ trait FightEventHandle
     {
         $this->event = new FightEvent(function ($event, ...$data) {
             call_user_func($this->callback, $event, ...$data);
+        });
+        //普通攻击
+        $this->event->register('FIGHT_START', 'normalAttack', function () {
+            Logger::getInstance()->console("{$this->userAttribute->getName()} lv:{$this->userAttribute->getLevel()}");
+            Logger::getInstance()->console("{$this->monsterAttribute->getName()} lv:{$this->monsterAttribute->getLevel()}");
         });
         //普通攻击
         $this->event->register('SECOND_01', 'normalAttack', function () {

@@ -61,15 +61,25 @@ class WebSocket
         $this->push($data);
     }
 
-    public function useSkill()
+    public function useSkill0002()
     {
         $data = ['action' => 'useSkill', 'skillCode' => '0002'];
         $this->push($data);
     }
 
-    public function useSkill2()
+    public function useSkill0003()
     {
         $data = ['action' => 'useSkill', 'skillCode' => '0003'];
+        $this->push($data);
+    }
+    public function useSkill0004()
+    {
+        $data = ['action' => 'useSkill', 'skillCode' => '0004'];
+        $this->push($data);
+    }
+    public function useSkill0005()
+    {
+        $data = ['action' => 'useSkill', 'skillCode' => '0005'];
         $this->push($data);
     }
 

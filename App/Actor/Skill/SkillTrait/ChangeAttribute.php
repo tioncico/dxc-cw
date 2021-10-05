@@ -45,12 +45,13 @@ trait ChangeAttribute
             $this->harm($targetAttribute, $effectResult);
             $this->triggerBuckleBloodEventAfter($targetAttribute, $effectResult);
         }else{
-            var_dump($effectResult->getPropertyChangeList());
+//            var_dump($effectResult->getPropertyChangeList());
             foreach ($effectResult->getPropertyChangeList() as $propertyName=>$num){
-                Logger::getInstance()->console("{$targetAttribute->getName()}{$propertyName}属性 +{$num}");
                 $getMethodName = "get".Str::studly($propertyName);
                 $setMethodName = "set".Str::studly($propertyName);
+                Logger::getInstance()->console("{$targetAttribute->getName()}{$propertyName}属性:{$targetAttribute->$getMethodName()}");
                 $targetAttribute->$setMethodName($targetAttribute->$getMethodName()+$num);
+                Logger::getInstance()->console("{$targetAttribute->getName()}{$propertyName}现在属性:{$targetAttribute->$getMethodName()}");
             }
         }
     }
@@ -64,6 +65,7 @@ trait ChangeAttribute
             return true;
         }
         $targetAttribute->incHp(-$buckleBloodNum);
+        Logger::getInstance()->console("{$targetAttribute->getName()}当前 hp:{$targetAttribute->getHp()}");
     }
 
     public function triggerBuckleBloodEventBefore(Attribute $targetAttribute, SkillEffectResult $effectResult)

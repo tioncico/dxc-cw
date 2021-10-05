@@ -154,7 +154,6 @@ class Fight
                 $this->event->second();
                 $i = 0;
 //                fgets(STDIN);
-                echo 1;
             } else {
                 $i++;
             }
