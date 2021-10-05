@@ -8,7 +8,7 @@ use EasySwoole\Spl\SplBean;
 
 class SkillEffectResult extends SplBean
 {
-    protected $skillInfo=null;//技能信息
+    protected $skillInfo = null;//技能信息
     protected $effectType = "";//效果类型
     protected $effectName = "";//效果名称
     protected $targetType = 0;//0自身,1玩家,2怪物
@@ -150,6 +150,15 @@ class SkillEffectResult extends SplBean
         $this->propertyChangeList = $propertyChangeList;
     }
 
+    public function addPropertyChange($propertyName, $num)
+    {
+        if (isset($this->propertyChangeList[$propertyName])) {
+            $this->propertyChangeList[$propertyName] += $num;
+        } else {
+            $this->propertyChangeList[$propertyName] = $num;
+        }
+    }
+
     /**
      * @return string
      */
@@ -181,7 +190,6 @@ class SkillEffectResult extends SplBean
     {
         $this->skillInfo = $skillInfo;
     }
-
 
 
 }

@@ -27,7 +27,7 @@ go(function () {
         MsgPushEvent::getInstance()->msgPush(1, $event, 200, "发送游戏数据", $data);
         if ($event=='FIGHT_START'){
 //            $user->getUserNowAttribute()->getSkillManager()->useSkill($user->getUserNowAttribute()->getSkillList()['0003']);
-            $user->getUserNowAttribute()->getSkillManager()->useSkill($user->getUserNowAttribute()->getSkillList()['0004']);
+            $user->getUserNowAttribute()->getSkillManager()->useSkill($user->getUserNowAttribute()->getSkillList()['0005']);
         }
     });
     $fight->startFight();

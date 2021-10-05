@@ -47,7 +47,7 @@ class Skill0004 extends SkillBean
 
 
         $this->setEffectParam([
-            $effectHarm,new Effect001(),
+            $effectHarm
         ]);
     }
 }

@@ -24,7 +24,6 @@ class SkillManager
     use Event;
     use ChangeAttribute;
     use EffectAddBuff;
-    use Effect001;
 
     /**
      * @var SkillBean[][]

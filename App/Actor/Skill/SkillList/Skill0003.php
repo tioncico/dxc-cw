@@ -18,7 +18,7 @@ class Skill0003 extends SkillBean
     protected $triggerType = '0';//触发类型
     protected $triggerRate = '{$self.hitRate}';//触发概率
     protected $coolingTime = '5';//冷却时间计算  攻速如果为1,那就说明1秒攻击一次,冷却时间为1秒,攻速如果为2,则表示1秒攻击2次,冷却时间为1/2秒,攻速如果为0.5,那代表1秒攻击0.5次,冷却时间为1/0.5=2秒
-    protected $manaCost = 0;//mp消耗计算
+    protected $manaCost = "10";//mp消耗计算
     protected $description = "雷霆一击";//介绍
 
     public function __construct(array $data = null, $autoCreateProperty = false)
