@@ -22,7 +22,7 @@ class SignRewardTest extends AdminBaseTestCase
 		$data['money'] = '59186';
 		$response = $this->request('add',$data);
 		$model = new SignRewardModel();
-		$model->destroy($response->result->);
+		$model->destroy($response->result);
 		//var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
 	}
 

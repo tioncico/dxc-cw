@@ -34,6 +34,14 @@ trait FightEventHandle
 //                $petAttribute->getSkillManager()->decCoolSkill(0.1);
             }
         });
+        //每秒buff触发
+        $this->event->register('SECOND', 'buffTrigger', function () {
+            $this->userAttribute->getBuffManager()->trigger('80');
+            $this->monsterAttribute->getBuffManager()->trigger('80');
+            foreach ($this->petAttributeList as $petAttribute) {
+//                $petAttribute->getBuffManager()->trigger("80");
+            }
+        });
         //全局buff过期
         $this->event->register('SECOND_01', 'buffCool', function () {
             /**
@@ -61,12 +69,12 @@ trait FightEventHandle
 
     public function buckleBloodEvent()
     {
-        $this->event->register('MONSTER_BUCKLE_BLOOD_BEFORE', 'buffTrigger', function ($event,Attribute $targetAttribute, SkillEffectResult $effectResult) {
-            $targetAttribute->getBuffManager()->trigger( 51,null, $effectResult);
-            $targetAttribute->getSkillManager()->trigger( 51,null, $effectResult);
-        });
-        $this->event->register('MONSTER_BUCKLE_BLOOD_AFTER', 'buffTrigger', function ($event,Attribute $targetAttribute, SkillEffectResult $effectResult) {
-            $targetAttribute->getSkillManager()->trigger( 52,null, $effectResult);
-        });
+//        $this->event->register('MONSTER_BUCKLE_BLOOD_BEFORE', 'buffTrigger', function ($event,Attribute $targetAttribute, $effectResult) {
+//            $targetAttribute->getBuffManager()->trigger( 51,null, $effectResult);
+//            $targetAttribute->getSkillManager()->trigger( 51,null, $effectResult);
+//        });
+//        $this->event->register('MONSTER_BUCKLE_BLOOD_AFTER', 'buffTrigger', function ($event,Attribute $targetAttribute, SkillEffectResult $effectResult) {
+//            $targetAttribute->getSkillManager()->trigger( 52,null, $effectResult);
+//        });
     }
 }

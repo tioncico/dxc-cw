@@ -8,7 +8,7 @@ use App\Actor\Skill\Effect\EffectBean;
 use App\Actor\Skill\SkillEffectResult;
 use EasySwoole\Spl\SplBean;
 
-abstract class BuffBean extends SplBean
+class BuffBean extends SplBean
 {
     protected $buffName;//buff 名
     protected $buffCode;//buff code
@@ -267,6 +267,4 @@ abstract class BuffBean extends SplBean
     {
         $this->expireTime += $expireTime;
     }
-
-    abstract function useBuff(SkillEffectResult $effectResult);
 }
