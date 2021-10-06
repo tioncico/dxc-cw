@@ -24,11 +24,6 @@ class UserBase extends ApiBase
      */
     public $who;
 
-    /**
-     * @var UserActor
-     */
-    public $userActorId;
-
     const USER_TOKEN_NAME = 'user_token';
 
 

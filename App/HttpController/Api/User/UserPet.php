@@ -278,7 +278,7 @@ class UserPet extends UserBase
     }
 
     /**
-     * @Api(name="usePet",path="/Api/User/UserPet/usePet")
+     * @Api(name="宠物上阵",path="/Api/User/UserPet/usePet")
      * @ApiDescription("宠物上阵")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -301,7 +301,7 @@ class UserPet extends UserBase
     }
 
     /**
-     * @Api(name="noUsePet",path="/Api/User/UserPet/noUsePet")
+     * @Api(name="宠物下场",path="/Api/User/UserPet/noUsePet")
      * @ApiDescription("宠物下场")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -321,6 +321,77 @@ class UserPet extends UserBase
         Assert::assert(!!$info, '宠物数据不存在');
         PetService::getInstance()->noUsePet($info);
         $this->writeJson(Status::CODE_OK, [], "上阵成功.");
+    }
+
+    /**
+     * @Api(name="宠物分解",path="/Api/User/UserPet/decompose")
+     * @ApiDescription("宠物分解")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @Param(name="userPetId",lengthMax="11",required="")
+     * @ApiSuccessParam(name="result.userPetId",description="")
+     */
+    public function decompose()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $model = new UserPetModel();
+        $info = $model->where('userId', $this->who->userId)->get(['userPetId' => $param['userPetId']]);
+        Assert::assert(!!$info, '宠物数据不存在');
+        Assert::assert($info->isUse == 0, '已上阵宠物不能分解');
+        PetService::getInstance()->decompose($info);
+        $this->writeJson(Status::CODE_OK, [], "分解成功.");
+    }
+
+    /**
+     * @Api(name="获取宠物进阶所需物品",path="/Api/User/UserPet/getUpClassLevelGoodsList")
+     * @ApiDescription("获取宠物进阶所需物品")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @Param(name="userPetId",lengthMax="11",required="")
+     * @ApiSuccessParam(name="result.userPetId",description="")
+     */
+    public function getUpClassLevelGoodsList()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $model = new UserPetModel();
+        $info = $model->where('userId', $this->who->userId)->get(['userPetId' => $param['userPetId']]);
+        Assert::assert(!!$info, '宠物数据不存在');
+        $data = PetService::getInstance()->getUpClassLevelNeedGoods($info);
+        $this->writeJson(Status::CODE_OK, $data, "获取数据成功.");
+    }
+
+    /**
+     * @Api(name="宠物进阶",path="/Api/User/UserPet/upClassLevel")
+     * @ApiDescription("宠物进阶")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @Param(name="userPetId",lengthMax="11",required="")
+     * @ApiSuccessParam(name="result.userPetId",description="")
+     */
+    public function upClassLevel()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $model = new UserPetModel();
+        $info = $model->where('userId', $this->who->userId)->get(['userPetId' => $param['userPetId']]);
+        Assert::assert(!!$info, '宠物数据不存在');
+        Assert::assert($info->isUse == 0, '已上阵宠物不能进阶');
+        $data = PetService::getInstance()->upClassLevel($info);
+        $this->writeJson(Status::CODE_OK, $data, "进阶成功.");
     }
 
 
@@ -388,8 +459,8 @@ class UserPet extends UserBase
         $data['addMaxNumGoodsList'] = [
             [
                 'onceUpNum' => 5,
-                'num'=>50,
-                'goodsInfo'=>GoodsModel::create()->getInfoByCode('money'),
+                'num'       => 50,
+                'goodsInfo' => GoodsModel::create()->getInfoByCode('money'),
             ]
         ];
 
@@ -418,7 +489,6 @@ class UserPet extends UserBase
             $this->writeJson(Status::CODE_OK, $info, "数据不存在.");
             return false;
         }
-
         $info->destroy();
         $this->writeJson(Status::CODE_OK, [], "删除成功.");
     }
@@ -447,7 +517,7 @@ class UserPet extends UserBase
             ]);
         });
 
-        $this->writeJson(Status::CODE_OK,  ['maxNum' => $info->petNum], "扩充成功.");
+        $this->writeJson(Status::CODE_OK, ['maxNum' => $info->petNum], "扩充成功.");
     }
 }
 

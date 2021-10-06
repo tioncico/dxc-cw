@@ -43,9 +43,9 @@ class UserService extends BaseService
             $userBaseAttributeInfo->level += 1;
             $userBaseAttributeInfo->exp -= $levelConfig->exp;
             //升级属性
-            $userBaseAttributeInfo->endurance += $userBaseAttributeInfo->enduranceQualification;
-            $userBaseAttributeInfo->intellect += $userBaseAttributeInfo->intellectQualification;
-            $userBaseAttributeInfo->strength += $userBaseAttributeInfo->strengthQualification;
+            $userBaseAttributeInfo->endurance = $userBaseAttributeInfo->enduranceQualification*$userBaseAttributeInfo->level;
+            $userBaseAttributeInfo->intellect = $userBaseAttributeInfo->intellectQualification*$userBaseAttributeInfo->level;
+            $userBaseAttributeInfo->strength = $userBaseAttributeInfo->strengthQualification*$userBaseAttributeInfo->level;
             $userBaseAttributeInfo->update();
         }
         if ($userBaseAttributeInfo->exp >= $levelUpConfig->exp) {
