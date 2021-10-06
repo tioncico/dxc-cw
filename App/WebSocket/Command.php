@@ -19,9 +19,11 @@ class Command extends SplBean
     protected $data;
     protected $msg;
 
-    const SC_ACTION_GAME_INFO = 'gameInfo';
     const SC_ACTION_ERROR = 'error';
 
+    const SC_ACTION_MAP_INFO = 'mapInfo';
+    const SC_ACTION_USER_INFO = 'userInfo';
+    const SC_ACTION_EXIT_MAP = 'exitMap';
     const SC_ACTION_BOX_OPEN = 'boxOpen';
     const SC_ACTION_FIGHT = 'fightStart';
     const SC_ACTION_SKILL = 'fightSkill';
@@ -34,8 +36,16 @@ class Command extends SplBean
     const SC_ACTION_FIGHT_END = 'fightEnd';
 
 
-    const CS_EXIT_MAP = 'exitMap';
-    const CS_FIGHT = 'fight';
+    const CS_EXIT_MAP = 'exitMap';//退出地图
+    const CS_FIGHT = 'fight';//战斗
+    const CS_MAP_INFO = 'mapInfo';//获取地图信息
+    const CS_USER_INFO = 'userInfo';//获取用户信息
+    const CS_OPEN_BOX = 'openBox';//打开箱子
+    const CS_USE_SKILL = 'useUserSkill';//使用技能
+    const CS_STOP_FIGHT = 'stopFight';//停止战斗
+    const CS_REVIVE = 'revive';//复活
+    const CS_USE_GOODS = 'useGoods';//使用物品
+    const CS_NEXT_LEVEL_MAP = 'nextLevelMap';//下一层地图
 
     /**
      * @return mixed

@@ -10,9 +10,12 @@ namespace App\WebSocket\Controller;
 
 use App\Actor\Cache\UserRelationMap;
 use App\Actor\GameActor;
+use App\Model\Game\GoodsModel;
 use App\Model\Game\MapModel;
 use App\Model\Game\UserAttributeModel;
+use App\Model\Game\UserBackpackModel;
 use App\Model\Game\UserMapModel;
+use App\Service\Game\BackpackService;
 use App\Utility\Assert\Assert;
 use App\WebSocket\Command;
 use EasySwoole\EasySwoole\ServerManager;
@@ -47,6 +50,7 @@ class Index extends BaseController
         $userId = $this->userId();
         $param = $this->getParam();
         $mapId = (int)$param['mapId'];
+        var_dump($param);
         $mapInfo = UserMapModel::create()->get(['mapId' => $mapId, 'userId' => $userId]);
         Assert::assert(!!$mapInfo, '地图信息不存在或未解锁');
         //获取用户体力
@@ -77,9 +81,9 @@ class Index extends BaseController
      */
     public function mapInfo()
     {
-        $userId = $this->userId();
         $actorId = UserRelationMap::getInstance()->getUserMap($userId);
-        GameActor::client()->send($actorId, new Command(['action' => 'mapInfo']));
+        Assert::assert(!!$actorId, '不在地图中');
+        $this->actorSend(Command::CS_MAP_INFO);
     }
 
     /**
@@ -91,9 +95,9 @@ class Index extends BaseController
      */
     public function userInfo()
     {
-        $userId = $this->userId();
         $actorId = UserRelationMap::getInstance()->getUserMap($userId);
-        GameActor::client()->send($actorId, new Command(['action' => 'mapInfo']));
+        Assert::assert(!!$actorId, '不在地图中');
+        $this->actorSend(Command::CS_USER_INFO);
     }
 
     /**
@@ -127,8 +131,7 @@ class Index extends BaseController
         $userId = $this->userId();
         $actorId = UserRelationMap::getInstance()->getUserMap($userId);
         Assert::assert(!!$actorId, '不在地图中');
-
-        GameActor::client()->send($actorId, new Command(['action' => 'nextLevelMap']));
+        $this->actorSend(Command::CS_NEXT_LEVEL_MAP);
     }
 
     /**
@@ -160,7 +163,7 @@ class Index extends BaseController
         $userId = $this->userId();
         $actorId = UserRelationMap::getInstance()->getUserMap($userId);
         Assert::assert(!!$actorId, '不在地图中');
-        GameActor::client()->send($actorId, new Command(['action' => 'useUserSkill', 'data' => ['skillCode' => $param['skillCode']]]));
+        $this->actorSend(Command::CS_USE_SKILL,['skillCode' => $param['skillCode']]);
     }
 
     /**
@@ -170,7 +173,8 @@ class Index extends BaseController
      * Time: 4:14 下午
      */
     public function openBox(){
-
+        $param = $this->getParam();
+        $this->actorSend(Command::CS_OPEN_BOX,['x' => $param['x'], 'y' => $param['y']]);
     }
 
     /**
@@ -180,18 +184,35 @@ class Index extends BaseController
      * Time: 4:14 下午
      */
     public function stopFight(){
-
+        $this->actorSend(Command::CS_STOP_FIGHT);
     }
 
 
     /**
-     * 复活
+     * 复活(消耗复活币)
      * revive
      * @author tioncico
      * Time: 4:14 下午
      */
     public function revive(){
+        $userId = $this->userId();
+        $backpackInfo = UserBackpackModel::create()->getInfoByCode($userId,'revive');
+        Assert::assert($backpackInfo->num>=1,"复活币数量不足");
+        $goodsInfo = GoodsModel::create()->getInfoByCode('revive');
+        BackpackService::getInstance()->decGoods($userId,$goodsInfo,1);
+        $this->actorSend(Command::CS_REVIVE);
+    }
 
+    public function useGoods(){
+        $param = $this->getParam();
+        $userId = $this->userId();
+        $goodsCode = $param['goodsCode'];
+        $backpackInfo = UserBackpackModel::create()->getInfoByCode($userId,$goodsCode);
+        Assert::assert($backpackInfo->num>=1,"物品数量不足");
+
+        $goodsInfo = GoodsModel::create()->getInfoByCode('revive');
+        BackpackService::getInstance()->decGoods($userId,$goodsInfo,1);
+        $this->actorSend(Command::CS_USE_GOODS);
     }
 
 }

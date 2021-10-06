@@ -66,11 +66,9 @@ class User
 
     public function toArray(){
         return [
-              'userBaseAttribute'=>$this->userBaseAttribute,
               'userAttribute'=>$this->userAttribute,
               'userEquipmentList'=>$this->userEquipmentList,
               'userPetList'=>$this->userPetList,
-              'userSkillList'=>$this->userSkillList,
               'userNowAttribute'=>$this->userNowAttribute,
         ];
     }

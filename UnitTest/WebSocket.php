@@ -63,7 +63,7 @@ class WebSocket
 
     public function useSkill0002()
     {
-        $data = ['action' => 'useSkill', 'skillCode' => '0002'];
+        $data = ['action' => 'useSkill', 'skillCode' => '0007'];
         $this->push($data);
     }
 

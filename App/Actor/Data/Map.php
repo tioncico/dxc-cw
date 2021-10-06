@@ -117,7 +117,7 @@ class Map
     public function toArray(){
         return [
             'mapInfo'=>$this->mapInfo,
-            'mapMonsterList'=>$this->mapMonsterList,
+//            'mapMonsterList'=>$this->mapMonsterList,
             'nowMapLevel'=>$this->nowMapLevel,
             'nowMapGrid'=>$this->nowMapGrid,
         ];

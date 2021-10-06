@@ -72,7 +72,15 @@ class GameActor extends BaseActor
 
     public function mapInfo()
     {
-        MsgPushEvent::getInstance()->msgPush($this->userId, \App\WebSocket\Command::SC_ACTION_GAME_INFO, 200, "发送游戏初始化信息", [
+        MsgPushEvent::getInstance()->msgPush($this->userId, \App\WebSocket\Command::SC_ACTION_MAP_INFO, 200, "地图信息", [
+            'userInfo' => $this->user->toArray(),
+            'mapInfo'  => $this->map->toArray()
+        ]);
+    }
+
+    public function userInfo()
+    {
+        MsgPushEvent::getInstance()->msgPush($this->userId, \App\WebSocket\Command::SC_ACTION_USER_INFO, 200, "用户信息", [
             'userInfo' => $this->user->toArray(),
             'mapInfo'  => $this->map->toArray()
         ]);
@@ -84,6 +92,10 @@ class GameActor extends BaseActor
         Assert::assert(empty($this->fight), "战斗未结束,无法退出");
         //清理用户地图数据
         UserRelationMap::getInstance()->delUserMap($this->userId);
+        MsgPushEvent::getInstance()->msgPush($this->userId, \App\WebSocket\Command::SC_ACTION_EXIT_MAP, 200, "退出地图", [
+            'userInfo' => $this->user->toArray(),
+            'mapInfo'  => $this->map->toArray()
+        ]);
         //清理类数据
         $this->user = null;
         $this->map = null;
@@ -108,6 +120,14 @@ class GameActor extends BaseActor
         $fight->startFight();
     }
 
+    /**
+     * 用户使用技能
+     * useUserSkill
+     * @param $param
+     * @throws \App\Utility\Assert\AssertException
+     * @author tioncico
+     * Time: 9:43 上午
+     */
     public function useUserSkill($param)
     {
         $skillCode = $param['skillCode'];
@@ -117,6 +137,14 @@ class GameActor extends BaseActor
     }
 
 
+    /**
+     * 删除怪物
+     * delMonsterEvent
+     * @param $x
+     * @param $y
+     * @author tioncico
+     * Time: 9:43 上午
+     */
     protected function delMonsterEvent($x, $y)
     {
         $this->fight->getEvent()->register('MONSTER_DIE', 'deleteMonster', function () use ($x, $y) {
