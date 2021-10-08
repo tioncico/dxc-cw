@@ -105,7 +105,6 @@ class GameVersion extends UserBase
      * @ApiSuccessParam(name="msg",description="api提示信息")
      * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
      * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
-     * @Param(name="id",lengthMax="11",required="")
      * @ApiSuccessParam(name="result.id",description="")
      * @ApiSuccessParam(name="result.versionId",description="版本id")
      * @ApiSuccessParam(name="result.description",description="版本介绍")
@@ -116,7 +115,7 @@ class GameVersion extends UserBase
     {
         $param = ContextManager::getInstance()->get('param');
         $model = new GameVersionModel();
-        $info = $model->order('versionId', 'DESC')->get(['id' => $param['id']]);
+        $info = $model->order('versionId', 'DESC')->get();
         $this->writeJson(Status::CODE_OK, $info, "获取数据成功.");
     }
 

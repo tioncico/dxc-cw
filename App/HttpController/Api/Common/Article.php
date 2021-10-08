@@ -40,40 +40,55 @@ class Article extends CommonBase
      * @Param(name="page",description="页数",optional="")
      * @ApiSuccess({"code":200,"result":{"data":{"list":null,"total":null}},"msg":"success"})
      */
-    public function getAll($categoryId,$categoryName,$articleCode,$page)
+    public function getAll($categoryId, $categoryName, $articleCode, $page)
     {
         $model = new ArticleModel();
         $pageSize = 20;
-        if ($categoryId){
-            $model->where(['categoryId'=>$categoryId]);
+        if ($categoryId) {
+            $model->where(['categoryId' => $categoryId]);
         }
-        if ($categoryName){
-            $model->where(['categoryName'=>$categoryName]);
+        if ($categoryName) {
+            $model->where(['categoryName' => $categoryName]);
         }
-        if ($articleCode){
-            $model->where(['articleCode'=>$articleCode]);
+        if ($articleCode) {
+            $model->where(['articleCode' => $articleCode]);
         }
-        $data = $model->getList($page??1,$pageSize);
+        $data = $model->getList($page ?? 1, $pageSize);
         $this->writeJson(Status::CODE_OK, $data, 'success');
     }
+
     /**
      * @Api(name="getOne",path="/Api/Common/Article/getOne")
      * @ApiDescription("获取一条文章数据")
      * @Param(name="articleId",description="文章ID",optional="")
      * @Param(name="articleCode",description="文章code",optional="")
      */
-    public function getOne($articleId,$articleCode){
+    public function getOne($articleId, $articleCode)
+    {
         $model = new ArticleModel();
-        if (empty($articleCode)&&empty($articleId)){
+        if (empty($articleCode) && empty($articleId)) {
             $this->writeJson(Status::CODE_BAD_REQUEST, '', '文章ID或文章code必须传一个');
         }
-        if ($articleCode){
-            $model->where(['articleCode'=>$articleCode]);
+        if ($articleCode) {
+            $model->where(['articleCode' => $articleCode]);
         }
-        if ($articleId){
-            $model->where(['articleId'=>$articleId]);
+        if ($articleId) {
+            $model->where(['articleId' => $articleId]);
         }
-        $data=$model->get();
+        $data = $model->get();
         $this->writeJson(Status::CODE_OK, $data, 'success');
+    }
+
+    /**
+     * @Api(name="获取游戏公告",path="/Api/Common/Article/getOne")
+     * @ApiDescription("获取一条文章数据")
+     */
+    public function getNotice()
+    {
+        $model = new ArticleModel();
+        $model->where(['articleCode' => "gameNotice"]);
+        $data = $model->get();
+        $this->writeJson(Status::CODE_OK, $data, 'success');
+
     }
 }
