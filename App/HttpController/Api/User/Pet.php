@@ -24,7 +24,7 @@ use EasySwoole\Validate\Validate;
  * Pet
  * Class Pet
  * Create With ClassGeneration
- * @ApiGroup(groupName="/Api/User.Pet")
+ * @ApiGroup(groupName="宠物功能")
  * @ApiGroupAuth(name="")
  * @ApiGroupDescription("")
  */

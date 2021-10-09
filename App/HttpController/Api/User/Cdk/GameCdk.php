@@ -25,7 +25,7 @@ use EasySwoole\Validate\Validate;
  * GameCdk
  * Class GameCdk
  * Create With ClassGeneration
- * @ApiGroup(groupName="/Api/User/Cdk.GameCdk")
+ * @ApiGroup(groupName="cdk兑换")
  * @ApiGroupAuth(name="")
  * @ApiGroupDescription("")
  */

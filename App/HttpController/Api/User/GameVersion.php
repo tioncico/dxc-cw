@@ -23,12 +23,13 @@ use EasySwoole\Validate\Validate;
  * GameVersion
  * Class GameVersion
  * Create With ClassGeneration
- * @ApiGroup(groupName="/Api/User.GameVersion")
+ * @ApiGroup(groupName="游戏版本")
  * @ApiGroupAuth(name="")
  * @ApiGroupDescription("")
  */
 class GameVersion extends UserBase
 {
+    protected $noneAuthAction = ['getLastVersion'];
     /**
      * @Api(name="add",path="/Api/User/GameVersion/add")
      * @ApiDescription("新增数据")

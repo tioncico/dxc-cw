@@ -26,7 +26,7 @@ use EasySwoole\Validate\Validate;
  * ShopGoods
  * Class ShopGoods
  * Create With ClassGeneration
- * @ApiGroup(groupName="/Api/User.ShopGoods")
+ * @ApiGroup(groupName="商城功能")
  * @ApiGroupAuth(name="")
  * @ApiGroupDescription("")
  */
