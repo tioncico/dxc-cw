@@ -29,6 +29,11 @@ use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\Param;
 use EasySwoole\Utility\Random;
 
+/**
+ * Class Auth
+ * @package App\HttpController\Api\User
+ * @ApiGroup(groupName="用户中心功能")
+ */
 class Auth extends UserBase
 {
     protected $noneAuthAction = ['login', 'register'];
