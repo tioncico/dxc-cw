@@ -27,12 +27,13 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-    PetModel::create()->chunk(function (PetModel $petModel) {
-        $name = "灵魂·{$petModel->name}";
-        GoodsModel::create()->where('name',$name)->update([
-            'code'=>"petSoul{$petModel->petId}"
-        ]);
-    });
+    \App\Service\Game\Cdk\CdkService::getInstance()->addSdk([
+        [
+            'code' => 'money',
+            'num'  => 100,
+        ]
+    ], 1);
+
 
     \Swoole\Timer::clearAll();
 });
