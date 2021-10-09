@@ -27,13 +27,6 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-    \App\Service\Game\Cdk\CdkService::getInstance()->addSdk([
-        [
-            'code' => 'money',
-            'num'  => 100,
-        ]
-    ], 1);
-
-
+    GoodsModel::create()->addData("技能卷轴","skillScroll",7,"技能卷轴,学习/升级技能必备材料",1);
     \Swoole\Timer::clearAll();
 });
