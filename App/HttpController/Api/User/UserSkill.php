@@ -52,7 +52,7 @@ class UserSkill extends UserBase
 	 * @Param(name="manaCost",alias="耗蓝",description="耗蓝",lengthMax="255",optional="")
 	 * @Param(name="entryCode",alias="词条code",description="词条code",lengthMax="255",optional="")
 	 * @Param(name="description",alias="介绍",description="介绍",lengthMax="255",optional="")
-	 * @Param(name="effectParam",alias="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字",description="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字",lengthMax="255",optional="")
+	 * @Param(name="effectParam",alias="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字",description="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字",lengthMax="255",optional="")
 	 */
 	public function add()
 	{
@@ -103,7 +103,7 @@ class UserSkill extends UserBase
 	 * @Param(name="manaCost",alias="耗蓝",description="耗蓝",lengthMax="255",optional="")
 	 * @Param(name="entryCode",alias="词条code",description="词条code",lengthMax="255",optional="")
 	 * @Param(name="description",alias="介绍",description="介绍",lengthMax="255",optional="")
-	 * @Param(name="effectParam",alias="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字",description="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字",lengthMax="255",optional="")
+	 * @Param(name="effectParam",alias="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字",description="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字",lengthMax="255",optional="")
 	 */
 	public function update()
 	{
@@ -160,7 +160,7 @@ class UserSkill extends UserBase
 	 * @ApiSuccessParam(name="result.manaCost",description="耗蓝")
 	 * @ApiSuccessParam(name="result.entryCode",description="词条code")
 	 * @ApiSuccessParam(name="result.description",description="介绍")
-	 * @ApiSuccessParam(name="result.effectParam",description="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字")
+	 * @ApiSuccessParam(name="result.effectParam",description="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字")
 	 */
 	public function getOne()
 	{
@@ -197,7 +197,7 @@ class UserSkill extends UserBase
 	 * @ApiSuccessParam(name="result[].manaCost",description="耗蓝")
 	 * @ApiSuccessParam(name="result[].entryCode",description="词条code")
 	 * @ApiSuccessParam(name="result[].description",description="介绍")
-	 * @ApiSuccessParam(name="result[].effectParam",description="参数 json数组,例如词条为:"攻击力增加x",那param就只有一个参数,参数为数字")
+	 * @ApiSuccessParam(name="result[].effectParam",description="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字")
 	 */
 	public function getList()
 	{
