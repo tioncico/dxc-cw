@@ -27,7 +27,7 @@ use EasySwoole\Validate\Validate;
  * GameTask
  * Class GameTask
  * Create With ClassGeneration
- * @ApiGroup(groupName="/Api/User/Task.GameTask")
+ * @ApiGroup(groupName="游戏任务")
  * @ApiGroupAuth(name="")
  * @ApiGroupDescription("")
  */

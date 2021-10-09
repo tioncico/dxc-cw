@@ -23,7 +23,7 @@ use EasySwoole\Validate\Validate;
  * UserMap
  * Class UserMap
  * Create With ClassGeneration
- * @ApiGroup(groupName="/Api/User.UserMap")
+ * @ApiGroup(groupName="游戏地图")
  * @ApiGroupAuth(name="")
  * @ApiGroupDescription("")
  */
@@ -31,7 +31,7 @@ class UserMap extends UserBase
 {
 
     /**
-     * @Api(name="getList",path="/Api/User/UserMap/getList")
+     * @Api(name="获取用户可进入地图",path="/Api/User/UserMap/getList")
      * @ApiDescription("获取数据列表")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")

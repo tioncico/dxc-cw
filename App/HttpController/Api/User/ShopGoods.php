@@ -212,7 +212,7 @@ class ShopGoods extends UserBase
 
 
     /**
-     * @Api(name="getList",path="/Api/User/ShopGoods/getList")
+     * @Api(name="获取商品列表",path="/Api/User/ShopGoods/getList")
      * @ApiDescription("获取数据列表")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")

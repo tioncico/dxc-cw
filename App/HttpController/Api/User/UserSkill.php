@@ -23,7 +23,7 @@ use EasySwoole\Validate\Validate;
  * UserSkill
  * Class UserSkill
  * Create With ClassGeneration
- * @ApiGroup(groupName="/Api/User.UserSkill")
+ * @ApiGroup(groupName="用户技能")
  * @ApiGroupAuth(name="")
  * @ApiGroupDescription("")
  */
@@ -172,7 +172,7 @@ class UserSkill extends UserBase
 
 
 	/**
-	 * @Api(name="getList",path="/Api/User/UserSkill/getList")
+	 * @Api(name="获取用户技能列表",path="/Api/User/UserSkill/getList")
 	 * @ApiDescription("获取数据列表")
 	 * @Method(allow={GET,POST})
 	 * @InjectParamsContext(key="param")
