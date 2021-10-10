@@ -139,7 +139,7 @@ class UserSkill extends UserBase
 
 
     /**
-     * @Api(name="getOne",path="/Api/User/UserSkill/getOne")
+     * @Api(name="技能出战",path="/Api/User/UserSkill/useSkill")
      * @ApiDescription("获取一条数据")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -148,12 +148,12 @@ class UserSkill extends UserBase
      * @ApiSuccessParam(name="msg",description="api提示信息")
      * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
      * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
-     * @Param(name="userSkillId",alias="玩家技能id",description="玩家技能id",lengthMax="11",required="")
+     * @Param(name="skillId",alias="技能id",description="技能id",lengthMax="11",required="")
      * @ApiSuccessParam(name="result.userSkillId",description="玩家技能id")
      * @ApiSuccessParam(name="result.userId",description="玩家id")
      * @ApiSuccessParam(name="result.skillId",description="技能id")
      * @ApiSuccessParam(name="result.skillName",description="技能名")
-     * @ApiSuccessParam(name="result.triggerType",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发")
+     * @ApiSuccessParam(name="result.triggerType",description=" 触发类型 0主动技能,其他都为被动技能")
      * @ApiSuccessParam(name="result.triggerRate",description="触发概率计算")
      * @ApiSuccessParam(name="result.isUse",description="是否穿戴")
      * @ApiSuccessParam(name="result.level",description="技能等级")
@@ -165,12 +165,60 @@ class UserSkill extends UserBase
      * @ApiSuccessParam(name="result.description",description="介绍")
      * @ApiSuccessParam(name="result.effectParam",description="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字")
      */
-    public function getOne()
+    public function useSkill()
     {
         $param = ContextManager::getInstance()->get('param');
+        $skillInfo = SkillModel::create()->get($param['skillId']);
+        Assert::assert(!!$skillInfo, "技能数据不存在!");
         $model = new UserSkillModel();
-        $info = $model->get(['userSkillId' => $param['userSkillId']]);
-        $this->writeJson(Status::CODE_OK, $info, "获取数据成功.");
+        $info = $model->getUserSkillByCode($this->who->userId,$skillInfo);
+        Assert::assert(!!$info,"你没有学习此技能");
+        Assert::assert($info->isUse==0,"技能已出战");
+        $info->isUse=1;
+        $info->update();
+        $this->writeJson(Status::CODE_OK, $info, "技能出战成功.");
+    }
+
+
+    /**
+     * @Api(name="技能下场",path="/Api/User/UserSkill/noUseSkill")
+     * @ApiDescription("获取一条数据")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @Param(name="skillId",alias="技能id",description="技能id",lengthMax="11",required="")
+     * @ApiSuccessParam(name="result.userSkillId",description="玩家技能id")
+     * @ApiSuccessParam(name="result.userId",description="玩家id")
+     * @ApiSuccessParam(name="result.skillId",description="技能id")
+     * @ApiSuccessParam(name="result.skillName",description="技能名")
+     * @ApiSuccessParam(name="result.triggerType",description=" 触发类型 0主动技能,其他都为被动技能")
+     * @ApiSuccessParam(name="result.triggerRate",description="触发概率计算")
+     * @ApiSuccessParam(name="result.isUse",description="是否穿戴")
+     * @ApiSuccessParam(name="result.level",description="技能等级")
+     * @ApiSuccessParam(name="result.rarityLevel",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
+     * @ApiSuccessParam(name="result.maxLevel",description="最大等级")
+     * @ApiSuccessParam(name="result.coolingTime",description="冷却时间")
+     * @ApiSuccessParam(name="result.manaCost",description="耗蓝")
+     * @ApiSuccessParam(name="result.entryCode",description="词条code")
+     * @ApiSuccessParam(name="result.description",description="介绍")
+     * @ApiSuccessParam(name="result.effectParam",description="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字")
+     */
+    public function noUseSkill()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $skillInfo = SkillModel::create()->get($param['skillId']);
+        Assert::assert(!!$skillInfo, "技能数据不存在!");
+        $model = new UserSkillModel();
+        $info = $model->getUserSkillByCode($this->who->userId,$skillInfo);
+        Assert::assert(!!$info,"你没有学习此技能");
+        Assert::assert($info->isUse==1,"技能已下场");
+        $info->isUse=0;
+        $info->update();
+        $this->writeJson(Status::CODE_OK, $info, "技能下场成功.");
     }
 
     /**
@@ -225,7 +273,7 @@ class UserSkill extends UserBase
      * @ApiSuccessParam(name="result.userSkillInfo.userId",description="玩家id")
      * @ApiSuccessParam(name="result.userSkillInfo.skillId",description="技能id")
      * @ApiSuccessParam(name="result.userSkillInfo.skillName",description="技能名")
-     * @ApiSuccessParam(name="result.userSkillInfo.triggerType",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发")
+     * @ApiSuccessParam(name="result.triggerType",description=" 触发类型 0主动技能,其他都为被动技能")
      * @ApiSuccessParam(name="result.userSkillInfo.triggerRate",description="触发概率计算")
      * @ApiSuccessParam(name="result.userSkillInfo.isUse",description="是否穿戴")
      * @ApiSuccessParam(name="result.userSkillInfo.level",description="技能等级")
@@ -264,7 +312,7 @@ class UserSkill extends UserBase
      * @ApiSuccessParam(name="result[].userId",description="玩家id")
      * @ApiSuccessParam(name="result[].skillId",description="技能id")
      * @ApiSuccessParam(name="result[].skillName",description="技能名")
-     * @ApiSuccessParam(name="result[].triggerType",description=" 触发类型 0主动触发 1战斗前buff,2攻击前触发,3攻击后触发,4被攻击前触发,5被攻击后触发,6扣血触发,7一秒触发一次,8战斗结束前触发,9战斗结束后触发")
+     * @ApiSuccessParam(name="result.triggerType",description=" 触发类型 0主动技能,其他都为被动技能")
      * @ApiSuccessParam(name="result[].triggerRate",description="触发概率计算")
      * @ApiSuccessParam(name="result[].isUse",description="是否穿戴")
      * @ApiSuccessParam(name="result[].level",description="技能等级")
