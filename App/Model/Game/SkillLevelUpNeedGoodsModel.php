@@ -3,6 +3,7 @@
 namespace App\Model\Game;
 
 use App\Model\BaseModel;
+use EasySwoole\Mysqli\QueryBuilder;
 
 /**
  * SkillLevelUpNeedGoodsModel
@@ -51,5 +52,12 @@ class SkillLevelUpNeedGoodsModel extends BaseModel
 		$model->save();
 		return $model;
 	}
+
+    public function goodsInfo()
+    {
+        return $this->hasOne(GoodsModel::class, function (QueryBuilder $query) {
+            return $query;
+        }, 'goodsCode', 'code');
+    }
 }
 

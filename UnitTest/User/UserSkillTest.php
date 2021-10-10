@@ -120,6 +120,19 @@ class UserSkillTest extends UserBaseTestCase
 	}
 
 
+	public function testGetSkillLevelUpNeedGoodsInfo()
+	{
+		$model = new UserSkillModel();
+		$data = [
+		    'skillId'=>1,
+            'level'=>1
+        ];
+		$response = $this->request('getSkillLevelUpNeedGoodsInfo',$data);
+
+		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
+	}
+
+
 	public function testDel()
 	{
 		$data = [];
