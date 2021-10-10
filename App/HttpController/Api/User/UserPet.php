@@ -454,7 +454,7 @@ class UserPet extends UserBase
         if (isset($param['type'])) {
             $model->where('type', $param['type']);
         }
-        $data = $model->order('isUse', 'desc')->order('level', 'desc')->getList($page, $pageSize);
+        $data = $model->with(['skillList'],false)->order('isUse', 'desc')->order('level', 'desc')->getList($page, $pageSize);
         $data['maxNum'] = UserExtraLimitModel::create()->getPetNum($this->who->userId);
         $data['addMaxNumGoodsList'] = [
             [

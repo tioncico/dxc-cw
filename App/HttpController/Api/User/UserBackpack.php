@@ -112,7 +112,7 @@ class UserBackpack extends UserBase
      * @ApiSuccessParam(name="code",description="状态码")
      * @ApiSuccessParam(name="result",description="api请求结果")
      * @ApiSuccessParam(name="msg",description="api提示信息")
-     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiSuccess({"code":200,"result":null,"msg":"使用物品成功.","requestId":null,"goodsChange":[{"goodsInfo":{"goodsId":137,"name":"宠物蛋·小精灵","code":"pet00010","baseCode":"petEgg","type":6,"description":"宠物蛋·小精灵","gold":1,"isSale":1,"level":1,"rarityLevel":1,"extraData":"10"},"num":-1}],"equipmentChange":[],"petChange":[{"petInfo":{"petId":1,"userId":1,"name":"铁甲蜥","type":"1","isUse":0,"description":"铁甲蜥","level":1,"classLevel":0,"awakeLevel":0,"exp":0,"isBest":1,"hp":100,"mp":100,"attack":0,"defense":0,"endurance":0,"intellect":0,"strength":0,"enduranceQualification":0,"intellectQualification":0,"strengthQualification":0,"criticalRate":0,"criticalStrikeDamage":0,"hitRate":0,"dodgeRate":0,"penetrate":0,"attackSpeed":0,"userElement":1,"attackElement":0,"jin":0,"mu":0,"tu":0,"sui":0,"huo":0,"light":0,"dark":0,"userPetId":10},"num":1}]})
      * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
      * @Param(name="backpackId",alias="背包id",description="背包id",lengthMax="11",required="")
      * @Param(name="num",alias="使用数量",description="使用数量",min="1",max="100",lengthMax="11",required="")

@@ -7,6 +7,7 @@ namespace App\HttpController\Api;
 use App\HttpController\Base;
 use App\Service\GameResponse;
 use App\Utility\Assert\AssertException;
+use EasySwoole\EasySwoole\Logger;
 use EasySwoole\Http\Message\Status;
 use EasySwoole\HttpAnnotation\Exception\Annotation\ParamValidateError;
 use EasySwoole\Validate\Validate;

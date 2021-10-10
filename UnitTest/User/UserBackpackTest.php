@@ -94,7 +94,7 @@ class UserBackpackTest extends UserBaseTestCase
 	public function testUseGoods()
 	{
 		$data = [
-		    'backpackId'=>110,
+		    'backpackId'=>828,
             'num'=>1
         ];
 		$response = $this->request('useGoods',$data);

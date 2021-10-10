@@ -195,7 +195,7 @@ class UserPetTest extends UserBaseTestCase
 		$data = [];
 		$response = $this->request('getList',$data);
 
-		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
 	}
 
 

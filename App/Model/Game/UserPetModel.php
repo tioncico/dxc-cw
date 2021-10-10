@@ -150,6 +150,12 @@ class UserPetModel extends BaseModel
         return $model;
     }
 
+    public function skillList()
+    {
+        return $this->hasMany(UserPetSkillModel::class, function (QueryBuilder $query) {
+            return $query;
+        }, 'userPetId', 'userPetId');
+    }
 
 }
 

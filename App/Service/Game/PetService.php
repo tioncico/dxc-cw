@@ -74,7 +74,7 @@ class PetService
         if ($data['enduranceQualification'] == $petModel->enduranceQualification && $data['intellectQualification'] == $petModel->intellectQualification && $data['strengthQualification'] == $petModel->strengthQualification) {
             $data['isBest'] = 1;
         }
-        $model =    BaseModel::create(function ()use($data){
+        $model = BaseModel::transaction(function () use ($data) {
             $model = new UserPetModel($data);
             $model->save();
             $this->addPetSkill($model);
@@ -85,24 +85,24 @@ class PetService
 
     public function addPetSkill(UserPetModel $userPetModel)
     {
-        $petSkillList  = PetSkillModel::create()->where('petId',$userPetModel->petId)->all();
-        foreach ($petSkillList as $petSkill){
+        $petSkillList = PetSkillModel::create()->where('petId', $userPetModel->petId)->all();
+        foreach ($petSkillList as $petSkill) {
             $data = [
-                'userId'=>$userPetModel->userId,
-                'userPetId'=>$userPetModel->userPetId,
-                'skillId'=>$petSkill->skillId,
-                'skillName'=>$petSkill->skillName,
-                'triggerType'=>$petSkill->triggerType,
-                'triggerRate'=>$petSkill->triggerRate,
-                'isUse'=>$petSkill->isUse,
-                'level'=>$petSkill->level,
-                'rarityLevel'=>$petSkill->rarityLevel,
-                'maxLevel'=>$petSkill->maxLevel,
-                'coolingTime'=>$petSkill->coolingTime,
-                'manaCost'=>$petSkill->manaCost,
-                'entryCode'=>$petSkill->entryCode,
-                'description'=>$petSkill->description,
-                'effectParam'=>$petSkill->effectParam,
+                'userId'      => $userPetModel->userId,
+                'userPetId'   => $userPetModel->userPetId,
+                'skillId'     => $petSkill->skillId,
+                'skillName'   => $petSkill->skillName,
+                'triggerType' => $petSkill->triggerType,
+                'triggerRate' => $petSkill->triggerRate,
+                'isUse'       => $petSkill->isUse,
+                'level'       => $petSkill->level,
+                'rarityLevel' => $petSkill->rarityLevel,
+                'maxLevel'    => $petSkill->maxLevel,
+                'coolingTime' => $petSkill->coolingTime,
+                'manaCost'    => $petSkill->manaCost,
+                'entryCode'   => $petSkill->entryCode,
+                'description' => $petSkill->description,
+                'effectParam' => $petSkill->effectParam,
             ];
             $skill = new UserPetSkillModel($data);
             $skill->save();
