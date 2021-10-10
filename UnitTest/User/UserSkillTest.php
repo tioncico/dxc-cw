@@ -12,7 +12,7 @@ use EasySwoole\Utility\Random;
  */
 class UserSkillTest extends UserBaseTestCase
 {
-	public $modelName = '/Api/User/UserSkill';
+	public $modelName = 'UserSkill';
 
 
 	public function testAdd()
@@ -116,7 +116,7 @@ class UserSkillTest extends UserBaseTestCase
 		$data = [];
 		$response = $this->request('getList',$data);
 
-		//var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
+		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE));
 	}
 
 

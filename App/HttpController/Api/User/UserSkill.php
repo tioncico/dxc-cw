@@ -2,6 +2,7 @@
 
 namespace App\HttpController\Api\User;
 
+use App\Model\Game\SkillModel;
 use App\Model\Game\UserSkillModel;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
@@ -179,7 +180,7 @@ class UserSkill extends UserBase
 	 * @ApiSuccessParam(name="code",description="状态码")
 	 * @ApiSuccessParam(name="result",description="api请求结果")
 	 * @ApiSuccessParam(name="msg",description="api提示信息")
-	 * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+	 * @ApiSuccess({"code":200,"result":[{"skillId":1,"name":"蓄力一击","level":1,"triggerType":0,"triggerRate":"{$self.hitRate}","rarityLevel":1,"maxLevel":10,"coolingTime":5,"manaCost":"10+($trigger_skillLevel*10)","entryCode":"0002","description":"蓄力攻击一次,造成 100+(100+[技能等级]*10)%攻击力 伤害","effectParam":"[\"100+(100+{$trigger_skillLevel}*10)*{$trigger_attack}\/100\"]","userSkillInfo":{"skillId":1,"userId":1,"level":1,"isUse":1}}],"msg":"获取列表成功","requestId":null,"goodsChange":[],"equipmentChange":[],"petChange":[]})
 	 * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
 	 * @Param(name="page", from={GET,POST}, alias="页数", optional="")
 	 * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
@@ -198,16 +199,22 @@ class UserSkill extends UserBase
 	 * @ApiSuccessParam(name="result[].entryCode",description="词条code")
 	 * @ApiSuccessParam(name="result[].description",description="介绍")
 	 * @ApiSuccessParam(name="result[].effectParam",description="参数 json数组,例如词条为:攻击力增加x,那param就只有一个参数,参数为数字")
-	 */
+     * @ApiSuccessParam(name="result[].userSkillInfo.skillId",description="技能id")
+     * @ApiSuccessParam(name="result[].userSkillInfo.userId",description="用户id")
+     * @ApiSuccessParam(name="result[].userSkillInfo.level",description="技能等级")
+     * @ApiSuccessParam(name="result[].userSkillInfo.isUse",description="是否出战")
+     */
 	public function getList()
 	{
 		$param = ContextManager::getInstance()->get('param');
 		$page = (int)($param['page'] ?? 1);
 		$pageSize = (int)($param['pageSize'] ?? 20);
-		$model = new UserSkillModel();
-
-		$data = $model->getList($page, $pageSize);
-		$this->writeJson(Status::CODE_OK, $data, '获取列表成功');
+		$model = new SkillModel();
+		$model->field("skill_list.*");
+        $model->join('skill_shop_list','skill_shop_list.skillId = skill_list.skillId');
+//        $model->join('user_skill_list','user_skill_list.skillId = skill_list.skillId and user_skill_list.userId='.$this->who->userId,'right');
+		$data = $model->with(['userSkillInfo'=>$this->who->userId],false)->all();
+		$this->writeJson(Status::CODE_OK, ['list'=>$data], '获取列表成功');
 	}
 
 

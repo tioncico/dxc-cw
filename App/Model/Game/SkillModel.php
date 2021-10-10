@@ -3,6 +3,7 @@
 namespace App\Model\Game;
 
 use App\Model\BaseModel;
+use EasySwoole\Mysqli\QueryBuilder;
 
 /**
  * SkillModel
@@ -79,6 +80,17 @@ class SkillModel extends BaseModel
 
 	public function getInfoByCode($code){
 	    return $this->where('entryCode',$code)->get();
+    }
+
+    public function userSkillInfo($userId=-1){
+	    if ($userId<=0){
+	        return null;
+        }
+        return $this->hasOne(UserSkillModel::class, function (QueryBuilder $query)use($userId){
+            $query->fields("skillId,userId,level,isUse");
+            $query->where('userId',$userId);
+            return $query;
+        }, 'skillId', 'skillId');
     }
 }
 
