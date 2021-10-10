@@ -7,8 +7,10 @@ namespace App\Service\Game;
 use App\Model\BaseModel;
 use App\Model\Game\GoodsModel;
 use App\Model\Game\PetModel;
+use App\Model\Game\PetSkillModel;
 use App\Model\Game\UserBackpackModel;
 use App\Model\Game\UserPetModel;
+use App\Model\Game\UserPetSkillModel;
 use App\Service\GameResponse;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
@@ -72,10 +74,39 @@ class PetService
         if ($data['enduranceQualification'] == $petModel->enduranceQualification && $data['intellectQualification'] == $petModel->intellectQualification && $data['strengthQualification'] == $petModel->strengthQualification) {
             $data['isBest'] = 1;
         }
-
-        $model = new UserPetModel($data);
-        $model->save();
+        $model =    BaseModel::create(function ()use($data){
+            $model = new UserPetModel($data);
+            $model->save();
+            $this->addPetSkill($model);
+            return $model;
+        });
         return $model;
+    }
+
+    public function addPetSkill(UserPetModel $userPetModel)
+    {
+        $petSkillList  = PetSkillModel::create()->where('petId',$userPetModel->petId)->all();
+        foreach ($petSkillList as $petSkill){
+            $data = [
+                'userId'=>$userPetModel->userId,
+                'userPetId'=>$userPetModel->userPetId,
+                'skillId'=>$petSkill->skillId,
+                'skillName'=>$petSkill->skillName,
+                'triggerType'=>$petSkill->triggerType,
+                'triggerRate'=>$petSkill->triggerRate,
+                'isUse'=>$petSkill->isUse,
+                'level'=>$petSkill->level,
+                'rarityLevel'=>$petSkill->rarityLevel,
+                'maxLevel'=>$petSkill->maxLevel,
+                'coolingTime'=>$petSkill->coolingTime,
+                'manaCost'=>$petSkill->manaCost,
+                'entryCode'=>$petSkill->entryCode,
+                'description'=>$petSkill->description,
+                'effectParam'=>$petSkill->effectParam,
+            ];
+            $skill = new UserPetSkillModel($data);
+            $skill->save();
+        }
     }
 
 
@@ -160,7 +191,7 @@ class PetService
                 Assert::assert($userBackpackInfo->num > $num, "物品 [{$goodsInfo->name}] 数量不足");
                 BackpackService::getInstance()->decGoods($userPetInfo->userId, $goodsInfo, $num);
             }
-            $userPetInfo->update(['classLevel'=>$userPetInfo->classLevel+1]);
+            $userPetInfo->update(['classLevel' => $userPetInfo->classLevel + 1]);
             $this->countPetAttribute($userPetInfo);
             GameResponse::getInstance()->addPet($userPetInfo, 0);
             return $userPetInfo;
@@ -201,9 +232,9 @@ class PetService
     public function getUpClassLevelNeedGoods(UserPetModel $userPetInfo)
     {
         //计算宠物精华 = 需要升级的宠物阶级*10
-        $petEssenceNum = ($userPetInfo->classLevel+1) * 100;
+        $petEssenceNum = ($userPetInfo->classLevel + 1) * 100;
         //计算宠物灵魂需要数量 = 需要升级的宠物阶级*2
-        $petSoulNum = $this->countPetSoulNum($userPetInfo->classLevel+1);
+        $petSoulNum = $this->countPetSoulNum($userPetInfo->classLevel + 1);
 
         return [
             [
