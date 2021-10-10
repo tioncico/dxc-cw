@@ -403,7 +403,7 @@ class UserPet extends UserBase
      * @ApiSuccessParam(name="code",description="状态码")
      * @ApiSuccessParam(name="result",description="api请求结果")
      * @ApiSuccessParam(name="msg",description="api提示信息")
-     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiSuccess({"code":200,"result":{"page":1,"pageSize":99999,"list":[{"userPetId":10,"petId":1,"userId":1,"name":"铁甲蜥","type":"1","isUse":0,"description":"铁甲蜥","level":1,"classLevel":0,"awakeLevel":0,"exp":0,"isBest":1,"hp":100,"mp":100,"attack":0,"defense":0,"endurance":0,"intellect":0,"strength":0,"enduranceQualification":0,"intellectQualification":0,"strengthQualification":0,"criticalRate":0,"criticalStrikeDamage":0,"hitRate":0,"dodgeRate":0,"penetrate":0,"attackSpeed":0,"userElement":1,"attackElement":0,"jin":0,"mu":0,"tu":0,"sui":0,"huo":0,"light":0,"dark":0,"skillList":[{"userPetSkillId":10,"userId":1,"userPetId":10,"skillId":1,"skillName":"铁甲蜥技能1","triggerType":70,"triggerRate":"100","isUse":1,"level":1,"rarityLevel":4,"maxLevel":10,"coolingTime":"1","manaCost":"1","entryCode":"pet_1_1","description":"铁甲蜥技能1","effectParam":""}]}],"total":1,"pageCount":1,"maxNum":100,"addMaxNumGoodsList":[{"onceUpNum":5,"num":50,"goodsInfo":{"goodsId":2,"name":"钻石","code":"money","baseCode":null,"type":2,"description":"钻石,高级游戏货币","gold":0,"isSale":0,"level":1,"rarityLevel":5,"extraData":null}}]},"msg":"获取列表成功","requestId":null,"goodsChange":[],"equipmentChange":[],"petChange":[]})
      * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
      * @Param(name="type", from={GET,POST}, description="宠物类型 1金2木3土4水5火6光7暗", optional="")
      * @Param(name="page", from={GET,POST}, alias="页数", optional="")
