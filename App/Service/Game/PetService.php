@@ -9,6 +9,8 @@ use App\Model\Game\GoodsModel;
 use App\Model\Game\PetModel;
 use App\Model\Game\PetSkillModel;
 use App\Model\Game\UserBackpackModel;
+use App\Model\Game\UserBaseAttributeModel;
+use App\Model\Game\UserLevelConfigModel;
 use App\Model\Game\UserPetModel;
 use App\Model\Game\UserPetSkillModel;
 use App\Service\GameResponse;
@@ -109,7 +111,6 @@ class PetService
         }
     }
 
-
     /**
      * 宠物上阵
      * usePet
@@ -156,11 +157,10 @@ class PetService
             }
             //todo 计算经验球
 
-
+            //删除宠物技能
+            UserPetSkillModel::create()->destroy(['userPetId' => $userPetInfo->userPetId]);
             //删除宠物
             $userPetInfo->destroy();
-
-
             return $userPetInfo;
         });
         return $info;
@@ -198,7 +198,6 @@ class PetService
         });
         return $info;
     }
-
 
     public function countPetAttribute(UserPetModel $userPetModel)
     {
@@ -248,6 +247,36 @@ class PetService
         ];
     }
 
+    public function addPetExp(UserPetModel $userPetInfo, $exp)
+    {
+        return BaseModel::transaction(function () use ($userPetInfo, $exp) {
+            $userPetInfo->exp += $exp;
+            $userPetInfo->update();
+            //判断升级情况
+            $this->levelUp($userPetInfo);
+            //计算宠物属性
+            $this->countPetAttribute($userPetInfo);
+            return $userPetInfo;
+        });
+    }
+
+    protected function levelUp(UserPetModel $userPetInfo)
+    {
+        //获取等级配置
+        $levelConfig = UserLevelConfigModel::create()->get($userPetInfo->level);
+        $levelUpConfig = UserLevelConfigModel::create()->get($userPetInfo->level + 1);
+        if (empty($levelUpConfig)) {
+            return false;
+        }
+        if ($userPetInfo->exp >= $levelConfig->exp) {
+            $userPetInfo->level += 1;
+            $userPetInfo->exp -= $levelConfig->exp;
+        }
+        if ($userPetInfo->exp >= $userPetInfo->exp) {
+            $this->levelUp($userPetInfo);
+        }
+    }
+
     public function countPetSoulNum($classLevel)
     {
         $arr = [
@@ -267,7 +296,6 @@ class PetService
         ];
         return $arr[$classLevel];
     }
-
 
     public function getUserPetList($userId)
     {
