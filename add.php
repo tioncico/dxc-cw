@@ -17,6 +17,8 @@ use App\Model\Game\MonsterModel;
 use App\Model\Game\PetModel;
 use App\Model\Game\ShopGoodsModel;
 use App\Model\Game\SkillModel;
+use App\Model\Game\Task\GameDailyTaskModel;
+use App\Model\Game\Task\GameDailyTaskPointRewardModel;
 use App\Model\Game\Task\GameTaskMasterModel;
 use App\Model\Game\Task\GameTaskModel;
 use \App\Service\Game\Attribute;
@@ -28,6 +30,13 @@ Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
 
-
+    $data = [
+        'type'=>2,
+        'pointNum'=>700,
+        'goodsCode'=>"money",
+        'goodsNum'=>100,
+    ];
+    $model = new GameDailyTaskPointRewardModel($data);
+    $model->save();
     \Swoole\Timer::clearAll();
 });

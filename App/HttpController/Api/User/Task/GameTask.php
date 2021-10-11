@@ -5,7 +5,7 @@ namespace App\HttpController\Api\User\Task;
 use App\HttpController\Api\User\UserBase;
 use App\Model\Game\Task\GameTaskMasterModel;
 use App\Model\Game\Task\GameTaskModel;
-use App\Service\Game\TaskService;
+use App\Service\Game\Task\TaskService;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
@@ -141,7 +141,7 @@ class GameTask extends UserBase
 
 
     /**
-     * @Api(name="获取任务列表",path="/Api/User/Task/GameTask/getList")
+     * @Api(name="获取主线任务列表",path="/Api/User/Task/GameTask/getList")
      * @ApiDescription("获取任务列表")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
@@ -189,8 +189,37 @@ class GameTask extends UserBase
          */
         foreach ($data['list'] as $key => $masterInfo) {
             $taskModel = new GameTaskModel();
-            $task = $taskModel->with(['goodsList'], false)->order('`order`', 'asc')->where('taskId',$masterInfo->userTaskCompleteInfo->nowTaskId??0,'>')->where('taskMasterId', $masterInfo->taskMasterId)->get();
-            $data['list'][$key]['taskInfo'] = json_decode(json_encode($task),1);
+            $task = $taskModel->with(['goodsList'], false)->order('`order`', 'asc')->where('taskId', $masterInfo->userTaskCompleteInfo->nowTaskId ?? 0, '>')->where('taskMasterId', $masterInfo->taskMasterId)->get();
+            $data['list'][$key]['taskInfo'] = json_decode(json_encode($task), 1);
+        }
+        $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
+    }
+
+    /**
+     * @Api(name="获取每日任务列表",path="/Api/User/Task/GameTask/getDailyList")
+     * @ApiDescription("获取任务列表")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @Param(name="page", from={GET,POST}, alias="页数", optional="")
+     * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
+     */
+    public function getDailyList()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $model = new GameTaskMasterModel();
+        $data = $model->with(['userTaskCompleteInfo' => $this->who->userId], false)->order('`order`', 'asc')->getList(1, 9999);
+        /**
+         * @var $masterInfo GameTaskMasterModel
+         */
+        foreach ($data['list'] as $key => $masterInfo) {
+            $taskModel = new GameTaskModel();
+            $task = $taskModel->with(['goodsList'], false)->order('`order`', 'asc')->where('taskId', $masterInfo->userTaskCompleteInfo->nowTaskId ?? 0, '>')->where('taskMasterId', $masterInfo->taskMasterId)->get();
+            $data['list'][$key]['taskInfo'] = json_decode(json_encode($task), 1);
         }
         $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
     }
@@ -225,31 +254,5 @@ class GameTask extends UserBase
         $this->writeJson(Status::CODE_OK, ['UserTaskCompleteInfo' => $userTaskMasterInfo], '任务完成');
     }
 
-
-    /**
-     * @Api(name="delete",path="/Api/User/Task/GameTask/delete")
-     * @ApiDescription("删除数据")
-     * @Method(allow={GET,POST})
-     * @InjectParamsContext(key="param")
-     * @ApiSuccessParam(name="code",description="状态码")
-     * @ApiSuccessParam(name="result",description="api请求结果")
-     * @ApiSuccessParam(name="msg",description="api提示信息")
-     * @ApiSuccess({"code":200,"result":[],"msg":"新增成功"})
-     * @ApiFail({"code":400,"result":[],"msg":"新增失败"})
-     * @Param(name="taskId",alias="任务id",description="任务id",lengthMax="11",required="")
-     */
-    public function delete()
-    {
-        $param = ContextManager::getInstance()->get('param');
-        $model = new GameTaskModel();
-        $info = $model->get(['taskId' => $param['taskId']]);
-        if (!$info) {
-            $this->writeJson(Status::CODE_OK, $info, "数据不存在.");
-            return false;
-        }
-
-        $info->destroy();
-        $this->writeJson(Status::CODE_OK, [], "删除成功.");
-    }
 }
 

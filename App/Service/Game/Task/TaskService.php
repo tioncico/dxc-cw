@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Service\Game;
+namespace App\Service\Game\Task;
 
 
 use App\Model\BaseModel;
