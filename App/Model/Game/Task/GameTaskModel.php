@@ -70,6 +70,7 @@ class GameTaskModel extends BaseModel
     public function goodsList()
     {
         return $this->hasMany(GameTaskRewardModel::class, function (QueryBuilder $query) {
+            $query->fields("goods_list.*,game_task_reward_list.num,game_task_reward_list.taskId");
             $query->join('goods_list', 'goods_list.code = game_task_reward_list.goodsCode');
             return $query;
         }, 'taskId', 'taskId');

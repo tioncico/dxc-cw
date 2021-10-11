@@ -66,8 +66,11 @@ class GameTaskMasterModel extends BaseModel
         }, 'taskMasterId', 'taskMasterId');
     }
 
-    public function userTaskCompleteInfo($userId)
+    public function userTaskCompleteInfo($userId=-1)
     {
+        if($userId<=0){
+            return  null;
+        }
         return $this->hasOne(UserGameTaskMasterCompleteModel::class, function (QueryBuilder $query) use ($userId) {
             $query->where('userId', $userId);
             return $query;

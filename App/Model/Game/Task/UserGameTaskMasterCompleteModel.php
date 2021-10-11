@@ -8,6 +8,7 @@ use App\Model\BaseModel;
  * UserGameTaskMasterCompleteModel
  * Class UserGameTaskMasterCompleteModel
  * Create With ClassGeneration
+ * @property int $id // 用户id
  * @property int $userId // 用户id
  * @property int $taskMasterId // 主任务id
  * @property int $nowTaskId // 当前任务id

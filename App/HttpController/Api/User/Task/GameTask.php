@@ -152,14 +152,32 @@ class GameTask extends UserBase
      * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
      * @Param(name="page", from={GET,POST}, alias="页数", optional="")
      * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
-     * @ApiSuccessParam(name="result[].taskId",description="任务id")
      * @ApiSuccessParam(name="result[].taskMasterId",description="主任务id")
-     * @ApiSuccessParam(name="result[].code",description="任务编码")
-     * @ApiSuccessParam(name="result[].order",description="排序")
-     * @ApiSuccessParam(name="result[].completeNum",description="完成次数")
+     * @ApiSuccessParam(name="result[].type",description="1 主线任务 ")
      * @ApiSuccessParam(name="result[].name",description="任务名")
      * @ApiSuccessParam(name="result[].description",description="任务介绍")
-     * @ApiSuccessParam(name="result[].param",description="任务参数 例如 获取1,5,7件10级橙装 参数为 [1,10,6(橙装)]")
+     * @ApiSuccessParam(name="result[].order",description="排序")
+     * @ApiSuccessParam(name="result[].taskInfo.taskId",description="任务id")
+     * @ApiSuccessParam(name="result[].taskInfo.taskMasterId",description="主任务id")
+     * @ApiSuccessParam(name="result[].taskInfo.code",description="任务编码")
+     * @ApiSuccessParam(name="result[].taskInfo.order",description="排序")
+     * @ApiSuccessParam(name="result[].taskInfo.completeNum",description="完成次数")
+     * @ApiSuccessParam(name="result[].taskInfo.name",description="任务名")
+     * @ApiSuccessParam(name="result[].taskInfo.description",description="任务介绍")
+     * @ApiSuccessParam(name="result[].taskInfo.param",description="任务参数 例如 获取1,5,7件10级橙装 参数为 [1,10,6(橙装)]")
+     * @ApiSuccessParam(name="result[].taskInfo.goodsList[].num",description="物品数量")
+     * @ApiSuccessParam(name="result[].taskInfo.goodsList[].taskId",description="任务id")
+     * @ApiSuccessParam(name="result[].taskInfo.goodsList[].goodsId",description="物品id")
+     * @ApiSuccessParam(name="result[].taskInfo.goodsList[].name",description="物品名称")
+     * @ApiSuccessParam(name="result[].taskInfo.goodsList[].code",description="物品code值")
+     * @ApiSuccessParam(name="result[].taskInfo.goodsList[].baseCode",description="物品基础类型")
+     * @ApiSuccessParam(name="result[].taskInfo.goodsList[].type",description="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备")
+     * @ApiSuccessParam(name="result[].taskInfo.goodsList[].description",description="介绍")
+     * @ApiSuccessParam(name="result[].taskInfo.goodsList[].gold",description="售出金币")
+     * @ApiSuccessParam(name="result[].taskInfo.goodsList[].isSale",description="是否可售出")
+     * @ApiSuccessParam(name="result[].taskInfo.goodsList[].level",description="等级")
+     * @ApiSuccessParam(name="result[].taskInfo.goodsList[].rarityLevel",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
+     * @ApiSuccessParam(name="result[].taskInfo.goodsList[].extraData",description="额外数据")
      */
     public function getList()
     {
@@ -171,8 +189,8 @@ class GameTask extends UserBase
          */
         foreach ($data['list'] as $key => $masterInfo) {
             $taskModel = new GameTaskModel();
-            $taskList = $taskModel->with(['goodsList'], false)->order('`order`', 'asc')->where('taskMasterId', $masterInfo->taskMasterId)->all();
-            $data['list'][$key]['taskList'] = json_decode(json_encode($taskList), 1);
+            $task = $taskModel->with(['goodsList'], false)->order('`order`', 'asc')->where('taskId',$masterInfo->userTaskCompleteInfo->nowTaskId??0,'>')->where('taskMasterId', $masterInfo->taskMasterId)->get();
+            $data['list'][$key]['taskInfo'] = json_decode(json_encode($task),1);
         }
         $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
     }
