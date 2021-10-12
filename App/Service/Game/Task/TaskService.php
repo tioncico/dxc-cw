@@ -16,6 +16,7 @@ use App\Model\Game\UserBaseAttributeModel;
 use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserLevelConfigModel;
 use App\Service\BaseService;
+use App\Service\Game\BackpackService;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Singleton;
 use EasySwoole\Mysqli\QueryBuilder;

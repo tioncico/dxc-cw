@@ -5,6 +5,7 @@ namespace App\HttpController\Api;
 
 
 use App\HttpController\Base;
+use App\Service\Game\Task\DailyTaskService;
 use App\Service\GameResponse;
 use App\Utility\Assert\AssertException;
 use EasySwoole\EasySwoole\Logger;
@@ -41,7 +42,7 @@ class ApiBase extends Base
                 'requestId'       => $this->request()->getRequestParam('requestId'),
                 'goodsChange'     => GameResponse::getInstance()->getGoods(),
                 'equipmentChange' => GameResponse::getInstance()->getEquipment(),
-                'petChange' => GameResponse::getInstance()->getPets(),
+                'petChange'       => GameResponse::getInstance()->getPets(),
             );
             $this->response()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
             $this->response()->withHeader('Content-type', 'application/json;charset=utf-8');

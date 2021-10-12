@@ -3,6 +3,7 @@
 namespace App\HttpController\Api\User\Task;
 
 use App\HttpController\Api\User\UserBase;
+use App\Model\Game\Task\GameDailyTaskModel;
 use App\Model\Game\Task\GameTaskMasterModel;
 use App\Model\Game\Task\GameTaskModel;
 use App\Service\Game\Task\TaskService;
@@ -211,22 +212,15 @@ class GameTask extends UserBase
     public function getDailyList()
     {
         $param = ContextManager::getInstance()->get('param');
-        $model = new GameTaskMasterModel();
-        $data = $model->with(['userTaskCompleteInfo' => $this->who->userId], false)->order('`order`', 'asc')->getList(1, 9999);
-        /**
-         * @var $masterInfo GameTaskMasterModel
-         */
-        foreach ($data['list'] as $key => $masterInfo) {
-            $taskModel = new GameTaskModel();
-            $task = $taskModel->with(['goodsList'], false)->order('`order`', 'asc')->where('taskId', $masterInfo->userTaskCompleteInfo->nowTaskId ?? 0, '>')->where('taskMasterId', $masterInfo->taskMasterId)->get();
-            $data['list'][$key]['taskInfo'] = json_decode(json_encode($task), 1);
-        }
-        $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
+        $model = new GameDailyTaskModel();
+        $data = $model->with(['userCompleteInfo'=>$this->who->userId],false)->all();
+
+        $this->writeJson(Status::CODE_OK, ['list'=>$data], '获取列表成功');
     }
 
     /**
-     * @Api(name="complete",path="/Api/User/Task/GameTask/complete")
-     * @ApiDescription("完成任务")
+     * @Api(name="完成主线任务",path="/Api/User/Task/GameTask/complete")
+     * @ApiDescription("完成主线任务")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
      * @ApiSuccessParam(name="code",description="状态码")

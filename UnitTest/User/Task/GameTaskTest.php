@@ -92,6 +92,15 @@ class GameTaskTest extends UserBaseTestCase
 		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
 	}
 
+	public function testGetDailyList()
+	{
+		$model = new GameTaskModel();
+		$data = [];
+		$response = $this->request('getDailyList',$data);
+
+		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+	}
+
 	public function testComplete()
 	{
 		$model = new GameTaskModel();

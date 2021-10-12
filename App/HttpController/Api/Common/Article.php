@@ -89,6 +89,5 @@ class Article extends CommonBase
         $model->where(['articleCode' => "gameNotice"]);
         $data = $model->get();
         $this->writeJson(Status::CODE_OK, $data, 'success');
-
     }
 }
