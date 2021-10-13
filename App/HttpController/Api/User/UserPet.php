@@ -396,6 +396,54 @@ class UserPet extends UserBase
 
 
     /**
+     * @Api(name="获取宠物觉醒所需物品",path="/Api/User/UserPet/getUpAwakeLevelGoodsList")
+     * @ApiDescription("获取宠物觉醒所需物品")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @Param(name="userPetId",lengthMax="11",required="")
+     * @ApiSuccessParam(name="result.userPetId",description="")
+     */
+    public function getUpAwakeLevelGoodsList()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $model = new UserPetModel();
+        $info = $model->where('userId', $this->who->userId)->get(['userPetId' => $param['userPetId']]);
+        Assert::assert(!!$info, '宠物数据不存在');
+        $data = PetService::getInstance()->getUpClassLevelNeedGoods($info);
+        $this->writeJson(Status::CODE_OK, $data, "获取数据成功.");
+    }
+
+    /**
+     * @Api(name="宠物觉醒",path="/Api/User/UserPet/upAwakeLevel")
+     * @ApiDescription("宠物觉醒")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @Param(name="userPetId",lengthMax="11",required="")
+     * @ApiSuccessParam(name="result.userPetId",description="")
+     */
+    public function upAwakeLevel()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $model = new UserPetModel();
+        $info = $model->where('userId', $this->who->userId)->get(['userPetId' => $param['userPetId']]);
+        Assert::assert(!!$info, '宠物数据不存在');
+        Assert::assert($info->isUse == 0, '已上阵宠物不能觉醒');
+        $data = PetService::getInstance()->upClassLevel($info);
+        $this->writeJson(Status::CODE_OK, $data, "觉醒成功.");
+    }
+
+
+    /**
      * @Api(name="获取用户宠物列表",path="/Api/User/UserPet/getList")
      * @ApiDescription("获取数据列表")
      * @Method(allow={GET,POST})
