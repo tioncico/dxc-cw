@@ -278,6 +278,31 @@ class UserPet extends UserBase
     }
 
     /**
+     * @Api(name="宠物使用物品",path="/Api/User/UserPet/petUseGoods")
+     * @ApiDescription("宠物使用物品")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @Param(name="userPetId",lengthMax="11",required="")
+     * @Param(name="goodsCode",lengthMax="32",required="")
+     * @ApiSuccessParam(name="result.userPetId",description="")
+     */
+    public function petUseGoods()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $model = new UserPetModel();
+        $info = $model->where('userId', $this->who->userId)->get(['userPetId' => $param['userPetId']]);
+        Assert::assert(!!$info, '宠物数据不存在');
+//        PetService::getInstance()->usePet($info);
+        $this->writeJson(Status::CODE_OK, [], "使用成功.");
+    }
+
+
+    /**
      * @Api(name="宠物上阵",path="/Api/User/UserPet/usePet")
      * @ApiDescription("宠物上阵")
      * @Method(allow={GET,POST})
