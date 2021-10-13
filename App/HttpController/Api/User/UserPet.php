@@ -289,6 +289,7 @@ class UserPet extends UserBase
      * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
      * @Param(name="userPetId",lengthMax="11",required="")
      * @Param(name="goodsCode",lengthMax="32",required="")
+     * @Param(name="num",lengthMax="32",integer="",min="1",required="")
      * @ApiSuccessParam(name="result.userPetId",description="")
      */
     public function petUseGoods()
@@ -297,6 +298,10 @@ class UserPet extends UserBase
         $model = new UserPetModel();
         $info = $model->where('userId', $this->who->userId)->get(['userPetId' => $param['userPetId']]);
         Assert::assert(!!$info, '宠物数据不存在');
+        //获取物品数据
+        $goodsInfo = GoodsModel::create()->getInfoByCode($param['goodsCode']);
+        Assert::assert($goodsInfo->baseCode=='petExp','此物品不能给宠物使用');
+
 //        PetService::getInstance()->usePet($info);
         $this->writeJson(Status::CODE_OK, [], "使用成功.");
     }
