@@ -3,11 +3,15 @@
 namespace App\HttpController\Api\User\Task;
 
 use App\HttpController\Api\User\UserBase;
+use App\Model\BaseModel;
+use App\Model\Game\GoodsModel;
 use App\Model\Game\Task\GameDailyTaskModel;
 use App\Model\Game\Task\GameDailyTaskPointRewardModel;
 use App\Model\Game\Task\GameTaskMasterModel;
 use App\Model\Game\Task\GameTaskModel;
 use App\Model\Game\Task\UserDailyTaskPointModel;
+use App\Model\Game\Task\UserDailyTaskReceiveModel;
+use App\Service\Game\BackpackService;
 use App\Service\Game\Task\TaskService;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
@@ -292,8 +296,25 @@ class GameTask extends UserBase
      */
     public function receiveDailyReward(){
         $param = ContextManager::getInstance()->get('param');
+        $rewardInfo = GameDailyTaskPointRewardModel::create()->with(['goodsInfo', 'userReceiveInfo' => $this->who->userId], false)->get($param['rewardId']);
+        Assert::assert(!!$rewardInfo,'奖励数据不存在');
+        $pointInfo = UserDailyTaskPointModel::create()->getInfo($this->who->userId);
+        if (!empty($rewardInfo->userReceiveInfo)){
+            Assert::assert(false,'你已领取此奖励');
+        }
+        if($rewardInfo->type==1){
+            Assert::assert($rewardInfo->pointNum<=$pointInfo->dailyPointNum,"积分不足");
+        }
+        if($rewardInfo->type==2){
+            Assert::assert($rewardInfo->pointNum<=$pointInfo->weekPointNum,"积分不足");
+        }
+        BaseModel::transaction(function ()use($pointInfo,$rewardInfo){
+            UserDailyTaskReceiveModel::create()->addData($this->who->userId,$rewardInfo->rewardId,time(),date('Ymd'));
+            BackpackService::getInstance()->addGoods($this->who->userId,$rewardInfo->goodsInfo,$rewardInfo->goodsNum);
+        });
+        $rewardInfo = GameDailyTaskPointRewardModel::create()->with(['goodsInfo', 'userReceiveInfo' => $this->who->userId], false)->get($param['rewardId']);
 
-        $this->writeJson(Status::CODE_OK, $data, '领取奖励成功');
+        $this->writeJson(Status::CODE_OK, ['rewardInfo'=>$rewardInfo], '领取奖励成功');
     }
 
     /**

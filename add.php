@@ -29,6 +29,6 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-    \App\Service\Game\BackpackService::getInstance()->addGoods(1843,GoodsModel::create()->getInfoByCode('petExp001'),1000);
+    GoodsModel::create()->addData('觉醒·源力', "petAwake", 5, '宠物觉醒必备材料', 7);
     \Swoole\Timer::clearAll();
 });
