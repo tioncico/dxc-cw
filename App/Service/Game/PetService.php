@@ -199,6 +199,30 @@ class PetService
         return $info;
     }
 
+    public function upAwakeLevel(UserPetModel $userPetInfo)
+    {
+        $info = BaseModel::transaction(function () use ($userPetInfo) {
+            $userPetInfo = $userPetInfo->lockForUpdate()->get($userPetInfo->userPetId);
+            //宠物觉醒需要觉醒源 和宠物灵魂
+            $goodsList = $this->getUpAwakeLevelNeedGoods($userPetInfo);
+            foreach ($goodsList as $value) {
+                $num = $value['num'];
+                /**
+                 * @var $goodsInfo GoodsModel
+                 */
+                $goodsInfo = $value['goodsInfo'];
+                $userBackpackInfo = UserBackpackModel::create()->getInfoByCode($userPetInfo->userId, $goodsInfo->code);
+                Assert::assert($userBackpackInfo->num > $num, "物品 [{$goodsInfo->name}] 数量不足");
+                BackpackService::getInstance()->decGoods($userPetInfo->userId, $goodsInfo, $num);
+            }
+            $userPetInfo->update(['awakeLevel' => $userPetInfo->awakeLevel + 1]);
+            $this->countPetAttribute($userPetInfo);
+            GameResponse::getInstance()->addPet($userPetInfo, 0);
+            return $userPetInfo;
+        });
+        return $info;
+    }
+
     public function countPetAttribute(UserPetModel $userPetModel)
     {
         //宠物的属性基本不变
@@ -239,6 +263,26 @@ class PetService
             [
                 'num'       => $petEssenceNum,
                 'goodsInfo' => GoodsModel::create()->getInfoByCode('petEssence')
+            ],
+            [
+                'num'       => $petSoulNum,
+                'goodsInfo' => GoodsModel::create()->getInfoByCode("petSoul{$userPetInfo->petId}")
+            ],
+        ];
+    }
+
+
+    public function getUpAwakeLevelNeedGoods(UserPetModel $userPetInfo)
+    {
+        //计算宠物觉醒 = (觉醒等级*50)
+        $petEssenceNum = ($userPetInfo->awakeLevel + 1) * 50;
+        //计算宠物灵魂需要数量 = 需要升级的宠物阶级*2
+        $petSoulNum = $this->countPetSoulNum($userPetInfo->classLevel + 1);
+
+        return [
+            [
+                'num'       => $petEssenceNum,
+                'goodsInfo' => GoodsModel::create()->getInfoByCode('petAwake')
             ],
             [
                 'num'       => $petSoulNum,

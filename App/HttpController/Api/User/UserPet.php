@@ -451,7 +451,7 @@ class UserPet extends UserBase
         $model = new UserPetModel();
         $info = $model->where('userId', $this->who->userId)->get(['userPetId' => $param['userPetId']]);
         Assert::assert(!!$info, '宠物数据不存在');
-        $data = PetService::getInstance()->getUpClassLevelNeedGoods($info);
+        $data = PetService::getInstance()->getUpAwakeLevelNeedGoods($info);
         $this->writeJson(Status::CODE_OK, $data, "获取数据成功.");
     }
 
@@ -475,7 +475,8 @@ class UserPet extends UserBase
         $info = $model->where('userId', $this->who->userId)->get(['userPetId' => $param['userPetId']]);
         Assert::assert(!!$info, '宠物数据不存在');
         Assert::assert($info->isUse == 0, '已上阵宠物不能觉醒');
-        $data = PetService::getInstance()->upClassLevel($info);
+        Assert::assert($info->awakeLevel<3,'宠物觉醒次数已满');
+        $data = PetService::getInstance()->upAwakeLevel($info);
         $this->writeJson(Status::CODE_OK, $data, "觉醒成功.");
     }
 
