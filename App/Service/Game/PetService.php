@@ -256,6 +256,7 @@ class PetService
             $this->levelUp($userPetInfo);
             //计算宠物属性
             $this->countPetAttribute($userPetInfo);
+            GameResponse::getInstance()->addPet($userPetInfo, 0);
             return $userPetInfo;
         });
     }

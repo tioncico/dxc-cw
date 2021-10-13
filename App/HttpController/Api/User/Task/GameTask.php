@@ -4,8 +4,10 @@ namespace App\HttpController\Api\User\Task;
 
 use App\HttpController\Api\User\UserBase;
 use App\Model\Game\Task\GameDailyTaskModel;
+use App\Model\Game\Task\GameDailyTaskPointRewardModel;
 use App\Model\Game\Task\GameTaskMasterModel;
 use App\Model\Game\Task\GameTaskModel;
+use App\Model\Game\Task\UserDailyTaskPointModel;
 use App\Service\Game\Task\TaskService;
 use App\Utility\Assert\Assert;
 use EasySwoole\Component\Context\ContextManager;
@@ -213,9 +215,85 @@ class GameTask extends UserBase
     {
         $param = ContextManager::getInstance()->get('param');
         $model = new GameDailyTaskModel();
-        $data = $model->with(['userCompleteInfo'=>$this->who->userId],false)->all();
+        $data = $model->with(['userCompleteInfo' => $this->who->userId], false)->all();
 
-        $this->writeJson(Status::CODE_OK, ['list'=>$data], '获取列表成功');
+        $this->writeJson(Status::CODE_OK, ['list' => $data], '获取列表成功');
+    }
+
+    /**
+     * @Api(name="获取每日任务的积分数和奖励",path="/Api/User/Task/GameTask/getDailyPointInfo")
+     * @ApiDescription("获取每日任务的积分数")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @Param(name="page", from={GET,POST}, alias="页数", optional="")
+     * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
+     * @ApiSuccessParam(name="result.pointInfo.userId",description="用户id")
+     * @ApiSuccessParam(name="result.pointInfo.weekPointNum",description="每周积分数")
+     * @ApiSuccessParam(name="result.pointInfo.dailyPointNum",description="每日积分")
+     * @ApiSuccessParam(name="result.pointInfo.lastUpdateTime",description="上次更新时间")
+     * @ApiSuccessParam(name="result.dailyRewardList.rewardId",description="奖励id")
+     * @ApiSuccessParam(name="result.dailyRewardList.type",description="1每日奖励,2每周奖励")
+     * @ApiSuccessParam(name="result.dailyRewardList.pointNum",description="积分数")
+     * @ApiSuccessParam(name="result.dailyRewardList.goodsCode",description="物品code")
+     * @ApiSuccessParam(name="result.dailyRewardList.goodsNum",description="物品数量")
+     * @ApiSuccessParam(name="result.dailyRewardList.goodsInfo.goodsId",description="物品id")
+     * @ApiSuccessParam(name="result.dailyRewardList.goodsInfo.name",description="物品名称")
+     * @ApiSuccessParam(name="result.dailyRewardList.goodsInfo.code",description="物品code值")
+     * @ApiSuccessParam(name="result.dailyRewardList.goodsInfo.baseCode",description="物品基础类型")
+     * @ApiSuccessParam(name="result.dailyRewardList.goodsInfo.type",description="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备")
+     * @ApiSuccessParam(name="result.dailyRewardList.goodsInfo.description",description="介绍")
+     * @ApiSuccessParam(name="result.dailyRewardList.goodsInfo.gold",description="售出金币")
+     * @ApiSuccessParam(name="result.dailyRewardList.goodsInfo.isSale",description="是否可售出")
+     * @ApiSuccessParam(name="result.dailyRewardList.goodsInfo.level",description="等级")
+     * @ApiSuccessParam(name="result.dailyRewardList.goodsInfo.rarityLevel",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
+     * @ApiSuccessParam(name="result.dailyRewardList.goodsInfo.extraData",description="额外数据")
+     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfo.userDailyTaskReceiveId",description="玩家每日任务领取id")
+     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfo.userId",description="玩家id")
+     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfo.rewardId",description="奖励id")
+     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfo.addTime",description="新增时间")
+     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfo.date",description="领取日期")
+     */
+    public function getDailyPointInfo()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $model = new GameDailyTaskPointRewardModel();
+        //每日奖励
+        $dailyRewardList = $model->with(['goodsInfo', 'userReceiveInfo' => $this->who->userId], false)->where('type', 1)->order('pointNum', 'ASC')->all();
+        $weekRewardList = $model->with(['goodsInfo', 'userReceiveInfo' => $this->who->userId], false)->where('type', 2)->order('pointNum', 'ASC')->all();
+        $data = [
+            'pointInfo'       => UserDailyTaskPointModel::create()->getInfo($this->who->userId),
+            'dailyRewardList' => $dailyRewardList,
+            'weekRewardList'  => $weekRewardList
+        ];
+
+        $this->writeJson(Status::CODE_OK, $data, '获取数据成功');
+    }
+
+
+
+    /**
+     * @Api(name="领取积分奖励",path="/Api/User/Task/GameTask/receiveDailyReward")
+     * @ApiDescription("领取积分奖励")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @Param(name="rewardId", from={GET,POST}, alias="奖励id",description="奖励id", required="")
+     * @Param(name="page", from={GET,POST}, alias="页数", optional="")
+     * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
+     */
+    public function receiveDailyReward(){
+        $param = ContextManager::getInstance()->get('param');
+
+        $this->writeJson(Status::CODE_OK, $data, '领取奖励成功');
     }
 
     /**

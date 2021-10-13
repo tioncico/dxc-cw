@@ -3,6 +3,8 @@
 namespace App\Model\Game\Task;
 
 use App\Model\BaseModel;
+use App\Model\Game\GoodsModel;
+use EasySwoole\Mysqli\QueryBuilder;
 
 /**
  * GameDailyTaskPointRewardModel
@@ -51,5 +53,22 @@ class GameDailyTaskPointRewardModel extends BaseModel
 		$model->save();
 		return $model;
 	}
+
+	public function goodsInfo(){
+        return $this->hasOne(GoodsModel::class, function (QueryBuilder $query) {
+            return $query;
+        }, 'goodsCode', 'code');
+    }
+
+    public function userReceiveInfo($userId=-1){
+	    if ($userId<=0){
+	        return null;
+        }
+        return $this->hasOne(UserDailyTaskReceiveModel::class, function (QueryBuilder $query)use($userId) {
+            $query->where('userId',$userId);
+            $query->where('date',date('Ymd'));
+            return $query;
+        }, 'rewardId', 'rewardId');
+    }
 }
 

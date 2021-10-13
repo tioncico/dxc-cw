@@ -29,14 +29,6 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-
-    $data = [
-        'type'=>2,
-        'pointNum'=>700,
-        'goodsCode'=>"money",
-        'goodsNum'=>100,
-    ];
-    $model = new GameDailyTaskPointRewardModel($data);
-    $model->save();
+    \App\Service\Game\BackpackService::getInstance()->addGoods(1843,GoodsModel::create()->getInfoByCode('petExp001'),1000);
     \Swoole\Timer::clearAll();
 });

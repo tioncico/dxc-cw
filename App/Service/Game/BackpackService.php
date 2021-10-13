@@ -7,11 +7,13 @@ namespace App\Service\Game;
 use App\Model\BaseModel;
 use App\Model\Game\GoodsEquipmentModel;
 use App\Model\Game\GoodsModel;
+use App\Model\Game\Task\GameDailyTaskModel;
 use App\Model\Game\UserBackpackModel;
 use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserGoodsEquipmentAttributeEntryModel;
 use App\Model\UserGoodsEquipmentStrengthenAttributeModel;
 use App\Service\BaseService;
+use App\Service\Game\Task\DailyTaskService;
 use App\Service\GameResponse;
 use EasySwoole\Component\Singleton;
 use EasySwoole\Mysqli\QueryBuilder;
@@ -49,6 +51,12 @@ class BackpackService extends BaseService
         //获取用户背包金币数据
         $userMoneyInfo = UserBackpackModel::create()->getUseMoneyInfo($userId);
         $userMoneyInfo->update(['num' => QueryBuilder::dec($moneyNum)]);
+
+        if ($moneyNum >= 50) {
+            //每日任务
+            DailyTaskService::getInstance()->completeTask($userId, GameDailyTaskModel::create(['code' => '007'])->get());
+        }
+
         return $userMoneyInfo;
     }
 
@@ -94,7 +102,7 @@ class BackpackService extends BaseService
                 $backpackInfo->update(['num' => QueryBuilder::dec($num)]);
             }
         }
-        if ($goodsModel->type!=7){
+        if ($goodsModel->type != 7) {
             GameResponse::getInstance()->addGoods($goodsModel, -$num);
         }
         return $backpackInfo;

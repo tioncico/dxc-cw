@@ -4,6 +4,7 @@ namespace App\HttpController\Api\User;
 
 use App\Model\BaseModel;
 use App\Model\Game\GoodsModel;
+use App\Model\Game\UserBackpackModel;
 use App\Model\Game\UserExtraLimitModel;
 use App\Model\Game\UserPetModel;
 use App\Service\Game\BackpackService;
@@ -301,8 +302,14 @@ class UserPet extends UserBase
         //获取物品数据
         $goodsInfo = GoodsModel::create()->getInfoByCode($param['goodsCode']);
         Assert::assert($goodsInfo->baseCode=='petExp','此物品不能给宠物使用');
-
-//        PetService::getInstance()->usePet($info);
+        $backpackInfo = UserBackpackModel::create()->getInfoByCode($this->who->userId,$goodsInfo->code);
+        Assert::assert($backpackInfo->num>=$param['num'],'物品数量不足');
+        BaseModel::transaction(function ()use($goodsInfo,$backpackInfo,$info,$param){
+            //扣除物品
+            BackpackService::getInstance()->decGoods($this->who->userId,$goodsInfo,$param['num']);
+            //宠物增加经验
+            PetService::getInstance()->addPetExp($info,intval($goodsInfo->extraData*$param['num']));
+        });
         $this->writeJson(Status::CODE_OK, [], "使用成功.");
     }
 

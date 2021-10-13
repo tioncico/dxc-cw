@@ -43,7 +43,7 @@ class DailyTaskService extends BaseService
                 continue;
             }
             $method = "task{$task->code}";
-            if (method_exists($this,$method)){
+            if (method_exists($this, $method)) {
                 $checkResult = $this->$method($userId, $request);
                 if ($checkResult === true) {
                     $this->completeTask($userId, $task);
@@ -72,6 +72,28 @@ class DailyTaskService extends BaseService
         return false;
     }
 
+    public function task003(int $userId, ?Request $request = null)
+    {
+        if (empty($request)) {
+            return false;
+        }
+        if ($request->getUri()->getPath() == '/Api/User/UserEquipment/strengthen') {
+            return true;
+        }
+        return false;
+    }
+
+    public function task006(int $userId, ?Request $request = null)
+    {
+        if (empty($request)) {
+            return false;
+        }
+        if ($request->getUri()->getPath() == '/Api/User/ShopGoods/buy') {
+            return true;
+        }
+        return false;
+    }
+
     public function completeTask($userId, GameDailyTaskModel $taskInfo)
     {
         return BaseModel::transaction(function () use ($userId, $taskInfo) {
@@ -80,7 +102,7 @@ class DailyTaskService extends BaseService
             $userPointNumInfo = $model->getInfo($userId);
             //判断是否已经到了最大数量
             $taskInfo = GameDailyTaskModel::create()->with(['userCompleteInfo' => $userId], false)->get($taskInfo->gameDailyTaskId);
-            if ($taskInfo->maxNum <= ($taskInfo->userCompleteInfo->completeNum??0)) {
+            if ($taskInfo->maxNum <= ($taskInfo->userCompleteInfo->completeNum ?? 0)) {
                 return null;
             }
             $userCompleteInfo = UserDailyTaskCompleteModel::create()->getTodayUserCompleteInfo($userId, $taskInfo->gameDailyTaskId);
