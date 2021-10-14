@@ -86,7 +86,7 @@ class UserEquipment extends UserBase
         $userEquipmentInfo = UserEquipmentBackpackModel::create()->where('backpackId', $param['backpackId'])->where('userId', $this->who->userId)->get();
         Assert::assert(!!$userEquipmentInfo, "装备信息不存在");
         Assert::assert($userEquipmentInfo->isUse == 0, "不能强化已穿戴装备");
-        Assert::assert($userEquipmentInfo->strengthenLevel >= 20, "最高强化到20");
+        Assert::assert($userEquipmentInfo->strengthenLevel < 20, "最高强化到20");
         //获取装备强化信息
         $oldStrengthenInfo = UserGoodsEquipmentStrengthenAttributeModel::create()->getData($userEquipmentInfo->backpackId);
         $newStrengthenInfo = EquipmentStrengthenService::getInstance()->getStrengthenData($userEquipmentInfo, $oldStrengthenInfo);
