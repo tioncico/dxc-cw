@@ -95,7 +95,7 @@ class UserEquipment extends UserBase
         //判断数量是否足够
         foreach ($consumableData as $consumableDatum) {
             if ($consumableDatum['nowNum'] < $consumableDatum['num']) {
-                Assert::assert(false, "材料[{$consumableDatum['name']}]不足");
+                Assert::assert(false, "物品[{$consumableDatum['name']}]不足");
             }
         }
         BaseModel::transaction(function () use ($consumableData, $newStrengthenInfo) {

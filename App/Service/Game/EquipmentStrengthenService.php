@@ -72,6 +72,8 @@ class EquipmentStrengthenService extends BaseService
 
         $goldInfo = GoodsModel::create()->field('goods_list.*,if(user_backpack_list.num is null,0,user_backpack_list.num) as nowNum')->join('user_backpack_list', 'user_backpack_list.goodsCode = goods_list.code', 'left')->getInfoByCode('gold');
         $materialInfo = GoodsModel::create()->field('goods_list.*,if(user_backpack_list.num is null,0,user_backpack_list.num) as nowNum')->join('user_backpack_list', 'user_backpack_list.goodsCode = goods_list.code', 'left')->getInfoByCode('material00001');
+        $goldInfo = $goldInfo->toArray(null,false);
+        $materialInfo = $materialInfo->toArray(null,false);
         $goldInfo['num'] = $goldNum;
         $materialInfo['num'] = $materialNum;
         return [
