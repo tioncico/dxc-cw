@@ -70,8 +70,8 @@ class EquipmentStrengthenService extends BaseService
         //需要装备碎片数量 装备稀有度*装备等级*强化等级*5
         $materialNum = $userEquipmentBackpackModel->rarityLevel * $userEquipmentBackpackModel->level * ($strengthenInfo->strengthenLevel) * 5;
 
-        $goldInfo = GoodsModel::create()->field('goods_list.*,if(user_backpack_list.num is null,0,user_backpack_list.num) as nowNum')->join('user_backpack_list', 'user_backpack_list.goodsCode = goods_list.code', 'left')->getInfoByCode('gold');
-        $materialInfo = GoodsModel::create()->field('goods_list.*,if(user_backpack_list.num is null,0,user_backpack_list.num) as nowNum')->join('user_backpack_list', 'user_backpack_list.goodsCode = goods_list.code', 'left')->getInfoByCode('material00001');
+        $goldInfo = GoodsModel::create()->field('goods_list.*,if(user_backpack_list.num is null,0,user_backpack_list.num) as nowNum')->join('user_backpack_list', 'user_backpack_list.goodsCode = goods_list.code and user_backpack_list.userId = '.$userEquipmentBackpackModel->userId, 'left')->getInfoByCode('gold');
+        $materialInfo = GoodsModel::create()->field('goods_list.*,if(user_backpack_list.num is null,0,user_backpack_list.num) as nowNum')->join('user_backpack_list', 'user_backpack_list.goodsCode = goods_list.code and user_backpack_list.userId = '.$userEquipmentBackpackModel->userId, 'left')->getInfoByCode('material00001');
         $goldInfo = $goldInfo->toArray(null,false);
         $materialInfo = $materialInfo->toArray(null,false);
         $goldInfo['num'] = $goldNum;
