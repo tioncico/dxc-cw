@@ -197,6 +197,7 @@ class GameTask extends UserBase
         foreach ($data['list'] as $key => $masterInfo) {
             $taskModel = new GameTaskModel();
             $task = $taskModel->with(['goodsList'], false)->order('`order`', 'asc')->where('taskId', $masterInfo->userTaskCompleteInfo->nowTaskId ?? 0, '>')->where('taskMasterId', $masterInfo->taskMasterId)->get();
+            $task->param = json_decode($task->param,1);
             $data['list'][$key]['taskInfo'] = json_decode(json_encode($task), 1);
         }
         $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
