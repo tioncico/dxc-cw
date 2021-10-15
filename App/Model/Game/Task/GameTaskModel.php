@@ -42,6 +42,10 @@ class GameTaskModel extends BaseModel
         return $data;
     }
 
+    public function getParamAttr($value,$data){
+        return json_decode($value,1);
+    }
+
 
     public function addData(
         int $taskMasterId,

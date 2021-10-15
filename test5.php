@@ -27,7 +27,7 @@ go(function () {
     $fight = new Fight($user, $monster, function ($event, ...$data)use($user) {
         MsgPushEvent::getInstance()->msgPush(1, $event, 200, "发送游戏数据", $data);
         if ($event=='FIGHT_START'){
-            $user->getUserNowAttribute()->getSkillManager()->useSkill($user->getUserNowAttribute()->getSkillList()['0006']);
+            $user->getUserNowAttribute()->getSkillManager()->useSkill($user->getUserNowAttribute()->getSkillList()['0005']);
 //            $user->getUserNowAttribute()->getSkillManager()->useSkill($user->getUserNowAttribute()->getSkillList()['0005']);
         }
     });
