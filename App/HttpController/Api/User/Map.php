@@ -4,6 +4,7 @@ namespace App\HttpController\Api\User;
 
 use App\Model\Game\MapEnvironmentModel;
 use App\Model\Game\MapModel;
+use App\Model\Game\UserMapModel;
 use App\Model\Game\UserPassMapModel;
 use EasySwoole\Component\Context\ContextManager;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
@@ -204,6 +205,33 @@ class Map extends UserBase
         $model = new UserPassMapModel();
 
         $data = $model->where('userId',$this->who->userId)->getList($page, $pageSize);
+        $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
+    }
+
+    /**
+     * @Api(name="获取用户可进入地图",path="/Api/User/Map/getUserMapList")
+     * @ApiDescription("获取数据列表")
+     * @Method(allow={GET,POST})
+     * @InjectParamsContext(key="param")
+     * @ApiSuccessParam(name="code",description="状态码")
+     * @ApiSuccessParam(name="result",description="api请求结果")
+     * @ApiSuccessParam(name="msg",description="api提示信息")
+     * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
+     * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
+     * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
+     * @ApiSuccessParam(name="result[].userMapId",description="")
+     * @ApiSuccessParam(name="result[].userId",description="用户id")
+     * @ApiSuccessParam(name="result[].mapId",description="地图id")
+     * @ApiSuccessParam(name="result[].addTime",description="新增时间")
+     */
+    public function getUserMapList()
+    {
+        $param = ContextManager::getInstance()->get('param');
+        $page = (int)($param['page'] ?? 1);
+        $pageSize = (int)($param['pageSize'] ?? 20);
+        $model = new UserMapModel();
+        $model->where('userId', $this->who->userId);
+        $data = $model->with(['mapInfo'],false)->getList($page, $pageSize);
         $this->writeJson(Status::CODE_OK, $data, '获取列表成功');
     }
 
