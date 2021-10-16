@@ -127,8 +127,8 @@ class UserPassMap extends UserBase
 
 
 	/**
-	 * @Api(name="getList",path="/Api/User/UserPassMap/getList")
-	 * @ApiDescription("获取数据列表")
+	 * @Api(name="获取用户已经通过的地图记录",path="/Api/User/UserPassMap/getList")
+	 * @ApiDescription("获取用户已经通过的地图记录")
 	 * @Method(allow={GET,POST})
 	 * @InjectParamsContext(key="param")
 	 * @ApiSuccessParam(name="code",description="状态码")
@@ -152,7 +152,7 @@ class UserPassMap extends UserBase
 		$pageSize = (int)($param['pageSize'] ?? 20);
 		$model = new UserPassMapModel();
 
-		$data = $model->getList($page, $pageSize);
+		$data = $model->where('userId',$this->who->userId)->getList($page, $pageSize);
 		$this->writeJson(Status::CODE_OK, $data, '获取列表成功');
 	}
 
