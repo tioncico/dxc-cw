@@ -127,37 +127,6 @@ class UserPassMap extends UserBase
 
 
 	/**
-	 * @Api(name="获取用户已经通过的地图记录",path="/Api/User/UserPassMap/getList")
-	 * @ApiDescription("获取用户已经通过的地图记录")
-	 * @Method(allow={GET,POST})
-	 * @InjectParamsContext(key="param")
-	 * @ApiSuccessParam(name="code",description="状态码")
-	 * @ApiSuccessParam(name="result",description="api请求结果")
-	 * @ApiSuccessParam(name="msg",description="api提示信息")
-	 * @ApiSuccess({"code":200,"result":[],"msg":"获取成功"})
-	 * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
-	 * @Param(name="page", from={GET,POST}, alias="页数", optional="")
-	 * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
-	 * @ApiSuccessParam(name="result[].userPassMapId",description="")
-	 * @ApiSuccessParam(name="result[].userId",description="用户id")
-	 * @ApiSuccessParam(name="result[].mapId",description="地图id")
-	 * @ApiSuccessParam(name="result[].mapEnvironmentId",description="环境id")
-	 * @ApiSuccessParam(name="result[].difficultyLevel",description="难度")
-	 * @ApiSuccessParam(name="result[].addTime",description="通关时间")
-	 */
-	public function getList()
-	{
-		$param = ContextManager::getInstance()->get('param');
-		$page = (int)($param['page'] ?? 1);
-		$pageSize = (int)($param['pageSize'] ?? 20);
-		$model = new UserPassMapModel();
-
-		$data = $model->where('userId',$this->who->userId)->getList($page, $pageSize);
-		$this->writeJson(Status::CODE_OK, $data, '获取列表成功');
-	}
-
-
-	/**
 	 * @Api(name="delete",path="/Api/User/UserPassMap/delete")
 	 * @ApiDescription("删除数据")
 	 * @Method(allow={GET,POST})
