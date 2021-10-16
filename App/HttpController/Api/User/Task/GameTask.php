@@ -214,6 +214,18 @@ class GameTask extends UserBase
      * @ApiFail({"code":400,"result":[],"msg":"获取失败"})
      * @Param(name="page", from={GET,POST}, alias="页数", optional="")
      * @Param(name="pageSize", from={GET,POST}, alias="每页总数", optional="")
+     * @ApiSuccessParam(name="result[].gameDailyTaskId",description="游戏每日任务id")
+     * @ApiSuccessParam(name="result[].name",description="任务名")
+     * @ApiSuccessParam(name="result[].code",description="任务code")
+     * @ApiSuccessParam(name="result[].description",description="任务介绍")
+     * @ApiSuccessParam(name="result[].rewardPoint",description="奖励积分")
+     * @ApiSuccessParam(name="result[].maxNum",description="总奖励次数限制")
+     * @ApiSuccessParam(name="result[].userCompleteInfo.userDailyTaskCompleteId",description="")
+     * @ApiSuccessParam(name="result[].userCompleteInfo.userId",description="")
+     * @ApiSuccessParam(name="result[].userCompleteInfo.gameDailyTaskId",description="")
+     * @ApiSuccessParam(name="result[].userCompleteInfo.completeNum",description="")
+     * @ApiSuccessParam(name="result[].userCompleteInfo.date",description="")
+     * @ApiSuccessParam(name="result[].userCompleteInfo.addTime",description="")
      */
     public function getDailyList()
     {
