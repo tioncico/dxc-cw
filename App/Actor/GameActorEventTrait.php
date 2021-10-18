@@ -9,13 +9,17 @@ use App\Actor\Fight\Fight;
 use App\Model\Game\GoodsModel;
 use App\Model\Game\MapMonsterModel;
 use App\Service\Game\Fight\Reward;
+use App\WebSocket\MsgPushEvent;
+use App\WebSocket\Push;
 use EasySwoole\EasySwoole\Logger;
+use EasySwoole\EasySwoole\ServerManager;
 
 trait GameActorEventTrait
 {
     public function initEvent(){
         $this->rewardEvent();
         $this->fightEndEvent();
+        $this->fightStartEvent();
     }
 
 
@@ -24,6 +28,20 @@ trait GameActorEventTrait
         $fight = $this->fight;
         $fight->getEvent()->register('FIGHT_END', 'delFightObj', function () {
             $this->fight = null;
+        });
+    }
+
+    protected function fightStartEvent()
+    {
+        /**
+         * @var $fight Fight
+         */
+        $fight = $this->fight;
+        $monsterInfo = $fight->getMonsterAttribute()->toArray();
+        $fight->getEvent()->register('FIGHT_START', 'pushWs', function ()use($monsterInfo) {
+            $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT, 200, "战斗开始推送",[
+                'monsterInfo'=>$monsterInfo,
+            ]);
         });
     }
 
@@ -50,7 +68,26 @@ trait GameActorEventTrait
                     $msg .= "  {$goodsInfo->name}*{$value['num']}";
                 }
             }
+            $this->push(\App\WebSocket\Command::SC_ACTION_MONSTER_DIE,200,'怪物死亡');
             Logger::getInstance()->log($msg);
         });
     }
+
+
+    /**
+     * 删除怪物
+     * delMonsterEvent
+     * @param $x
+     * @param $y
+     * @author tioncico
+     * Time: 9:43 上午
+     */
+    protected function delMonsterEvent($x, $y)
+    {
+        $this->fight->getEvent()->register('MONSTER_DIE', 'deleteMonster', function () use ($x, $y) {
+            $this->map->nowMapGrid[$x][$y] = null;
+            Logger::getInstance()->log("{$x},{$y}怪物死亡,删除");
+        });
+    }
+
 }

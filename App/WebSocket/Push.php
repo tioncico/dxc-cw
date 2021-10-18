@@ -11,6 +11,7 @@ namespace App\WebSocket;
 
 use App\Service\Wedding\WeddingRedisHashService;
 use App\WebSocket\Cache\UserFdMap;
+use EasySwoole\EasySwoole\Logger;
 use EasySwoole\EasySwoole\ServerManager;
 use EasySwoole\EasySwoole\Task\TaskManager;
 use EasySwoole\EasySwoole\Trigger;
@@ -29,7 +30,11 @@ class Push implements TaskInterface
 
     function run(int $taskId, int $workerIndex)
     {
-        $fdList = UserFdMap::getInstance()->getUserFdList($this->userId);
+        self::push($this->userId,$this->command);
+    }
+
+    static function push($userId,Command $command){
+        $fdList = UserFdMap::getInstance()->getUserFdList($userId);
         if (empty($fdList)){
             return true;
         }
@@ -37,7 +42,7 @@ class Push implements TaskInterface
             try{
                 $fdInfo = ServerManager::getInstance()->getSwooleServer()->getClientInfo($fd);
                 if ($fdInfo['websocket_status']==3){
-                    ServerManager::getInstance()->getSwooleServer()->push($fd, $this->encode($this->command->toArray(null, $this->command::FILTER_NOT_NULL)));
+                    ServerManager::getInstance()->getSwooleServer()->push($fd, self::encode($command->toArray(null, $command::FILTER_NOT_NULL)));
                 }else{
 
                 }
@@ -60,7 +65,7 @@ class Push implements TaskInterface
      * @author Tioncico
      * Time: 16:48
      */
-    public function encode($msg): ?string
+    public static function encode($msg): ?string
     {
         return json_encode($msg, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }

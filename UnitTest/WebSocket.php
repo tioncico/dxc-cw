@@ -27,8 +27,6 @@ class WebSocket
             'mapId'  => 1,
         ];
         $this->push($data);
-        sleep(1);
-        $this->fight();
     }
 
     public function getMapActorId()
@@ -46,6 +44,12 @@ class WebSocket
     public function mapInfo()
     {
         $data = ['action' => 'mapInfo'];
+        $this->push($data);
+    }
+
+    public function userInfo()
+    {
+        $data = ['action' => 'userInfo'];
         $this->push($data);
     }
 
@@ -113,8 +117,10 @@ class WebSocket
             while (1) {
                 $response = $this->wsClient->recv(0);
                 if ($response) {
-
-                    echo json_encode(json_decode($response->data, true), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL;
+                    echo json_encode(json_decode($response->data, true), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) . PHP_EOL;
+                }
+                if ($response===false){
+                    break;
                 }
             }
             \co::sleep(0.1);

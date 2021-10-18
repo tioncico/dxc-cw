@@ -15,8 +15,11 @@ use App\Model\Game\MapModel;
 use App\Model\Game\MapMonsterModel;
 use App\Model\Game\UserAttributeModel;
 use App\Service\Game\Fight\Reward;
+use App\Service\GameResponse;
 use App\Utility\Assert\Assert;
+use App\WebSocket\Command;
 use App\WebSocket\MsgPushEvent;
+use App\WebSocket\Push;
 use EasySwoole\Actor\AbstractActor;
 use EasySwoole\Actor\ActorConfig;
 use EasySwoole\EasySwoole\Logger;
@@ -27,6 +30,7 @@ use function AlibabaCloud\Client\value;
 class GameActor extends BaseActor
 {
     use GameActorEventTrait;
+
     protected $userId;
     protected $mapId;
 
@@ -72,17 +76,15 @@ class GameActor extends BaseActor
 
     public function mapInfo()
     {
-        MsgPushEvent::getInstance()->msgPush($this->userId, \App\WebSocket\Command::SC_ACTION_MAP_INFO, 200, "地图信息", [
-            'userInfo' => $this->user->toArray(),
-            'mapInfo'  => $this->map->toArray()
+        $this->push(\App\WebSocket\Command::SC_ACTION_MAP_INFO, 200, "地图信息", [
+            'mapInfo' => $this->map->toArray()
         ]);
     }
 
     public function userInfo()
     {
-        MsgPushEvent::getInstance()->msgPush($this->userId, \App\WebSocket\Command::SC_ACTION_USER_INFO, 200, "用户信息", [
+        $this->push(\App\WebSocket\Command::SC_ACTION_USER_INFO, 200, "用户信息", [
             'userInfo' => $this->user->toArray(),
-            'mapInfo'  => $this->map->toArray()
         ]);
     }
 
@@ -92,7 +94,7 @@ class GameActor extends BaseActor
         Assert::assert(empty($this->fight), "战斗未结束,无法退出");
         //清理用户地图数据
         UserRelationMap::getInstance()->delUserMap($this->userId);
-        MsgPushEvent::getInstance()->msgPush($this->userId, \App\WebSocket\Command::SC_ACTION_EXIT_MAP, 200, "退出地图", [
+        $this->push(\App\WebSocket\Command::SC_ACTION_EXIT_MAP, 200, "退出地图", [
             'userInfo' => $this->user->toArray(),
             'mapInfo'  => $this->map->toArray()
         ]);
@@ -108,14 +110,16 @@ class GameActor extends BaseActor
         $x = $param['x'] ?? 0;
         $y = $param['y'] ?? 0;
         $monster = $this->map->nowMapGrid[$x][$y] ?? '';
-
+        $monster->hp = 100;
+        if (! $monster instanceof MapMonsterModel){
+            var_dump($this->map->nowMapGrid);
+        }
         Assert::assert($monster instanceof MapMonsterModel, "怪物未找到");
         $fight = new Fight($this->user,$monster, function ($event, ...$data) {
-//            MsgPushEvent::getInstance()->msgPush($this->userId, $event, 200, "发送游戏数据", $data);
+//            $this->push( $event, 200, "发送游戏数据", $data);
         });
         $this->fight = $fight;
         $this->initEvent();
-        $this->fightEndEvent();
         $this->delMonsterEvent($x, $y);
         $fight->startFight();
     }
@@ -131,35 +135,30 @@ class GameActor extends BaseActor
     public function useUserSkill($param)
     {
         $skillCode = $param['skillCode'];
-        $skillInfo = $this->user->getUserNowAttribute()->getSkillList()[$skillCode]??null;
-        Assert::assert(!!$skillInfo,"技能不存在");
+        $skillInfo = $this->user->getUserNowAttribute()->getSkillList()[$skillCode] ?? null;
+        Assert::assert(!!$skillInfo, "技能不存在");
         $this->user->getUserNowAttribute()->getSkillManager()->useSkill($skillInfo);
-    }
-
-
-    /**
-     * 删除怪物
-     * delMonsterEvent
-     * @param $x
-     * @param $y
-     * @author tioncico
-     * Time: 9:43 上午
-     */
-    protected function delMonsterEvent($x, $y)
-    {
-        $this->fight->getEvent()->register('MONSTER_DIE', 'deleteMonster', function () use ($x, $y) {
-            $this->map->nowMapGrid[$x][$y] = null;
-            Logger::getInstance()->log("{$x},{$y}怪物死亡,删除");
-        });
     }
 
     protected function onException(\Throwable $throwable)
     {
         $actorId = $this->actorId();
         Trigger::getInstance()->throwable($throwable);
-        MsgPushEvent::getInstance()->msgPush($this->userId, \App\WebSocket\Command::SC_ACTION_ERROR, 400, $throwable->getMessage());
+        $this->push(\App\WebSocket\Command::SC_ACTION_ERROR, 400, $throwable->getMessage());
 
         echo "mapActor {$actorId} onException\n";
+    }
+
+    protected function push($action, $code, $msg = '', $data = [])
+    {
+        $data['goodsChange'] = GameResponse::getInstance()->getGoods();
+        $command = new Command();
+        $command->setAction($action);
+        $command->setCode($code);
+        $command->setMsg($msg);
+        $command->setData($data);
+
+        Push::push($this->userId,$command);
     }
 
 }

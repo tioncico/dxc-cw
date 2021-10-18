@@ -50,7 +50,6 @@ class Index extends BaseController
         $userId = $this->userId();
         $param = $this->getParam();
         $mapId = (int)$param['mapId'];
-        var_dump($param);
         $mapInfo = UserMapModel::create()->get(['mapId' => $mapId, 'userId' => $userId]);
         Assert::assert(!!$mapInfo, '地图信息不存在或未解锁');
         //获取用户体力
@@ -81,7 +80,7 @@ class Index extends BaseController
      */
     public function mapInfo()
     {
-        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
+        $actorId = UserRelationMap::getInstance()->getUserMap($this->userId());
         Assert::assert(!!$actorId, '不在地图中');
         $this->actorSend(Command::CS_MAP_INFO);
     }
@@ -95,7 +94,7 @@ class Index extends BaseController
      */
     public function userInfo()
     {
-        $actorId = UserRelationMap::getInstance()->getUserMap($userId);
+        $actorId = UserRelationMap::getInstance()->getUserMap($this->userId());
         Assert::assert(!!$actorId, '不在地图中');
         $this->actorSend(Command::CS_USER_INFO);
     }
