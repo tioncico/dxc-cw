@@ -27,6 +27,8 @@ class WebSocket
             'mapId'  => 1,
         ];
         $this->push($data);
+        sleep(1);
+//        $this->fight();
     }
 
     public function getMapActorId()
