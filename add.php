@@ -30,17 +30,19 @@ Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
     $data = [
-        'taskMasterId'=>4,
-        'code'=>'004',
-        'order'=>2,
-        'completeNum'=>1,
-        'name'=>'通关地下城',
-        'description'=>"通关地下城[一号深处]",
-        'param'=>json_encode([
-            4
-        ]),
+        'name'=>'撕咬',
+        'level'=>'1',
+        'triggerType'=>'31',
+        'triggerRate'=>'100',
+        'rarityLevel'=>'5',
+        'maxLevel'=>'15',
+        'coolingTime'=>'0',
+        'manaCost'=>'0',
+        'entryCode'=>'1005',
+        'description'=>'每次攻击造成3段伤害,每段伤害为80%,',
+        'effectParam'=>null,
     ];
-    $model = new GameTaskModel($data);
+    $model = new SkillModel($data);
     $model->save();
 
 

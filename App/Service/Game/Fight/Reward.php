@@ -116,13 +116,13 @@ class Reward
 
         }
         if ($monsterInfo->type == 2) {
-            //经验 = 地图经验基数*(2至3.5)
-            $exp = mt_rand(intval($mapExp * 2), intval($mapExp * 3.5));
+            //经验 = 地图经验基数*(3至5)
+            $exp = mt_rand(intval($mapExp * 3), intval($mapExp * 5));
 
         }
         if ($monsterInfo->type == 3) {
-            //经验 = 地图经验基数*怪物类型(10至20)
-            $exp = mt_rand(intval($mapExp * 10), intval($mapExp * 20));
+            //经验 = 地图经验基数*怪物类型(8至10)
+            $exp = mt_rand(intval($mapExp * 8), intval($mapExp * 10));
         }
         $this->exp = $exp;
         return $exp;
