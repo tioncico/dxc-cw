@@ -259,7 +259,7 @@ class UserSkill extends UserBase
 
 
     /**
-     * @Api(name="学习/升级技能",path="/Api/User/UserSkill/升级技能所需物品")
+     * @Api(name="学习/升级技能",path="/Api/User/UserSkill/skillLevelUp")
      * @ApiDescription("获取一条数据")
      * @Method(allow={GET,POST})
      * @InjectParamsContext(key="param")
