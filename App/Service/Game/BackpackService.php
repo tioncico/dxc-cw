@@ -15,6 +15,7 @@ use App\Model\UserGoodsEquipmentStrengthenAttributeModel;
 use App\Service\BaseService;
 use App\Service\Game\Task\DailyTaskService;
 use App\Service\GameResponse;
+use App\Utility\Assert\Assert;
 use EasySwoole\Component\Singleton;
 use EasySwoole\Mysqli\QueryBuilder;
 
@@ -96,6 +97,7 @@ class BackpackService extends BaseService
             $backpackInfo = $this->decMoney($userId, $num);
         } else {
             $backpackInfo = UserBackpackModel::create()->getInfoByCode($userId, $goodsModel->code);
+            Assert::assert($backpackInfo->num>=$num,"物品[$goodsModel->name]数量不足");
             if (empty($backpackInfo)) {
                 $backpackInfo = UserBackpackModel::create()->addData($userId, $goodsModel, $num);
             } else {

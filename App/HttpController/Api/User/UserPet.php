@@ -302,9 +302,7 @@ class UserPet extends UserBase
         //获取物品数据
         $goodsInfo = GoodsModel::create()->getInfoByCode($param['goodsCode']);
         Assert::assert($goodsInfo->baseCode=='petExp','此物品不能给宠物使用');
-        $backpackInfo = UserBackpackModel::create()->getInfoByCode($this->who->userId,$goodsInfo->code);
-        Assert::assert($backpackInfo->num>=$param['num'],'物品数量不足');
-        BaseModel::transaction(function ()use($goodsInfo,$backpackInfo,$info,$param){
+        BaseModel::transaction(function ()use($goodsInfo,$info,$param){
             //扣除物品
             BackpackService::getInstance()->decGoods($this->who->userId,$goodsInfo,$param['num']);
             //宠物增加经验

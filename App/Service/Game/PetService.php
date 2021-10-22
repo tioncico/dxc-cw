@@ -316,8 +316,9 @@ class PetService
         if ($userPetInfo->exp >= $levelConfig->exp) {
             $userPetInfo->level += 1;
             $userPetInfo->exp -= $levelConfig->exp;
+            $userPetInfo->update();
         }
-        if ($userPetInfo->exp >= $userPetInfo->exp) {
+        if ($userPetInfo->exp >= $levelUpConfig->exp) {
             $this->levelUp($userPetInfo);
         }
     }
