@@ -98,7 +98,7 @@ class UserCache
             $data = $redisClient->get($this->getKey("equipmentList", $userId));
             if (empty($data)) {
                 $data = EquipmentService::getInstance()->getUserEquipmentList($userId);
-                $this->setUserPetList($userId, $data);
+                $this->setUserEquipmentList($userId, $data);
             }
             return $data;
         });

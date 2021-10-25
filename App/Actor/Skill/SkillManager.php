@@ -193,7 +193,7 @@ class SkillManager
         if (($monaCostNum = $this->checkManaCost($skill)) === false) {
             Assert::assert(false, "魔法不足");
         }
-        $skillResult = new SkillResult();
+        $skillResult = new SkillResult(['skillInfo'=>$skill]);
         $skillResult->setManaCostNum($monaCostNum);
         Logger::getInstance()->log("{$this->attribute->getName()}{$skill->getSkillName()} 触发");
         //判断释放概率

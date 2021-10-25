@@ -54,7 +54,7 @@ class Fight
     {
         $this->initUserAttribute($user);
         $this->initMonsterAttribute($monsterAttribute);
-//        $this->initPetAttribute($petAttributeList);
+        $this->initPetAttribute($user->userPetList);
         $this->registerEvent();
         $this->callback = $callback;
     }
@@ -113,8 +113,8 @@ class Fight
     {
         $this->userAttribute->getSkillManager()->trigger('0', '0001');
         $this->monsterAttribute->getSkillManager()->trigger('0', '0001');
+
         foreach ($this->petAttributeList as $petAttribute) {
-//            Logger::getInstance()->log("宠物{$petAttribute->getName()}普通攻击");
             $petAttribute->getSkillManager()->trigger('0', '0001');
         }
     }

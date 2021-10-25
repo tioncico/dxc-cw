@@ -324,6 +324,9 @@ class Attribute extends SplBean
      */
     public function getAttackSpeed()
     {
+        if($this->attackSpeed<=0){
+            $this->attackSpeed=0.1;
+        }
         return $this->attackSpeed;
     }
 
