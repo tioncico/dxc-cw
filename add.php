@@ -12,6 +12,7 @@ include "./vendor/autoload.php";
 use App\Model\Game\GoodsEquipmentAttributeEntryModel;
 use App\Model\Game\GoodsEquipmentModel;
 use App\Model\Game\GoodsModel;
+use App\Model\Game\MapEnvironmentModel;
 use App\Model\Game\MapModel;
 use App\Model\Game\MonsterModel;
 use App\Model\Game\PetModel;
@@ -30,21 +31,12 @@ Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
     $data = [
-        'name'=>'撕咬',
-        'level'=>'1',
-        'triggerType'=>'31',
-        'triggerRate'=>'100',
-        'rarityLevel'=>'5',
-        'maxLevel'=>'15',
-        'coolingTime'=>'0',
-        'manaCost'=>'0',
-        'entryCode'=>'1005',
-        'description'=>'每次攻击造成3段伤害,每段伤害为80%,',
-        'effectParam'=>null,
+        'name'=>'不灭挑战塔',
+        'description'=>'不灭挑战塔',
+        'recommendedLevelValue'=>'1-999',
+        'isInstanceZone'=>'1',
     ];
-    $model = new SkillModel($data);
+    $model = new MapEnvironmentModel($data);
     $model->save();
-
-
     \Swoole\Timer::clearAll();
 });
