@@ -200,7 +200,7 @@ class SkillManager
         $isHit = $this->checkUseSkillMiss($skill);
         if ($isHit) {
             //触发事件
-            $this->onSkillBefore($skillResult);
+            $this->fight->getEvent()->userSkillBefore($this->attribute,$skillResult);
             //遍历技能效果
             $this->ergodicSkillEffect($skill, $skillResult);
         } else {
@@ -208,7 +208,7 @@ class SkillManager
             $skillResult->setIsMiss(1);
         }
         $this->coolSkill($skill);
-        $this->onSkillAfter($skillResult);
+        $this->fight->getEvent()->userSkillAfter($this->attribute,$skillResult);
     }
 
     protected function checkManaCost(SkillBean $skill)

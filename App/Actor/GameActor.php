@@ -109,7 +109,7 @@ class GameActor extends BaseActor
         Assert::assert(empty($this->fight), "战斗已开始");
         $x = $param['x'] ?? 0;
         $y = $param['y'] ?? 0;
-        $monster = $this->map->nowMapGrid[$x][$y] ?? '';
+        $monster = $this->map->nowMapGrid[$x][$y]['data'] ?? '';
         $monster->hp = 100;
         if (! $monster instanceof MapMonsterModel){
             var_dump($this->map->nowMapGrid);
@@ -157,7 +157,7 @@ class GameActor extends BaseActor
         $command->setCode($code);
         $command->setMsg($msg);
         $command->setData($data);
-
+        Logger::getInstance()->info("ws推送:{$action}:{$msg}");
         Push::push($this->userId,$command);
     }
 

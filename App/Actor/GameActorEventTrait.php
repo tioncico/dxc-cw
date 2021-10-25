@@ -6,6 +6,7 @@ namespace App\Actor;
 
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Fight\Fight;
+use App\Actor\Skill\SkillResult;
 use App\Model\Game\GoodsModel;
 use App\Model\Game\MapMonsterModel;
 use App\Service\Game\Fight\Reward;
@@ -16,10 +17,31 @@ use EasySwoole\EasySwoole\ServerManager;
 
 trait GameActorEventTrait
 {
-    public function initEvent(){
+    public function initEvent()
+    {
         $this->rewardEvent();
         $this->fightEndEvent();
         $this->fightStartEvent();
+        $this->skillEvent();
+    }
+
+    protected function skillEvent()
+    {
+        $fight = $this->fight;
+        $fight->getEvent()->register('USE_SKILL_BEFORE', 'pushWS', function ($eventName, Attribute $attribute, SkillResult $skillResult) {
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, '使用技能推送', [
+                'attributeModel' => $attribute->getOriginModel(),
+                'attributeType'  => $attribute->getAttributeType(),
+                'skillResult'    => $skillResult
+            ]);
+        });
+        $fight->getEvent()->register('USE_SKILL_AFTER', 'pushWS', function ($eventName, Attribute $attribute, SkillResult $skillResult) {
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_AFTER, 200, '使用技能推送', [
+                'attributeModel' => $attribute->getOriginModel(),
+                'attributeType'  => $attribute->getAttributeType(),
+                'skillResult'    => $skillResult
+            ]);
+        });
     }
 
 
@@ -38,9 +60,9 @@ trait GameActorEventTrait
          */
         $fight = $this->fight;
         $monsterInfo = $fight->getMonsterAttribute()->toArray();
-        $fight->getEvent()->register('FIGHT_START', 'pushWs', function ()use($monsterInfo) {
-            $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT, 200, "战斗开始推送",[
-                'monsterInfo'=>$monsterInfo,
+        $fight->getEvent()->register('FIGHT_START', 'pushWs', function () use ($monsterInfo) {
+            $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT, 200, "战斗开始推送", [
+                'monsterInfo' => $monsterInfo,
             ]);
         });
     }
@@ -52,7 +74,7 @@ trait GameActorEventTrait
          * @var $fight Fight
          */
         $fight = $this->fight;
-        $fight->getEvent()->register('MONSTER_DIE', 'reward', function ($event,Attribute $attribute)  {
+        $fight->getEvent()->register('MONSTER_DIE', 'reward', function ($event, Attribute $attribute) {
             $monster = $attribute->getOriginModel();
             //计算奖励
             $reward = new Reward($this->userId, $this->map->mapInfo, $monster);
@@ -68,7 +90,7 @@ trait GameActorEventTrait
                     $msg .= "  {$goodsInfo->name}*{$value['num']}";
                 }
             }
-            $this->push(\App\WebSocket\Command::SC_ACTION_MONSTER_DIE,200,'怪物死亡');
+            $this->push(\App\WebSocket\Command::SC_ACTION_MONSTER_DIE, 200, '怪物死亡');
             Logger::getInstance()->log($msg);
         });
     }
