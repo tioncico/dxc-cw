@@ -139,34 +139,12 @@ class FightEvent
 
     public function userSkillBefore(Attribute $attribute, SkillResult $skillResult)
     {
-        var_dump(1);
         $this->onEvent('USE_SKILL_BEFORE', $attribute, $skillResult);
     }
 
     public function userSkillAfter(Attribute $attribute, SkillResult $skillResult)
     {
-        var_dump(2);
         $this->onEvent('USE_SKILL_AFTER', $attribute, $skillResult);
-    }
-
-    public function petSkillBefore(Attribute $attribute, SkillResult $skillResult)
-    {
-        $this->onEvent('PET_SKILL_BEFORE', $attribute, $skillResult);
-    }
-
-    public function petSkillAfter(Attribute $attribute, SkillResult $skillResult)
-    {
-        $this->onEvent('PET_SKILL_AFTER', $attribute, $skillResult);
-    }
-
-    public function monsterSkillBefore(Attribute $attribute, SkillResult $skillResult)
-    {
-        $this->onEvent('MONSTER_SKILL_BEFORE', $attribute, $skillResult);
-    }
-
-    public function monsterSkillAfter(Attribute $attribute, SkillResult $skillResult)
-    {
-        $this->onEvent('MONSTER_SKILL_AFTER', $attribute, $skillResult);
     }
 
     public function second()

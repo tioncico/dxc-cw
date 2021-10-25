@@ -6,6 +6,7 @@ namespace App\Actor;
 
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Fight\Fight;
+use App\Actor\Skill\SkillEffectResult;
 use App\Actor\Skill\SkillResult;
 use App\Model\Game\GoodsModel;
 use App\Model\Game\MapMonsterModel;
@@ -23,20 +24,38 @@ trait GameActorEventTrait
         $this->fightEndEvent();
         $this->fightStartEvent();
         $this->skillEvent();
+        $this->buckleBloodEvent();
     }
-
     protected function skillEvent()
     {
         $fight = $this->fight;
         $fight->getEvent()->register('USE_SKILL_BEFORE', 'pushWS', function ($eventName, Attribute $attribute, SkillResult $skillResult) {
-            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, '使用技能推送', [
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, '使用技能前推送', [
                 'attributeModel' => $attribute->getOriginModel(),
                 'attributeType'  => $attribute->getAttributeType(),
                 'skillResult'    => $skillResult
             ]);
         });
         $fight->getEvent()->register('USE_SKILL_AFTER', 'pushWS', function ($eventName, Attribute $attribute, SkillResult $skillResult) {
-            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_AFTER, 200, '使用技能推送', [
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_AFTER, 200, '使用技能后推送', [
+                'attributeModel' => $attribute->getOriginModel(),
+                'attributeType'  => $attribute->getAttributeType(),
+                'skillResult'    => $skillResult
+            ]);
+        });
+    }
+    protected function buckleBloodEvent()
+    {
+        $fight = $this->fight;
+        $fight->getEvent()->register('USER_BUCKLE_BLOOD_AFTER', 'pushWS', function ($eventName, Attribute $attribute, SkillEffectResult $skillResult) {
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, '扣血后推送', [
+                'attributeModel' => $attribute->getOriginModel(),
+                'attributeType'  => $attribute->getAttributeType(),
+                'skillResult'    => $skillResult
+            ]);
+        });
+        $fight->getEvent()->register('MONSTER_BUCKLE_BLOOD_AFTER', 'pushWS', function ($eventName, Attribute $attribute, SkillEffectResult $skillResult) {
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, '扣血后推送', [
                 'attributeModel' => $attribute->getOriginModel(),
                 'attributeType'  => $attribute->getAttributeType(),
                 'skillResult'    => $skillResult
