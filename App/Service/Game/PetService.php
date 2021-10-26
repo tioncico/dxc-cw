@@ -142,6 +142,15 @@ class PetService
         return $info;
     }
 
+    public function incUserAttribute(Attribute $userAttributeBean, UserPetModel $userPetModel)
+    {
+        //部分属性相加
+        $userAttributeBean->setHp(intval($userAttributeBean->getHp() + $userPetModel->hp*0.3));
+        $userAttributeBean->setMp(intval($userAttributeBean->getMp() + $userPetModel->mp*0.3));
+        $userAttributeBean->setAttack(intval($userAttributeBean->getAttack() + $userPetModel->attack*0.3));
+        $userAttributeBean->setDefense(intval($userAttributeBean->getDefense() + $userPetModel->defense*0.3));
+    }
+
     public function decompose(UserPetModel $userPetInfo)
     {
         $info = BaseModel::transaction(function () use ($userPetInfo) {

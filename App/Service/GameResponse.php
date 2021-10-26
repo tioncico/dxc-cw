@@ -5,6 +5,7 @@ namespace App\Service;
 
 
 use App\Model\Game\GoodsModel;
+use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserPetModel;
 use EasySwoole\Component\Context\ContextManager;
@@ -16,6 +17,7 @@ class GameResponse
     const GOODS_KEY = 'changeGoodsKey';
     const EQUIPMENT_KEY = 'changeEquipmentKey';
     const PET_KEY = 'changePetKey';
+    const USER_ATTRIBUTE_CHANGE_KEY = 'changeUserAttribute';
     use Singleton;
 
     public function addGoods(GoodsModel $goodsModel, $num)
@@ -42,7 +44,13 @@ class GameResponse
         ContextManager::getInstance()->set(self::PET_KEY, $data);
     }
 
-    public function addEquipment(UserEquipmentBackpackModel $userEquipmentBackpackModel, $num=1)
+
+    public function setUser(UserAttributeModel $userAttributeModel)
+    {
+        ContextManager::getInstance()->set(self::USER_ATTRIBUTE_CHANGE_KEY, $userAttributeModel);
+    }
+
+    public function addEquipment(UserEquipmentBackpackModel $userEquipmentBackpackModel, $num = 1)
     {
         $data = ContextManager::getInstance()->get(self::EQUIPMENT_KEY);
         if (isset($data[$userEquipmentBackpackModel->backpackId])) {
@@ -64,8 +72,8 @@ class GameResponse
     public function getEquipment()
     {
         $equipment = ContextManager::getInstance()->get(self::EQUIPMENT_KEY);
-        if (empty($equipment)){
-            $equipment=[];
+        if (empty($equipment)) {
+            $equipment = [];
         }
         return array_values($equipment);
     }
@@ -73,8 +81,8 @@ class GameResponse
     public function getGoods()
     {
         $goods = ContextManager::getInstance()->get(self::GOODS_KEY);
-        if (empty($goods)){
-            $goods=[];
+        if (empty($goods)) {
+            $goods = [];
         }
         return array_values($goods);
     }
@@ -82,10 +90,19 @@ class GameResponse
     public function getPets()
     {
         $goods = ContextManager::getInstance()->get(self::PET_KEY);
-        if (empty($goods)){
-            $goods=[];
+        if (empty($goods)) {
+            $goods = [];
         }
         return array_values($goods);
+    }
+
+    public function getUserAttribute()
+    {
+        $info = ContextManager::getInstance()->get(self::USER_ATTRIBUTE_CHANGE_KEY);
+        if (empty($info)) {
+            $info = [];
+        }
+        return $info;
     }
 
 }

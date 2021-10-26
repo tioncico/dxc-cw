@@ -43,6 +43,7 @@ class ApiBase extends Base
                 'goodsChange'     => GameResponse::getInstance()->getGoods(),
                 'equipmentChange' => GameResponse::getInstance()->getEquipment(),
                 'petChange'       => GameResponse::getInstance()->getPets(),
+                'userAttributeChange'       => GameResponse::getInstance()->getPets(),
             );
             $this->response()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
             $this->response()->withHeader('Content-type', 'application/json;charset=utf-8');

@@ -30,13 +30,11 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-    $data = [
-        'name'=>'不灭挑战塔',
-        'description'=>'不灭挑战塔',
-        'recommendedLevelValue'=>'1-999',
-        'isInstanceZone'=>'1',
-    ];
-    $model = new MapEnvironmentModel($data);
-    $model->save();
+    $skillInfo = SkillModel::create()->get(14);
+    var_dump($skillInfo->toArray());
+
+    \App\Model\Game\PetSkillModel::create()->where('petSkillId',44)->update($skillInfo->toArray());
+
+
     \Swoole\Timer::clearAll();
 });
