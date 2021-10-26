@@ -20,6 +20,8 @@ use App\Utility\Cache\UserCache;
 use App\Utility\Rand\Bean;
 use App\Utility\Rand\Rand;
 use EasySwoole\Component\Singleton;
+use EasySwoole\Utility\Str;
+use function AlibabaCloud\Client\value;
 
 class EquipmentService extends BaseService
 {
@@ -27,7 +29,7 @@ class EquipmentService extends BaseService
 
     public function getUserEquipmentList($userId)
     {
-        $list = UserEquipmentBackpackModel::create()->where('isUse', 1)->where('userId', $userId)->all();
+        $list = UserEquipmentBackpackModel::create()->with(['strengthenInfo','equipmentAttributeEntryList'],false)->where('isUse', 1)->where('userId', $userId)->all();
         $userEquipmentList = [];
         /**
          * @var $value UserEquipmentBackpackModel
@@ -324,6 +326,29 @@ class EquipmentService extends BaseService
         $userEquipmentBackpackInfo->update([
             'attributeDescription' => implode("\n", $descriptionArr),
         ]);
+    }
+
+    public function incUserAttributeByEquipmentAttributeEntry(Attribute $userBaseAttributeBean,Attribute $userAttributeBean,UserEquipmentBackpackModel $userEquipment){
+        //装备随机属性
+        $equipmentAttributeEntryList = $userEquipment->equipmentAttributeEntryList;
+        foreach ($equipmentAttributeEntryList as $equipmentAttributeEntryModel){
+            $propertyName = $equipmentAttributeEntryModel->param['attribute'];
+            $num = $equipmentAttributeEntryModel->param['num'];
+            if ($equipmentAttributeEntryModel->code=='0001'){
+                $setMethod = 'set'.Str::studly($propertyName);
+                $getMethod = 'set'.Str::studly($propertyName);
+                var_dump(111);
+                if (method_exists($userAttributeBean,$setMethod)&&method_exists($userAttributeBean,$getMethod)){
+                    $userAttributeBean->$setMethod($userAttributeBean->$getMethod()+$num);
+                }
+            }elseif($equipmentAttributeEntryModel->code=='0002'){
+                $setMethod = 'set'.Str::studly($propertyName);
+                $getMethod = 'set'.Str::studly($propertyName);
+                if (method_exists($userAttributeBean,$setMethod)&&method_exists($userAttributeBean,$getMethod)){
+                    $userAttributeBean->$setMethod(intval($userBaseAttributeBean->$getMethod()*$num/100));
+                }
+            }
+        }
     }
 
     public function incUserAttribute(Attribute $userAttributeBean,UserEquipmentBackpackModel $userEquipment){
