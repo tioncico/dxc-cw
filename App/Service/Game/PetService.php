@@ -4,6 +4,7 @@
 namespace App\Service\Game;
 
 
+use App\Actor\Data\User;
 use App\Model\BaseModel;
 use App\Model\Game\GoodsModel;
 use App\Model\Game\PetModel;
@@ -125,6 +126,7 @@ class PetService
         $info = BaseModel::transaction(function () use ($userPetInfo) {
             //将宠物更新为已上阵
             $userPetInfo->update(['isUse' => 1]);
+            UserService::getInstance()->countUserAttribute($userPetInfo->userId);
             GameResponse::getInstance()->addPet($userPetInfo, 0);
             return $userPetInfo;
         });
@@ -136,6 +138,7 @@ class PetService
         $info = BaseModel::transaction(function () use ($userPetInfo) {
             //将宠物更新为已上阵
             $userPetInfo->update(['isUse' => 0]);
+            UserService::getInstance()->countUserAttribute($userPetInfo->userId);
             GameResponse::getInstance()->addPet($userPetInfo, 0);
             return $userPetInfo;
         });
