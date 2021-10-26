@@ -155,7 +155,16 @@ class PetService
                 $goodsInfo = $value['goodsInfo'];
                 BackpackService::getInstance()->addGoods($userPetInfo->userId, $goodsInfo, $num);
             }
-            //todo 计算经验球
+            //计算经验球
+            $expGoodsList = $this->countExp($userPetInfo);
+            foreach ($expGoodsList as $value) {
+                $num = $value['num'];
+                /**
+                 * @var $goodsInfo GoodsModel
+                 */
+                $goodsInfo = $value['goodsInfo'];
+                BackpackService::getInstance()->addGoods($userPetInfo->userId, $goodsInfo, $num);
+            }
 
             //删除宠物技能
             UserPetSkillModel::create()->destroy(['userPetId' => $userPetInfo->userPetId]);
@@ -164,6 +173,29 @@ class PetService
             return $userPetInfo;
         });
         return $info;
+    }
+
+    public function countExp(UserPetModel $userPetInfo)
+    {
+        //计算总经验
+        $expInfo = UserLevelConfigModel::create()->field('sum(exp) as exp')->where('level', $userPetInfo->level, '<')->get();
+        $expNum = $expInfo->exp ?? 100;
+        $expArr = GoodsModel::create()->where('baseCode', 'petExp')->order('extraData')->all();
+        $goodsList = [];
+        /**
+         * @var $value GoodsModel
+         */
+        foreach ($expArr as $value) {
+            if ($expNum < $value->extraData) {
+                continue;
+            }
+            $goodsList[] = [
+                'goodsInfo' => $value,
+                'num'       => intval($expNum / $value->extraData)
+            ];
+            $expNum -= $expNum / $value->extraData;
+        }
+        return $goodsList;
     }
 
     /**
