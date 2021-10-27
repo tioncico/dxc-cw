@@ -49,14 +49,14 @@ class UserDailyTaskCompleteModel extends BaseModel
             'date'            => $date,
             'addTime'         => $addTime,
         ];
-        $model = new self($data);
+        $model = new static($data);
         $model->save();
         return $model;
     }
 
     public function getTodayUserCompleteInfo($userId, $gameDailyTaskId)
     {
-        $info = $this->where('userId', $userId)->where('gameDailyTaskId', $gameDailyTaskId)->get();
+        $info = $this->where('userId', $userId)->where('date',date('Ymd'))->where('gameDailyTaskId', $gameDailyTaskId)->get();
         if (empty($info)) {
             $info = $this->addData($userId, $gameDailyTaskId, 0, date('Ymd'), time());
         }

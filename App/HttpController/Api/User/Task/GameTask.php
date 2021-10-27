@@ -279,8 +279,8 @@ class GameTask extends UserBase
         $param = ContextManager::getInstance()->get('param');
         $model = new GameDailyTaskPointRewardModel();
         //每日奖励
-        $dailyRewardList = $model->with(['goodsInfo', 'userReceiveInfo' => $this->who->userId], false)->where('type', 1)->order('pointNum', 'ASC')->all();
-        $weekRewardList = $model->with(['goodsInfo', 'userReceiveInfo' => $this->who->userId], false)->where('type', 2)->order('pointNum', 'ASC')->all();
+        $dailyRewardList = $model->with(['goodsInfo', 'userReceiveInfoToday' => $this->who->userId], false)->where('type', 1)->order('pointNum', 'ASC')->all();
+        $weekRewardList = $model->with(['goodsInfo', 'userReceiveInfoWeek' => $this->who->userId], false)->where('type', 2)->order('pointNum', 'ASC')->all();
         $data = [
             'pointInfo'       => UserDailyTaskPointModel::create()->getInfo($this->who->userId),
             'dailyRewardList' => $dailyRewardList,
@@ -308,11 +308,17 @@ class GameTask extends UserBase
      */
     public function receiveDailyReward(){
         $param = ContextManager::getInstance()->get('param');
-        $rewardInfo = GameDailyTaskPointRewardModel::create()->with(['goodsInfo', 'userReceiveInfo' => $this->who->userId], false)->get($param['rewardId']);
+        $rewardInfo = GameDailyTaskPointRewardModel::create()->with(['goodsInfo', 'userReceiveInfoToday' => $this->who->userId, 'userReceiveInfoWeek' => $this->who->userId], false)->get(intval($param['rewardId']));
         Assert::assert(!!$rewardInfo,'奖励数据不存在');
         $pointInfo = UserDailyTaskPointModel::create()->getInfo($this->who->userId);
-        if (!empty($rewardInfo->userReceiveInfo)){
-            Assert::assert(false,'你已领取此奖励');
+        if ($rewardInfo->type==1){
+            if (!empty($rewardInfo->userReceiveInfoToday)){
+                Assert::assert(false,'你已领取此奖励1');
+            }
+        }else{
+            if (!empty($rewardInfo->userReceiveInfoWeek)){
+                Assert::assert(false,'你已领取此奖励2');
+            }
         }
         if($rewardInfo->type==1){
             Assert::assert($rewardInfo->pointNum<=$pointInfo->dailyPointNum,"积分不足");
