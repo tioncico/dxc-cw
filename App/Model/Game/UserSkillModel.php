@@ -87,7 +87,7 @@ class UserSkillModel extends BaseModel
         if ($info->maxLevel>$info->level){
             $info->update(['level'=>QueryBuilder::inc(1)]);
         }
-        return false;
+        return $info;
     }
 }
 

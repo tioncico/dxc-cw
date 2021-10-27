@@ -49,7 +49,7 @@ class SkillService extends BaseService
         $userSkillModel = new UserSkillModel();
         $skillInfo = $userSkillModel->getUserSkillByCode($userId, $skillModel);
         Assert::assert($skillInfo->maxLevel > $skillInfo->level, "等级已升级到满级");
-        $skillInfo->levelUp($userId, $skillModel);
+        $skillInfo = $skillInfo->levelUp($userId, $skillModel);
         return $skillInfo;
     }
 
@@ -59,7 +59,7 @@ class SkillService extends BaseService
         return $goodsList;
     }
 
-    public function skillLevelUp($userId, SkillModel $skillModel):UserSkillModel
+    public function skillLevelUp($userId, SkillModel $skillModel): UserSkillModel
     {
         //判断玩家有没有学
         $userSkillInfo = UserSkillModel::create()->getUserSkillByCode($userId, $skillModel);
@@ -69,7 +69,7 @@ class SkillService extends BaseService
             $level = 1;
         }
         $goodsList = $this->getStudyNeedGoods($skillModel->skillId, $level);
-      return  BaseModel::transaction(function () use ($userSkillInfo, $skillModel, $goodsList) {
+        return BaseModel::transaction(function () use ($userSkillInfo, $skillModel, $goodsList) {
 
             /**
              * @var $goods SkillLevelUpNeedGoodsModel
