@@ -4,6 +4,7 @@
 namespace App\Actor\Fight;
 
 
+use App\Actor\Buff\BuffResult\BuffResult;
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Skill\SkillBean;
 use App\Actor\Skill\SkillEffectResult;
@@ -17,6 +18,8 @@ class FightEvent
         'FIGHT_END'                   => [],
         'USE_SKILL_BEFORE'            => [],
         'USE_SKILL_AFTER'             => [],
+        'BUFF_START'             => [],
+        'BUFF_RESULT'             => [],
         'USER_BUCKLE_BLOOD_BEFORE'    => [],
         'USER_BUCKLE_BLOOD_AFTER'     => [],
         'MONSTER_BUCKLE_BLOOD_BEFORE' => [],
@@ -81,12 +84,12 @@ class FightEvent
         'FIGHT_END'                   => 'fightEnd',//'战斗结束后',
         'USE_SKILL_BEFORE'            => 'useSkillBefore',//'战斗结束后',
         'USE_SKILL_AFTER'             => 'useSkillAfter',//'战斗结束后',
+        'BUFF_START'                  => 'buffStart',//创建buff,
+        'BUFF_RESULT'                 => 'buffResult',//buff效果触发,
         'USER_BUCKLE_BLOOD_BEFORE'    => 'userBuckleBloodBefore',//'用户扣血前',
         'USER_BUCKLE_BLOOD_AFTER'     => 'userBuckleBloodAfter',//'用户扣血后',
         'MONSTER_BUCKLE_BLOOD_BEFORE' => 'monsterBuckleBloodBefore',//'怪物扣血前',
         'MONSTER_BUCKLE_BLOOD_AFTER'  => 'monsterBuckleBloodAfter',//'怪物扣血后',
-        'USER_SKILL_BEFORE'           => 'userSkillBefore',//'玩家释放技能前',
-        'USER_SKILL_AFTER'            => 'userSkillAfter',//'玩家释放技能后',
         'PET_SKILL_BEFORE'            => 'petSkillBefore',//'玩家释放技能前',
         'PET_SKILL_AFTER'             => 'petSkillAfter',//'玩家释放技能后',
         'MONSTER_SKILL_BEFORE'        => 'monsterSkillBefore',//'怪物释放技能前',
@@ -115,6 +118,18 @@ class FightEvent
     public function useSkillAfter(Attribute $attribute, SkillResult $skillResult)
     {
         $this->onEvent('USE_SKILL_AFTER', $attribute, $skillResult);
+    }
+
+
+    public function buffStart(Attribute $attribute, BuffResult $buffResult)
+    {
+        $this->onEvent('BUFF_START', $attribute, $buffResult);
+    }
+
+
+    public function buffResult(Attribute $attribute, BuffResult $buffResult)
+    {
+        $this->onEvent('BUFF_RESULT', $attribute, $buffResult);
     }
 
     public function userBuckleBloodBefore(Attribute $targetAttribute, SkillEffectResult $effectResult)

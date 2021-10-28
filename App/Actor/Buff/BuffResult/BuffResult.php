@@ -11,6 +11,7 @@ class BuffResult extends SplBean
 {
     protected $buffInfo = null;//buff信息
     protected $propertyChangeList = [];//元素变更情况,例如mp-10
+    protected $targetModel = null;//目标模型数据
 
     /**
      * @return null
@@ -51,6 +52,22 @@ class BuffResult extends SplBean
         } else {
             $this->propertyChangeList[$propertyName] = $num;
         }
+    }
+
+    /**
+     * @return null
+     */
+    public function getTargetModel()
+    {
+        return $this->targetModel;
+    }
+
+    /**
+     * @param null $targetModel
+     */
+    public function setTargetModel($targetModel): void
+    {
+        $this->targetModel = $targetModel;
     }
 
 }

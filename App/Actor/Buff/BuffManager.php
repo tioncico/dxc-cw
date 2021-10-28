@@ -2,8 +2,10 @@
 
 namespace App\Actor\Buff;
 
+use App\Actor\Buff\BuffResult\BuffResult;
 use App\Actor\Buff\BuffTrait\BuffTrait;
 use App\Actor\Buff\BuffTrait\ChangeAttribute;
+use App\Actor\Buff\BuffTrait\Event;
 use App\Actor\Buff\BuffTrait\TemplateHandle;
 use App\Actor\Fight\Bean\Attribute;
 use EasySwoole\EasySwoole\Logger;
@@ -11,6 +13,7 @@ use EasySwoole\Utility\Str;
 
 class BuffManager
 {
+    use Event;
     use BuffTrait;
     use TemplateHandle;
     use ChangeAttribute;
@@ -116,9 +119,10 @@ class BuffManager
             $this->buffList[$buffBean->getTriggerType()][$buffBean->getBuffCode()] = $buffBean;
             $this->buffCodeList[$buffBean->getBuffCode()] = $buffBean;
         }
+        $this->addBuffEvent($this->attribute,$buffBean);
     }
 
-    public function trigger($type, $code = null, ?SkillEffectResult $effectResult = null)
+    public function trigger($type, $code = null, ?BuffResult $buffResult = null)
     {
         //如果$code为null,则触发所有技能
         if ($code === null) {
@@ -149,21 +153,7 @@ class BuffManager
         $methodName = "useBuff" . Str::studly($buff->getBuffCode());
         $buffResult = $this->$methodName($buff);
         $this->changeAttribute($buffResult);
-    }
-
-    protected function ergodicSkillEffect(SkillBean $skill, SkillResult $skillResult)
-    {
-        //获取$skill的属性
-        $effectList = $skill->getEffectParam();
-        foreach ($effectList as $effectBean) {
-            $type = $effectBean->getType();
-            list($targetBaseAttribute, $targetAttribute) = $this->getTargetAttribute($effectBean->getTarget());
-            $methodName = 'effect' . Str::studly($type);
-            $skillEffectResult = $this->$methodName($targetBaseAttribute, $targetAttribute, $skill, $effectBean);
-            $skillResult->addEffectResult($skillEffectResult);
-            //触发属性相关
-            $this->changeAttribute($targetAttribute, $skillEffectResult);
-        }
+        $this->buffResult($this->attribute,$buffResult);
     }
 
     /**

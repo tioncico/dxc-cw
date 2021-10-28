@@ -30,6 +30,7 @@ trait EffectAddBuff
         $skillEffectResult->setTargetType($this->getEffectTargetType($effectBean->getTarget()));
         $buffBean = $effectBean->getBuffBean();
         $targetAttribute->getBuffManager()->addBuff($buffBean, $effectBean->getBuffLayer());
+
         Logger::getInstance()->log("{$targetAttribute->getName()}叠加buff:[{$buffBean->getBuffName()}]");
         return $skillEffectResult;
     }
