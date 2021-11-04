@@ -34,7 +34,8 @@ class BuffManager
      */
     protected $attribute;//当前信息
 
-    protected $attributeType;
+
+    protected $eventCallback=[];
 
     const VARIABLE = [
         //释放技能人当前属性

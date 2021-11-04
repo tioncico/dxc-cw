@@ -4,6 +4,7 @@
 namespace App\Actor;
 
 
+use App\Actor\Buff\BuffBean;
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Fight\Fight;
 use App\Actor\Skill\SkillEffectResult;
@@ -25,7 +26,46 @@ trait GameActorEventTrait
         $this->fightStartEvent();
         $this->skillEvent();
         $this->buckleBloodEvent();
+        $this->buffEvent();
     }
+
+    protected function buffEvent()
+    {
+        /**
+         * @var $fight Fight
+         */
+        $fight = $this->fight;
+
+        $addBuffEventFunction = function ($name,Attribute $attribute, BuffBean $buffBean){
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, 'buff增加推送', [
+                'attributeModel' => $attribute->getOriginModel(),
+                'attributeType'  => $attribute->getAttributeType(),
+                'buffBean'    => $buffBean
+            ]);
+        };
+        $buffResultEventFunction = function ($name,Attribute $attribute, BuffBean $buffBean){
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, 'buff增加推送', [
+                'attributeModel' => $attribute->getOriginModel(),
+                'attributeType'  => $attribute->getAttributeType(),
+                'buffBean'    => $buffBean
+            ]);
+        };
+
+
+        $fight->getUserAttribute()->getBuffManager()->addEventHandle('addBuffEvent','pushWS',$addBuffEventFunction);
+        $fight->getMonsterAttribute()->getBuffManager()->addEventHandle('addBuffEvent','pushWS',$addBuffEventFunction);
+        foreach ($fight->getPetAttributeList() as $attribute){
+            $attribute->getBuffManager()->addEventHandle('addBuffEvent','pushWS',$addBuffEventFunction);
+        }
+
+        $fight->getUserAttribute()->getBuffManager()->addEventHandle('buffResult','pushWS',$buffResultEventFunction);
+        $fight->getMonsterAttribute()->getBuffManager()->addEventHandle('buffResult','pushWS',$buffResultEventFunction);
+        foreach ($fight->getPetAttributeList() as $attribute){
+            $attribute->getBuffManager()->addEventHandle('buffResult','pushWS',$buffResultEventFunction);
+        }
+
+    }
+
     protected function skillEvent()
     {
         $fight = $this->fight;
@@ -44,6 +84,7 @@ trait GameActorEventTrait
             ]);
         });
     }
+
     protected function buckleBloodEvent()
     {
         $fight = $this->fight;

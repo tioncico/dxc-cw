@@ -110,7 +110,7 @@ class GameActor extends BaseActor
         $x = $param['x'] ?? 0;
         $y = $param['y'] ?? 0;
         $monster = $this->map->nowMapGrid[$x][$y]['data'] ?? '';
-        $monster->hp = 100;
+//        $monster->hp = 100;
         if (! $monster instanceof MapMonsterModel){
             var_dump($this->map->nowMapGrid);
         }

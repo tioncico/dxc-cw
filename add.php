@@ -30,11 +30,20 @@ use EasySwoole\Component\Context\ContextManager;
 Co::set(['hook_flags' => SWOOLE_HOOK_ALL]); // v4.4+版本使用此方法。
 
 go(function () {
-    $skillInfo = SkillModel::create()->get(14);
-    var_dump($skillInfo->toArray());
-
-    \App\Model\Game\PetSkillModel::create()->where('petSkillId',44)->update($skillInfo->toArray());
-
+    \App\Service\Game\MailService::getInstance()->sendMail(1843,'test','test',[
+        [
+            'code'=>'petAwake',
+            'num'=>99999
+        ],
+        [
+            'code'=>'petEssence',
+            'num'=>99999
+        ],
+        [
+            'code'=>'petSoul1',
+            'num'=>99999
+        ],
+    ]);
 
     \Swoole\Timer::clearAll();
 });

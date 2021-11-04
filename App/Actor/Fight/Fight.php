@@ -111,12 +111,12 @@ class Fight
 
     public function normalAttack()
     {
-        $this->userAttribute->getSkillManager()->trigger('0', '0001');
-        $this->monsterAttribute->getSkillManager()->trigger('0', '0001');
-
-        foreach ($this->petAttributeList as $petAttribute) {
-            $petAttribute->getSkillManager()->trigger('0', '0001');
-        }
+//        $this->userAttribute->getSkillManager()->trigger('0', '0001');
+//        $this->monsterAttribute->getSkillManager()->trigger('0', '0001');
+//
+//        foreach ($this->petAttributeList as $petAttribute) {
+//            $petAttribute->getSkillManager()->trigger('0', '0001');
+//        }
     }
 
     public function pushFightResult($command, ...$data)
