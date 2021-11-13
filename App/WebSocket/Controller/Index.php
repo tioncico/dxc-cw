@@ -68,6 +68,7 @@ class Index extends BaseController
         //创建关联关系
         UserRelationMap::getInstance()->addUserMap($userId, $actorId);
         $this->actorSend('mapInfo');
+        $this->actorSend('userInfo');
 //        $this->responseMsg(200, "进入地图成功");
     }
 
