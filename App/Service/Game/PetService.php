@@ -4,6 +4,7 @@
 namespace App\Service\Game;
 
 
+use App\Actor\Data\User;
 use App\Model\BaseModel;
 use App\Model\Game\GoodsModel;
 use App\Model\Game\PetModel;
@@ -125,6 +126,7 @@ class PetService
         $info = BaseModel::transaction(function () use ($userPetInfo) {
             //将宠物更新为已上阵
             $userPetInfo->update(['isUse' => 1]);
+            UserService::getInstance()->countUserAttribute($userPetInfo->userId);
             GameResponse::getInstance()->addPet($userPetInfo, 0);
             return $userPetInfo;
         });
@@ -136,10 +138,20 @@ class PetService
         $info = BaseModel::transaction(function () use ($userPetInfo) {
             //将宠物更新为已上阵
             $userPetInfo->update(['isUse' => 0]);
+            UserService::getInstance()->countUserAttribute($userPetInfo->userId);
             GameResponse::getInstance()->addPet($userPetInfo, 0);
             return $userPetInfo;
         });
         return $info;
+    }
+
+    public function incUserAttribute(Attribute $userAttributeBean, UserPetModel $userPetModel)
+    {
+        //部分属性相加
+        $userAttributeBean->setHp(intval($userAttributeBean->getHp() + $userPetModel->hp*0.3));
+        $userAttributeBean->setMp(intval($userAttributeBean->getMp() + $userPetModel->mp*0.3));
+        $userAttributeBean->setAttack(intval($userAttributeBean->getAttack() + $userPetModel->attack*0.3));
+        $userAttributeBean->setDefense(intval($userAttributeBean->getDefense() + $userPetModel->defense*0.3));
     }
 
     public function decompose(UserPetModel $userPetInfo)
@@ -155,7 +167,16 @@ class PetService
                 $goodsInfo = $value['goodsInfo'];
                 BackpackService::getInstance()->addGoods($userPetInfo->userId, $goodsInfo, $num);
             }
-            //todo 计算经验球
+            //计算经验球
+            $expGoodsList = $this->countExp($userPetInfo);
+            foreach ($expGoodsList as $value) {
+                $num = $value['num'];
+                /**
+                 * @var $goodsInfo GoodsModel
+                 */
+                $goodsInfo = $value['goodsInfo'];
+                BackpackService::getInstance()->addGoods($userPetInfo->userId, $goodsInfo, $num);
+            }
 
             //删除宠物技能
             UserPetSkillModel::create()->destroy(['userPetId' => $userPetInfo->userPetId]);
@@ -164,6 +185,29 @@ class PetService
             return $userPetInfo;
         });
         return $info;
+    }
+
+    public function countExp(UserPetModel $userPetInfo)
+    {
+        //计算总经验
+        $expInfo = UserLevelConfigModel::create()->field('sum(exp) as exp')->where('level', $userPetInfo->level, '<')->get();
+        $expNum = $expInfo->exp ?? 100;
+        $expArr = GoodsModel::create()->where('baseCode', 'petExp')->order('extraData')->all();
+        $goodsList = [];
+        /**
+         * @var $value GoodsModel
+         */
+        foreach ($expArr as $value) {
+            if ($expNum < $value->extraData) {
+                continue;
+            }
+            $goodsList[] = [
+                'goodsInfo' => $value,
+                'num'       => intval($expNum / $value->extraData)
+            ];
+            $expNum -= $expNum / $value->extraData;
+        }
+        return $goodsList;
     }
 
     /**

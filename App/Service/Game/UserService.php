@@ -10,8 +10,10 @@ use App\Model\Game\UserBaseAttributeModel;
 use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserLevelConfigModel;
 use App\Service\BaseService;
+use App\Service\GameResponse;
 use App\Utility\Cache\UserCache;
 use EasySwoole\Component\Singleton;
+use EasySwoole\EasySwoole\Logger;
 use EasySwoole\Mysqli\QueryBuilder;
 
 class UserService extends BaseService
@@ -43,9 +45,9 @@ class UserService extends BaseService
             $userBaseAttributeInfo->level += 1;
             $userBaseAttributeInfo->exp -= $levelConfig->exp;
             //升级属性
-            $userBaseAttributeInfo->endurance = $userBaseAttributeInfo->enduranceQualification*$userBaseAttributeInfo->level;
-            $userBaseAttributeInfo->intellect = $userBaseAttributeInfo->intellectQualification*$userBaseAttributeInfo->level;
-            $userBaseAttributeInfo->strength = $userBaseAttributeInfo->strengthQualification*$userBaseAttributeInfo->level;
+            $userBaseAttributeInfo->endurance = $userBaseAttributeInfo->enduranceQualification * $userBaseAttributeInfo->level;
+            $userBaseAttributeInfo->intellect = $userBaseAttributeInfo->intellectQualification * $userBaseAttributeInfo->level;
+            $userBaseAttributeInfo->strength = $userBaseAttributeInfo->strengthQualification * $userBaseAttributeInfo->level;
             $userBaseAttributeInfo->update();
         }
         if ($userBaseAttributeInfo->exp >= $levelUpConfig->exp) {
@@ -71,7 +73,7 @@ class UserService extends BaseService
         return $userBaseAttributeInfo;
     }
 
-    public function countUserAttribute($userId):UserAttributeModel
+    public function countUserAttribute($userId): UserAttributeModel
     {
         //获取用户基础信息
         $userBaseAttributeInfo = UserCache::getInstance()->getUserBaseAttribute($userId);
@@ -84,46 +86,54 @@ class UserService extends BaseService
          * @var $userEquipment UserEquipmentBackpackModel
          */
         foreach ($userEquipmentBackpackList as $userEquipment) {
-            //部分属性相加
-            $userAttributeBean->setHp($userAttributeBean->getHp() + $userEquipment->hp);
-            $userAttributeBean->setMp($userAttributeBean->getMp() + $userEquipment->mp);
-            $userAttributeBean->setAttack($userAttributeBean->getAttack() + $userEquipment->attack);
-            $userAttributeBean->setDefense($userAttributeBean->getDefense() + $userEquipment->defense);
-            $userAttributeBean->setEndurance($userAttributeBean->getEndurance() + $userEquipment->endurance);
-            $userAttributeBean->setIntellect($userAttributeBean->getIntellect() + $userEquipment->intellect);
-            $userAttributeBean->setStrength($userAttributeBean->getStrength() + $userEquipment->strength);
-            $userAttributeBean->setCriticalRate($userAttributeBean->getCriticalRate() + $userEquipment->criticalRate);
-            $userAttributeBean->setCriticalStrikeDamage($userAttributeBean->getCriticalStrikeDamage() + $userEquipment->criticalStrikeDamage);
-            $userAttributeBean->setHitRate($userAttributeBean->getHitRate() + $userEquipment->hitRate);
-            $userAttributeBean->setDodgeRate($userAttributeBean->getDodgeRate() + $userEquipment->dodgeRate);
-            $userAttributeBean->setPenetrate($userAttributeBean->getPenetrate() + $userEquipment->penetrate);
-            $userAttributeBean->setJin($userAttributeBean->getJin() + $userEquipment->jin);
-            $userAttributeBean->setMu($userAttributeBean->getMu() + $userEquipment->mu);
-            $userAttributeBean->setTu($userAttributeBean->getTu() + $userEquipment->tu);
-            $userAttributeBean->setSui($userAttributeBean->getSui() + $userEquipment->sui);
-            $userAttributeBean->setHuo($userAttributeBean->getHuo() + $userEquipment->huo);
-            $userAttributeBean->setLight($userAttributeBean->getLight() + $userEquipment->light);
-            $userAttributeBean->setDark($userAttributeBean->getDark() + $userEquipment->dark);
-            $userAttributeBean->setLuck($userAttributeBean->getLuck() + $userEquipment->luck);
-            $userAttributeBean->setAttackSpeed($userAttributeBean->getAttackSpeed() + $userEquipment->attackSpeed);
+            EquipmentService::getInstance()->incUserAttribute($userAttributeBean, $userEquipment);
             //元素属性覆盖
             if (!empty($userEquipment->attackElement)) {
                 $userAttributeBean->setAttackElement($userEquipment->attackElement);
             }
-            //强化数据
-            if (isset($userEquipment->strengthenInfo)) {
-                $strengthenInfo = $userEquipment->strengthenInfo;
-                $userAttributeBean->incHp($strengthenInfo->hp??0);
-                $userAttributeBean->incDefense($strengthenInfo->defense??0);
-                $userAttributeBean->incAttack($strengthenInfo->attack??0);
-            }
-            //随机属性只在进图的时候加
         }
+        //获取宠物缓存数据
+        $userPetList = UserCache::getInstance()->getUserPetList($userId, true);
+        foreach ($userPetList as $userPet) {
+            PetService::getInstance()->incUserAttribute($userAttributeBean, $userPet);
+        }
+
         $userAttributeModel = UserCache::getInstance()->getUserAttribute($userId);
         $userAttributeModel->update($userAttributeBean->toArray());
-        UserCache::getInstance()->setUserAttribute($userId,$userAttributeModel);
-
+        UserCache::getInstance()->setUserAttribute($userId, $userAttributeModel);
+        GameResponse::getInstance()->setUser($userAttributeModel);
         return $userAttributeModel;
+    }
+
+    public function countFightAttribute(int $userId)
+    {
+        Logger::getInstance()->info("计算用户{$userId} 战斗数据");
+        //获取用户基础信息
+        $userBaseAttributeInfo = UserCache::getInstance()->getUserBaseAttribute($userId);
+        $userBaseAttributeBean = new Attribute($userBaseAttributeInfo->toArray());
+        $userAttributeBean = clone $userBaseAttributeBean;
+        //获取用户穿戴装备信息
+        $userEquipmentBackpackList = UserCache::getInstance()->getUserEquipmentList($userId);
+
+        /**
+         * @var $userEquipment UserEquipmentBackpackModel
+         */
+        foreach ($userEquipmentBackpackList as $userEquipment) {
+            Logger::getInstance()->info("计算用户{$userId} 装备{$userEquipment->goodsName}数据");
+            EquipmentService::getInstance()->incUserAttribute($userAttributeBean, $userEquipment);
+            //元素属性覆盖
+            if (!empty($userEquipment->attackElement)) {
+                $userAttributeBean->setAttackElement($userEquipment->attackElement);
+            }
+            EquipmentService::getInstance()->incUserAttributeByEquipmentAttributeEntry($userBaseAttributeBean,$userAttributeBean,$userEquipment);
+        }
+        //获取宠物缓存数据
+        $userPetList = UserCache::getInstance()->getUserPetList($userId, true);
+        foreach ($userPetList as $userPet) {
+            Logger::getInstance()->info("计算用户{$userId}宠物{$userPet->name}数据");
+            PetService::getInstance()->incUserAttribute($userAttributeBean, $userPet);
+        }
+        return $userAttributeBean;
     }
 
 }

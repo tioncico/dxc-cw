@@ -101,6 +101,16 @@ class GameTaskTest extends UserBaseTestCase
 		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
 	}
 
+
+	public function testGetDailyPointInfo()
+	{
+		$model = new GameTaskModel();
+		$data = [];
+		$response = $this->request('getDailyPointInfo',$data);
+
+		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+	}
+
 	public function testComplete()
 	{
 		$model = new GameTaskModel();
@@ -108,6 +118,17 @@ class GameTaskTest extends UserBaseTestCase
 		    'taskId'=>1
         ];
 		$response = $this->request('complete',$data);
+
+		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+	}
+
+	public function testReceiveDailyReward()
+	{
+		$model = new GameTaskModel();
+		$data = [
+		    'rewardId'=>2
+        ];
+		$response = $this->request('receiveDailyReward',$data);
 
 		var_dump(json_encode($response,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
 	}

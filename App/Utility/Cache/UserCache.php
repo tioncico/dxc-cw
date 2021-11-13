@@ -36,11 +36,20 @@ class UserCache
     /**@var UserEquipmentBackpackModel */
     protected $userEquipmentList;//用户装备列表 装备部位键值对
 
-    public function getUserBaseAttribute($userId): UserBaseAttributeModel
+    /**
+     * getUserBaseAttribute
+     * @param       $userId
+     * @param false $isRefresh
+     * @return UserBaseAttributeModel
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 10:03 上午
+     */
+    public function getUserBaseAttribute($userId,$isRefresh=false): UserBaseAttributeModel
     {
-        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId) {
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId,$isRefresh) {
             $data = $redisClient->get($this->getKey("baseAttribute", $userId));
-            if (empty($data)) {
+            if ($isRefresh||empty($data)) {
                 $data = UserBaseAttributeModel::create()->getInfo($userId);
                 $this->setUserBaseAttribute($userId, $data);
             }
@@ -48,11 +57,11 @@ class UserCache
         });
     }
 
-    public function getUserAttribute($userId): UserAttributeModel
+    public function getUserAttribute($userId,$isRefresh=false): UserAttributeModel
     {
-        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId) {
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId,$isRefresh) {
             $data = $redisClient->get($this->getKey("attribute", $userId));
-            if (empty($data)) {
+            if ($isRefresh||empty($data)) {
                 $data = UserAttributeModel::create()->getInfo($userId);
                 $this->setUserAttribute($userId, $data);
             }
@@ -63,16 +72,17 @@ class UserCache
     /**
      * getUserSkillList
      * @param $userId
+     * @param $isRefresh
      * @return UserSkillModel[]
      * @throws \Throwable
      * @author tioncico
      * Time: 2:19 下午
      */
-    public function getUserSkillList($userId)
+    public function getUserSkillList($userId,$isRefresh=false)
     {
-        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId) {
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId,$isRefresh) {
             $data = $redisClient->get($this->getKey("skillList", $userId));
-            if (empty($data)) {
+            if ($isRefresh||empty($data)) {
                 $data = SkillService::getInstance()->getUserSkillList($userId);
                 $this->setUserSkillList($userId, $data);
             }
@@ -80,11 +90,20 @@ class UserCache
         });
     }
 
-    public function getUserPetList($userId)
+    /**
+     * getUserPetList
+     * @param       $userId
+     * @param false $isRefresh
+     * @return UserPetModel[]
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 10:03 上午
+     */
+    public function getUserPetList($userId,$isRefresh=false)
     {
-        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId) {
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId,$isRefresh) {
             $data = $redisClient->get($this->getKey("petList", $userId));
-            if (empty($data)) {
+            if ($isRefresh||empty($data)) {
                 $data = PetService::getInstance()->getUserPetList($userId);
                 $this->setUserPetList($userId, $data);
             }
@@ -92,13 +111,22 @@ class UserCache
         });
     }
 
-    public function getUserEquipmentList($userId)
+    /**
+     * getUserEquipmentList
+     * @param       $userId
+     * @param false $isRefresh
+     * @return UserEquipmentBackpackModel[]
+     * @throws \Throwable
+     * @author tioncico
+     * Time: 10:03 上午
+     */
+    public function getUserEquipmentList($userId,$isRefresh=false)
     {
-        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId) {
+        return RedisClient::invoke(function (RedisClient $redisClient) use ($userId,$isRefresh) {
             $data = $redisClient->get($this->getKey("equipmentList", $userId));
-            if (empty($data)) {
+            if ($isRefresh||empty($data)) {
                 $data = EquipmentService::getInstance()->getUserEquipmentList($userId);
-                $this->setUserPetList($userId, $data);
+                $this->setUserEquipmentList($userId, $data);
             }
             return $data;
         });

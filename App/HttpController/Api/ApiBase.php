@@ -36,13 +36,14 @@ class ApiBase extends Base
     {
         if (!$this->response()->isEndResponse()) {
             $data = array(
-                "code"            => $statusCode,
-                "result"          => $result,
-                "msg"             => $msg,
-                'requestId'       => $this->request()->getRequestParam('requestId'),
-                'goodsChange'     => GameResponse::getInstance()->getGoods(),
-                'equipmentChange' => GameResponse::getInstance()->getEquipment(),
-                'petChange'       => GameResponse::getInstance()->getPets(),
+                "code"                => $statusCode,
+                "result"              => $result,
+                "msg"                 => $msg,
+                'requestId'           => $this->request()->getRequestParam('requestId'),
+                'goodsChange'         => GameResponse::getInstance()->getGoods(),
+                'equipmentChange'     => GameResponse::getInstance()->getEquipment(),
+                'petChange'           => GameResponse::getInstance()->getPets(),
+                'userAttributeChange' => GameResponse::getInstance()->getUserAttribute(),
             );
             $this->response()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
             $this->response()->withHeader('Content-type', 'application/json;charset=utf-8');

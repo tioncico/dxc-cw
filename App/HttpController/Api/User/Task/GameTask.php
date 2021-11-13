@@ -268,19 +268,40 @@ class GameTask extends UserBase
      * @ApiSuccessParam(name="result.dailyRewardList.goodsInfo.level",description="等级")
      * @ApiSuccessParam(name="result.dailyRewardList.goodsInfo.rarityLevel",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
      * @ApiSuccessParam(name="result.dailyRewardList.goodsInfo.extraData",description="额外数据")
-     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfo.userDailyTaskReceiveId",description="玩家每日任务领取id")
-     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfo.userId",description="玩家id")
-     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfo.rewardId",description="奖励id")
-     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfo.addTime",description="新增时间")
-     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfo.date",description="领取日期")
+     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfoToday.userDailyTaskReceiveId",description="玩家每日任务领取id")
+     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfoToday.userId",description="玩家id")
+     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfoToday.rewardId",description="奖励id")
+     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfoToday.addTime",description="新增时间")
+     * @ApiSuccessParam(name="result.dailyRewardList.userReceiveInfoToday.date",description="领取日期")
+     * @ApiSuccessParam(name="result.weekRewardList.rewardId",description="奖励id")
+     * @ApiSuccessParam(name="result.weekRewardList.type",description="1每日奖励,2每周奖励")
+     * @ApiSuccessParam(name="result.weekRewardList.pointNum",description="积分数")
+     * @ApiSuccessParam(name="result.weekRewardList.goodsCode",description="物品code")
+     * @ApiSuccessParam(name="result.weekRewardList.goodsNum",description="物品数量")
+     * @ApiSuccessParam(name="result.weekRewardList.goodsInfo.goodsId",description="物品id")
+     * @ApiSuccessParam(name="result.weekRewardList.goodsInfo.name",description="物品名称")
+     * @ApiSuccessParam(name="result.weekRewardList.goodsInfo.code",description="物品code值")
+     * @ApiSuccessParam(name="result.weekRewardList.goodsInfo.baseCode",description="物品基础类型")
+     * @ApiSuccessParam(name="result.weekRewardList.goodsInfo.type",description="类型 1金币,2钻石,3道具,4礼包,5材料,6宠物蛋,7装备")
+     * @ApiSuccessParam(name="result.weekRewardList.goodsInfo.description",description="介绍")
+     * @ApiSuccessParam(name="result.weekRewardList.goodsInfo.gold",description="售出金币")
+     * @ApiSuccessParam(name="result.weekRewardList.goodsInfo.isSale",description="是否可售出")
+     * @ApiSuccessParam(name="result.weekRewardList.goodsInfo.level",description="等级")
+     * @ApiSuccessParam(name="result.weekRewardList.goodsInfo.rarityLevel",description="稀有度 1普通,2精致,3稀有,4罕见,5传说,6神话,7噩梦神话")
+     * @ApiSuccessParam(name="result.weekRewardList.goodsInfo.extraData",description="额外数据")
+     * @ApiSuccessParam(name="result.weekRewardList.userReceiveInfoWeek.userDailyTaskReceiveId",description="玩家每日任务领取id")
+     * @ApiSuccessParam(name="result.weekRewardList.userReceiveInfoWeek.userId",description="玩家id")
+     * @ApiSuccessParam(name="result.weekRewardList.userReceiveInfoWeek.rewardId",description="奖励id")
+     * @ApiSuccessParam(name="result.weekRewardList.userReceiveInfoWeek.addTime",description="新增时间")
+     * @ApiSuccessParam(name="result.weekRewardList.userReceiveInfoWeek.date",description="领取日期")
      */
     public function getDailyPointInfo()
     {
         $param = ContextManager::getInstance()->get('param');
         $model = new GameDailyTaskPointRewardModel();
         //每日奖励
-        $dailyRewardList = $model->with(['goodsInfo', 'userReceiveInfo' => $this->who->userId], false)->where('type', 1)->order('pointNum', 'ASC')->all();
-        $weekRewardList = $model->with(['goodsInfo', 'userReceiveInfo' => $this->who->userId], false)->where('type', 2)->order('pointNum', 'ASC')->all();
+        $dailyRewardList = $model->with(['goodsInfo', 'userReceiveInfoToday' => $this->who->userId], false)->where('type', 1)->order('pointNum', 'ASC')->all();
+        $weekRewardList = $model->with(['goodsInfo', 'userReceiveInfoWeek' => $this->who->userId], false)->where('type', 2)->order('pointNum', 'ASC')->all();
         $data = [
             'pointInfo'       => UserDailyTaskPointModel::create()->getInfo($this->who->userId),
             'dailyRewardList' => $dailyRewardList,
@@ -308,11 +329,17 @@ class GameTask extends UserBase
      */
     public function receiveDailyReward(){
         $param = ContextManager::getInstance()->get('param');
-        $rewardInfo = GameDailyTaskPointRewardModel::create()->with(['goodsInfo', 'userReceiveInfo' => $this->who->userId], false)->get($param['rewardId']);
+        $rewardInfo = GameDailyTaskPointRewardModel::create()->with(['goodsInfo', 'userReceiveInfoToday' => $this->who->userId, 'userReceiveInfoWeek' => $this->who->userId], false)->get(intval($param['rewardId']));
         Assert::assert(!!$rewardInfo,'奖励数据不存在');
         $pointInfo = UserDailyTaskPointModel::create()->getInfo($this->who->userId);
-        if (!empty($rewardInfo->userReceiveInfo)){
-            Assert::assert(false,'你已领取此奖励');
+        if ($rewardInfo->type==1){
+            if (!empty($rewardInfo->userReceiveInfoToday)){
+                Assert::assert(false,'你已领取此奖励1');
+            }
+        }else{
+            if (!empty($rewardInfo->userReceiveInfoWeek)){
+                Assert::assert(false,'你已领取此奖励2');
+            }
         }
         if($rewardInfo->type==1){
             Assert::assert($rewardInfo->pointNum<=$pointInfo->dailyPointNum,"积分不足");

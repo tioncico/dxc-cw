@@ -171,7 +171,7 @@ class SkillManager
     {
         //如果$code为null,则触发所有技能
         if ($code === null) {
-            $skillList = $this->skillList[$type] ?? [];
+            $skillList = $this->skillList[$type]??[];
             foreach ($skillList as $skill) {
                 $this->useSkill($skill);
             }
@@ -193,14 +193,14 @@ class SkillManager
         if (($monaCostNum = $this->checkManaCost($skill)) === false) {
             Assert::assert(false, "魔法不足");
         }
-        $skillResult = new SkillResult(['skillInfo' => $skill]);
+        $skillResult = new SkillResult(['skillInfo'=>$skill]);
         $skillResult->setManaCostNum($monaCostNum);
         Logger::getInstance()->log("{$this->attribute->getName()}{$skill->getSkillName()} 触发");
         //判断释放概率
         $isHit = $this->checkUseSkillMiss($skill);
         if ($isHit) {
             //触发事件
-            $this->onSkillBefore($skillResult);
+            $this->fight->getEvent()->userSkillBefore($this->attribute,$skillResult);
             //遍历技能效果
             $this->ergodicSkillEffect($skill, $skillResult);
         } else {
@@ -208,7 +208,7 @@ class SkillManager
             $skillResult->setIsMiss(1);
         }
         $this->coolSkill($skill);
-        $this->onSkillAfter($skillResult);
+        $this->fight->getEvent()->userSkillAfter($this->attribute,$skillResult);
     }
 
     protected function checkManaCost(SkillBean $skill)
@@ -231,6 +231,7 @@ class SkillManager
             list($targetBaseAttribute, $targetAttribute) = $this->getTargetAttribute($effectBean->getTarget());
             $methodName = 'effect' . Str::studly($type);
             $skillEffectResult = $this->$methodName($targetBaseAttribute, $targetAttribute, $skill, $effectBean);
+            $skillEffectResult->setTargetModel($targetAttribute->getOriginModel());
             $skillResult->addEffectResult($skillEffectResult);
             //触发属性相关
             $this->changeAttribute($targetAttribute, $skillEffectResult);

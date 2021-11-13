@@ -9,6 +9,7 @@ use App\Model\BaseModel;
 use App\Model\Game\GoodsEquipmentAttributeEntryModel;
 use App\Model\Game\GoodsEquipmentModel;
 use App\Model\Game\GoodsModel;
+use App\Model\Game\UserAttributeModel;
 use App\Model\Game\UserBackpackModel;
 use App\Model\Game\UserEquipmentBackpackModel;
 use App\Model\Game\UserGoodsEquipmentAttributeEntryModel;
@@ -19,6 +20,8 @@ use App\Utility\Cache\UserCache;
 use App\Utility\Rand\Bean;
 use App\Utility\Rand\Rand;
 use EasySwoole\Component\Singleton;
+use EasySwoole\Utility\Str;
+use function AlibabaCloud\Client\value;
 
 class EquipmentService extends BaseService
 {
@@ -26,7 +29,7 @@ class EquipmentService extends BaseService
 
     public function getUserEquipmentList($userId)
     {
-        $list = UserEquipmentBackpackModel::create()->where('isUse', 1)->where('userId', $userId)->all();
+        $list = UserEquipmentBackpackModel::create()->with(['strengthenInfo','equipmentAttributeEntryList'],false)->where('isUse', 1)->where('userId', $userId)->all();
         $userEquipmentList = [];
         /**
          * @var $value UserEquipmentBackpackModel
@@ -323,6 +326,63 @@ class EquipmentService extends BaseService
         $userEquipmentBackpackInfo->update([
             'attributeDescription' => implode("\n", $descriptionArr),
         ]);
+    }
+
+    public function incUserAttributeByEquipmentAttributeEntry(Attribute $userBaseAttributeBean,Attribute $userAttributeBean,UserEquipmentBackpackModel $userEquipment){
+        //装备随机属性
+        $equipmentAttributeEntryList = $userEquipment->equipmentAttributeEntryList;
+        foreach ($equipmentAttributeEntryList as $equipmentAttributeEntryModel){
+            $propertyName = $equipmentAttributeEntryModel->param['attribute'];
+            $num = $equipmentAttributeEntryModel->param['num'];
+            if ($equipmentAttributeEntryModel->code=='0001'){
+                $setMethod = 'set'.Str::studly($propertyName);
+                $getMethod = 'set'.Str::studly($propertyName);
+                var_dump(111);
+                if (method_exists($userAttributeBean,$setMethod)&&method_exists($userAttributeBean,$getMethod)){
+                    $userAttributeBean->$setMethod($userAttributeBean->$getMethod()+$num);
+                }
+            }elseif($equipmentAttributeEntryModel->code=='0002'){
+                $setMethod = 'set'.Str::studly($propertyName);
+                $getMethod = 'set'.Str::studly($propertyName);
+                if (method_exists($userAttributeBean,$setMethod)&&method_exists($userAttributeBean,$getMethod)){
+                    $userAttributeBean->$setMethod(intval($userBaseAttributeBean->$getMethod()*$num/100));
+                }
+            }
+        }
+    }
+
+    public function incUserAttribute(Attribute $userAttributeBean,UserEquipmentBackpackModel $userEquipment){
+        //部分属性相加
+        $userAttributeBean->setHp($userAttributeBean->getHp() + $userEquipment->hp);
+        $userAttributeBean->setMp($userAttributeBean->getMp() + $userEquipment->mp);
+        $userAttributeBean->setAttack($userAttributeBean->getAttack() + $userEquipment->attack);
+        $userAttributeBean->setDefense($userAttributeBean->getDefense() + $userEquipment->defense);
+        $userAttributeBean->setEndurance($userAttributeBean->getEndurance() + $userEquipment->endurance);
+        $userAttributeBean->setIntellect($userAttributeBean->getIntellect() + $userEquipment->intellect);
+        $userAttributeBean->setStrength($userAttributeBean->getStrength() + $userEquipment->strength);
+        $userAttributeBean->setCriticalRate($userAttributeBean->getCriticalRate() + $userEquipment->criticalRate);
+        $userAttributeBean->setCriticalStrikeDamage($userAttributeBean->getCriticalStrikeDamage() + $userEquipment->criticalStrikeDamage);
+        $userAttributeBean->setHitRate($userAttributeBean->getHitRate() + $userEquipment->hitRate);
+        $userAttributeBean->setDodgeRate($userAttributeBean->getDodgeRate() + $userEquipment->dodgeRate);
+        $userAttributeBean->setPenetrate($userAttributeBean->getPenetrate() + $userEquipment->penetrate);
+        $userAttributeBean->setJin($userAttributeBean->getJin() + $userEquipment->jin);
+        $userAttributeBean->setMu($userAttributeBean->getMu() + $userEquipment->mu);
+        $userAttributeBean->setTu($userAttributeBean->getTu() + $userEquipment->tu);
+        $userAttributeBean->setSui($userAttributeBean->getSui() + $userEquipment->sui);
+        $userAttributeBean->setHuo($userAttributeBean->getHuo() + $userEquipment->huo);
+        $userAttributeBean->setLight($userAttributeBean->getLight() + $userEquipment->light);
+        $userAttributeBean->setDark($userAttributeBean->getDark() + $userEquipment->dark);
+        $userAttributeBean->setLuck($userAttributeBean->getLuck() + $userEquipment->luck);
+        $userAttributeBean->setAttackSpeed($userAttributeBean->getAttackSpeed() + $userEquipment->attackSpeed);
+        //强化数据
+        if (isset($userEquipment->strengthenInfo)) {
+            $strengthenInfo = $userEquipment->strengthenInfo;
+            $userAttributeBean->incHp($strengthenInfo->hp??0);
+            $userAttributeBean->incDefense($strengthenInfo->defense??0);
+            $userAttributeBean->incAttack($strengthenInfo->attack??0);
+        }
+        //todo 随机属性只在进图的时候加
+
     }
 
     protected function getAttributeName($type = null)

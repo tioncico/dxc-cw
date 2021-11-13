@@ -4,8 +4,10 @@
 namespace App\Actor;
 
 
+use App\Actor\Buff\BuffBean;
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Fight\Fight;
+use App\Actor\Skill\SkillEffectResult;
 use App\Actor\Skill\SkillResult;
 use App\Model\Game\GoodsModel;
 use App\Model\Game\MapMonsterModel;
@@ -17,43 +19,91 @@ use EasySwoole\EasySwoole\ServerManager;
 
 trait GameActorEventTrait
 {
-    public function initEvent(){
+    public function initEvent()
+    {
         $this->rewardEvent();
         $this->fightEndEvent();
         $this->fightStartEvent();
-        $this->attackEvent();
+        $this->skillEvent();
+        $this->buckleBloodEvent();
+        $this->buffEvent();
     }
 
-    protected function attackEvent(){
+    protected function buffEvent()
+    {
+        /**
+         * @var $fight Fight
+         */
         $fight = $this->fight;
-        var_dump(333);
-        $fight->getEvent()->register('USER_NORMAL_ATTACK_BEFORE','fightPush',function (Attribute $attribute,SkillResult $skillResult){
-        });
-        $fight->getEvent()->register('USER_NORMAL_ATTACK_AFTER','fightPush',function (Attribute $attribute,SkillResult $skillResult){
-            var_dump(22211);
-            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL, 200, "战斗技能",[
-                'self'=>$attribute,
-                'skillResult'=>$skillResult
-            ]);
 
-        });
-        $fight->getEvent()->register('PET_NORMAL_ATTACK_BEFORE','fightPush',function ( $attribute, $skillResult){});
-        $fight->getEvent()->register('PET_NORMAL_ATTACK_AFTER','fightPush',function (Attribute $attribute,SkillResult $skillResult){
-            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL, 200, "战斗技能",[
-                'self'=>$attribute,
-                'skillResult'=>$skillResult
+        $addBuffEventFunction = function ($name,Attribute $attribute, BuffBean $buffBean){
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, 'buff增加推送', [
+                'attributeModel' => $attribute->getOriginModel(),
+                'attributeType'  => $attribute->getAttributeType(),
+                'buffBean'    => $buffBean
             ]);
-
-        });
-        $fight->getEvent()->register('MONSTER_NORMAL_ATTACK_BEFORE','fightPush',function ( $attribute, $skillResult){});
-        $fight->getEvent()->register('MONSTER_NORMAL_ATTACK_AFTER','fightPush',function ($attribute, $skillResult){
-            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL, 200, "战斗技能",[
-                'self'=>$attribute,
-                'skillResult'=>$skillResult
+        };
+        $buffResultEventFunction = function ($name,Attribute $attribute, BuffBean $buffBean){
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, 'buff增加推送', [
+                'attributeModel' => $attribute->getOriginModel(),
+                'attributeType'  => $attribute->getAttributeType(),
+                'buffBean'    => $buffBean
             ]);
+        };
 
+
+        $fight->getUserAttribute()->getBuffManager()->addEventHandle('addBuffEvent','pushWS',$addBuffEventFunction);
+        $fight->getMonsterAttribute()->getBuffManager()->addEventHandle('addBuffEvent','pushWS',$addBuffEventFunction);
+        foreach ($fight->getPetAttributeList() as $attribute){
+            $attribute->getBuffManager()->addEventHandle('addBuffEvent','pushWS',$addBuffEventFunction);
+        }
+
+        $fight->getUserAttribute()->getBuffManager()->addEventHandle('buffResult','pushWS',$buffResultEventFunction);
+        $fight->getMonsterAttribute()->getBuffManager()->addEventHandle('buffResult','pushWS',$buffResultEventFunction);
+        foreach ($fight->getPetAttributeList() as $attribute){
+            $attribute->getBuffManager()->addEventHandle('buffResult','pushWS',$buffResultEventFunction);
+        }
+
+    }
+
+    protected function skillEvent()
+    {
+        $fight = $this->fight;
+        $fight->getEvent()->register('USE_SKILL_BEFORE', 'pushWS', function ($eventName, Attribute $attribute, SkillResult $skillResult) {
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, '使用技能前推送', [
+                'attributeModel' => $attribute->getOriginModel(),
+                'attributeType'  => $attribute->getAttributeType(),
+                'skillResult'    => $skillResult
+            ]);
+        });
+        $fight->getEvent()->register('USE_SKILL_AFTER', 'pushWS', function ($eventName, Attribute $attribute, SkillResult $skillResult) {
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_AFTER, 200, '使用技能后推送', [
+                'attributeModel' => $attribute->getOriginModel(),
+                'attributeType'  => $attribute->getAttributeType(),
+                'skillResult'    => $skillResult
+            ]);
         });
     }
+
+    protected function buckleBloodEvent()
+    {
+        $fight = $this->fight;
+        $fight->getEvent()->register('USER_BUCKLE_BLOOD_AFTER', 'pushWS', function ($eventName, Attribute $attribute, SkillEffectResult $skillResult) {
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, '扣血后推送', [
+                'attributeModel' => $attribute->getOriginModel(),
+                'attributeType'  => $attribute->getAttributeType(),
+                'skillResult'    => $skillResult
+            ]);
+        });
+        $fight->getEvent()->register('MONSTER_BUCKLE_BLOOD_AFTER', 'pushWS', function ($eventName, Attribute $attribute, SkillEffectResult $skillResult) {
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, '扣血后推送', [
+                'attributeModel' => $attribute->getOriginModel(),
+                'attributeType'  => $attribute->getAttributeType(),
+                'skillResult'    => $skillResult
+            ]);
+        });
+    }
+
 
     protected function fightEndEvent()
     {
@@ -70,12 +120,13 @@ trait GameActorEventTrait
          */
         $fight = $this->fight;
         $monsterInfo = $fight->getMonsterAttribute()->toArray();
-        $fight->getEvent()->register('FIGHT_START', 'pushWs', function ()use($monsterInfo) {
-            $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT, 200, "战斗开始推送",[
-                'monsterInfo'=>$monsterInfo,
+        $fight->getEvent()->register('FIGHT_START', 'pushWs', function () use ($monsterInfo) {
+            $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT, 200, "战斗开始推送", [
+                'monsterInfo' => $monsterInfo,
             ]);
         });
     }
+
 
     protected function rewardEvent()
     {
@@ -83,7 +134,7 @@ trait GameActorEventTrait
          * @var $fight Fight
          */
         $fight = $this->fight;
-        $fight->getEvent()->register('MONSTER_DIE', 'reward', function ($event,Attribute $attribute)  {
+        $fight->getEvent()->register('MONSTER_DIE', 'reward', function ($event, Attribute $attribute) {
             $monster = $attribute->getOriginModel();
             //计算奖励
             $reward = new Reward($this->userId, $this->map->mapInfo, $monster);
@@ -99,10 +150,11 @@ trait GameActorEventTrait
                     $msg .= "  {$goodsInfo->name}*{$value['num']}";
                 }
             }
-            $this->push(\App\WebSocket\Command::SC_ACTION_MONSTER_DIE,200,'怪物死亡');
+            $this->push(\App\WebSocket\Command::SC_ACTION_MONSTER_DIE, 200, '怪物死亡');
             Logger::getInstance()->log($msg);
         });
     }
+
 
     /**
      * 删除怪物

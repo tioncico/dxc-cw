@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Utility\Bean\ListBean;
+use EasySwoole\Mysqli\QueryBuilder;
 use EasySwoole\ORM\AbstractModel;
 use EasySwoole\ORM\DbManager;
 

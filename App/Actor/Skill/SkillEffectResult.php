@@ -10,6 +10,7 @@ class SkillEffectResult extends SplBean
 {
     protected $skillInfo = null;//技能信息
     protected $effectType = "";//效果类型
+    protected $targetModel = null;//目标模型数据
     protected $effectName = "";//效果名称
     protected $targetType = 0;//0自身,1玩家,2怪物
     protected $harmNum = 0;//初始伤害
@@ -189,6 +190,22 @@ class SkillEffectResult extends SplBean
     public function setSkillInfo($skillInfo): void
     {
         $this->skillInfo = $skillInfo;
+    }
+
+    /**
+     * @return null
+     */
+    public function getTargetModel()
+    {
+        return $this->targetModel;
+    }
+
+    /**
+     * @param null $targetModel
+     */
+    public function setTargetModel($targetModel): void
+    {
+        $this->targetModel = $targetModel;
     }
 
 
