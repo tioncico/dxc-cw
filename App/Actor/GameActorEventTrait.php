@@ -37,14 +37,14 @@ trait GameActorEventTrait
         $fight = $this->fight;
 
         $addBuffEventFunction = function ($name,Attribute $attribute, BuffBean $buffBean){
-            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, 'buff增加推送', [
+            $this->push(\App\WebSocket\Command::SC_ACTION_BUFF_ADD, 200, 'buff增加推送', [
                 'attributeModel' => $attribute->getOriginModel(),
                 'attributeType'  => $attribute->getAttributeType(),
                 'buffBean'    => $buffBean
             ]);
         };
         $buffResultEventFunction = function ($name,Attribute $attribute, BuffBean $buffBean){
-            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, 'buff增加推送', [
+            $this->push(\App\WebSocket\Command::SC_ACTION_BUFF_RESULT, 200, 'buff结果推送', [
                 'attributeModel' => $attribute->getOriginModel(),
                 'attributeType'  => $attribute->getAttributeType(),
                 'buffBean'    => $buffBean
