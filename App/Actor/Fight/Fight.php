@@ -43,7 +43,8 @@ class Fight
      * @var Attribute
      */
     protected $monsterAttribute;
-    public $state = 0; //1战斗开始,2战斗结束
+    public $state = 0; //0战斗未开始,1战斗已开始
+
     /**
      * @var FightEvent
      */

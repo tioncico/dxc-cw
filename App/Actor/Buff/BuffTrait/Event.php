@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Actor\Skill\SkillTrait;
+namespace App\Actor\Buff\BuffTrait;
 
 
 use App\Actor\Skill\SkillList\NormalAttack;

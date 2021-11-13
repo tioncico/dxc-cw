@@ -6,6 +6,7 @@ namespace App\Actor;
 
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Fight\Fight;
+use App\Actor\Skill\SkillResult;
 use App\Model\Game\GoodsModel;
 use App\Model\Game\MapMonsterModel;
 use App\Service\Game\Fight\Reward;
@@ -20,8 +21,39 @@ trait GameActorEventTrait
         $this->rewardEvent();
         $this->fightEndEvent();
         $this->fightStartEvent();
+        $this->attackEvent();
     }
 
+    protected function attackEvent(){
+        $fight = $this->fight;
+        var_dump(333);
+        $fight->getEvent()->register('USER_NORMAL_ATTACK_BEFORE','fightPush',function (Attribute $attribute,SkillResult $skillResult){
+        });
+        $fight->getEvent()->register('USER_NORMAL_ATTACK_AFTER','fightPush',function (Attribute $attribute,SkillResult $skillResult){
+            var_dump(22211);
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL, 200, "战斗技能",[
+                'self'=>$attribute,
+                'skillResult'=>$skillResult
+            ]);
+
+        });
+        $fight->getEvent()->register('PET_NORMAL_ATTACK_BEFORE','fightPush',function ( $attribute, $skillResult){});
+        $fight->getEvent()->register('PET_NORMAL_ATTACK_AFTER','fightPush',function (Attribute $attribute,SkillResult $skillResult){
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL, 200, "战斗技能",[
+                'self'=>$attribute,
+                'skillResult'=>$skillResult
+            ]);
+
+        });
+        $fight->getEvent()->register('MONSTER_NORMAL_ATTACK_BEFORE','fightPush',function ( $attribute, $skillResult){});
+        $fight->getEvent()->register('MONSTER_NORMAL_ATTACK_AFTER','fightPush',function ($attribute, $skillResult){
+            $this->push(\App\WebSocket\Command::SC_ACTION_SKILL, 200, "战斗技能",[
+                'self'=>$attribute,
+                'skillResult'=>$skillResult
+            ]);
+
+        });
+    }
 
     protected function fightEndEvent()
     {
@@ -44,7 +76,6 @@ trait GameActorEventTrait
             ]);
         });
     }
-
 
     protected function rewardEvent()
     {
@@ -72,7 +103,6 @@ trait GameActorEventTrait
             Logger::getInstance()->log($msg);
         });
     }
-
 
     /**
      * 删除怪物

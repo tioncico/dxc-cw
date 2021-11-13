@@ -27,6 +27,7 @@ trait Event
                     $this->fight->getEvent()->petNormalAttackBefore($this->attribute, $skillResult);
                     break;
                 case 3:
+                    var_dump(get_class($this->attribute));
                     $this->fight->getEvent()->monsterNormalAttackBefore($this->attribute, $skillResult);
                     break;
             }

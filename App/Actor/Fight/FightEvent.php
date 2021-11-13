@@ -8,6 +8,7 @@ use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Skill\SkillBean;
 use App\Actor\Skill\SkillEffectResult;
 use App\Actor\Skill\SkillResult;
+use EasySwoole\EasySwoole\Logger;
 
 class FightEvent
 {
@@ -73,7 +74,7 @@ class FightEvent
         if (is_callable($this->callback)){
             call_user_func($this->callback, $event,...$data);
         }
-//        Logger::getInstance()->console("触发事件{$event}");
+        Logger::getInstance()->console("触发事件{$event}");
         foreach ($this->container[$event] as $name => $callable) {
             call_user_func($callable, $name,...$data);
         }

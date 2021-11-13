@@ -171,7 +171,7 @@ class SkillManager
     {
         //如果$code为null,则触发所有技能
         if ($code === null) {
-            $skillList = $this->skillList[$type]??[];
+            $skillList = $this->skillList[$type] ?? [];
             foreach ($skillList as $skill) {
                 $this->useSkill($skill);
             }
@@ -193,7 +193,7 @@ class SkillManager
         if (($monaCostNum = $this->checkManaCost($skill)) === false) {
             Assert::assert(false, "魔法不足");
         }
-        $skillResult = new SkillResult();
+        $skillResult = new SkillResult(['skillInfo' => $skill]);
         $skillResult->setManaCostNum($monaCostNum);
         Logger::getInstance()->log("{$this->attribute->getName()}{$skill->getSkillName()} 触发");
         //判断释放概率

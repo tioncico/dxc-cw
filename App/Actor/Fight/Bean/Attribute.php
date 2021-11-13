@@ -38,16 +38,6 @@ class Attribute extends SplBean
     protected $attackTimes = 1;//攻击次数
     protected $isDie = false;
     protected $originModel;//来源数据
-    /**
-     * @var BuffManager
-     */
-    protected $buffManager;
-
-    /**
-     * @var SkillManager
-     */
-    protected $skillManager;
-
     protected $skillList=[];
 
     /**
@@ -571,23 +561,6 @@ class Attribute extends SplBean
     {
         $this->attributeType = $attributeType;
     }
-
-    /**
-     * @return BuffManager
-     */
-    public function getBuffManager(): ?BuffManager
-    {
-        return $this->buffManager;
-    }
-
-    /**
-     * @param BuffManager $buffManager
-     */
-    public function setBuffManager(BuffManager $buffManager): void
-    {
-        $this->buffManager = $buffManager;
-    }
-
 
     public function __toString()
     {

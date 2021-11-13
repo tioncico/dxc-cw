@@ -72,6 +72,13 @@ class GameActor extends BaseActor
     {
         $this->user = new User($this->userId);
         $this->map = new Map($this->map);
+        $this->fight = new Fight();//建立战斗对象
+    }
+
+    public function tickGame()
+    {
+        $this->tick(1, function () {
+        });
     }
 
     public function mapInfo()
@@ -109,13 +116,10 @@ class GameActor extends BaseActor
         Assert::assert(empty($this->fight), "战斗已开始");
         $x = $param['x'] ?? 0;
         $y = $param['y'] ?? 0;
-        $monster = $this->map->nowMapGrid[$x][$y] ?? '';
+        $monster = $this->map->nowMapGrid[$x][$y]['data'] ?? '';
         $monster->hp = 100;
-        if (! $monster instanceof MapMonsterModel){
-            var_dump($this->map->nowMapGrid);
-        }
         Assert::assert($monster instanceof MapMonsterModel, "怪物未找到");
-        $fight = new Fight($this->user,$monster, function ($event, ...$data) {
+        $fight = new Fight($this->user, $monster, function ($event, ...$data) {
 //            $this->push( $event, 200, "发送游戏数据", $data);
         });
         $this->fight = $fight;
@@ -158,7 +162,7 @@ class GameActor extends BaseActor
         $command->setMsg($msg);
         $command->setData($data);
 
-        Push::push($this->userId,$command);
+        Push::push($this->userId, $command);
     }
 
 }

@@ -32,6 +32,10 @@ class Map
 
     ];//当前地图宫格情况 type 0没有数据,1怪物,2宝箱,3buff
 
+    public function getMonsterSkillManager(){
+
+    }
+
     public function __construct($mapId)
     {
         $this->initMap($mapId);
@@ -79,7 +83,10 @@ class Map
         $monsterList = $this->randMapMonster(1, mt_rand(($this->mapInfo->monsterNum * 0.5), $this->mapInfo->monsterNum));
 
         $randResultList = (new Rand($randList))->randValue(count($monsterList), false);
-        $this->nowMapGrid[0][0] = array_shift($monsterList);
+        $this->nowMapGrid[0][0] = [
+            'type' => 1,
+            'data' => array_shift($monsterList)
+        ];
         foreach ($randResultList as $value) {
             $bean = $value['info'];
             $this->nowMapGrid[$bean->getValue()[0]][$bean->getValue()[1]] = [
