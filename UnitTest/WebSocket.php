@@ -118,6 +118,7 @@ class WebSocket
     public function push($data)
     {
         $data['requestId'] = time();
+        var_dump(json_encode($data));
         $this->wsClient->push(json_encode($data));
     }
 
