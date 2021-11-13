@@ -32,6 +32,14 @@ class Index extends Controller
         $this->response()->write($string);
     }
 
+    function wsDoc()
+    {
+        $parser = new AnnotationDoc();
+        $string = $parser->scan2Html(EASYSWOOLE_ROOT.'/Doc',file_get_contents(EASYSWOOLE_ROOT.'/Doc/战斗文档.md'));
+        $this->response()->withAddedHeader('Content-type',"text/html");
+        $this->response()->write($string);
+    }
+
     function index()
     {
         $this->response()->redirect('/userDoc');
