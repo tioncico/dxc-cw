@@ -70,7 +70,7 @@ class Map
                     'value' => [$x, $y]
                 ]);
                 $grid[$x][$y] = [
-                    'type' => '0',
+                    'type' => 0,
                     'data' => []
                 ];
             }
