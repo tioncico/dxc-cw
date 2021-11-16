@@ -64,7 +64,7 @@ class Map
         $grid = [];
         $randList = [];
         for ($x = 0; $x < $maxX; $x++) {
-            for ($y = 0; $y <= $maxY; $y++) {
+            for ($y = 0; $y < $maxY; $y++) {
                 $randList[] = new Bean([
                     'odds'  => 1,
                     'value' => [$x, $y]
