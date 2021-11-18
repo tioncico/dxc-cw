@@ -110,13 +110,14 @@ class Map
             ];
         }
 
-
         foreach ($randResultList as $value) {
             $bean = $value['info'];
-            $this->nowMapGrid[$bean->getValue()[0]][$bean->getValue()[1]] = [
-                'type' => 1,
-                'data' => array_shift($monsterList)
-            ];
+            if (count($monsterList)>=1){
+                $this->nowMapGrid[$bean->getValue()[0]][$bean->getValue()[1]] = [
+                    'type' => 1,
+                    'data' => array_shift($monsterList)
+                ];
+            }
         }
     }
 

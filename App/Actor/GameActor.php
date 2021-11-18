@@ -145,7 +145,7 @@ class GameActor extends BaseActor
         foreach ($this->map->getNowMapGrid() as $item){
             foreach ($item as $value){
                 if ($value['type']==1){
-//                    Assert::assert(false, "还有怪物没有清理");
+                    Assert::assert(false, "还有怪物没有清理");
                 }
             }
         }

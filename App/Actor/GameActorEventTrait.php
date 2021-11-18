@@ -167,7 +167,10 @@ trait GameActorEventTrait
     protected function delMonsterEvent($x, $y)
     {
         $this->fight->getEvent()->register('MONSTER_DIE', 'deleteMonster', function () use ($x, $y) {
-            $this->map->nowMapGrid[$x][$y] = null;
+            $this->map->nowMapGrid[$x][$y] = [
+                'type'=>0,
+                'data'=>null
+            ];
             Logger::getInstance()->log("{$x},{$y}怪物死亡,删除");
         });
     }
