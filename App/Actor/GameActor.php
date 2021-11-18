@@ -140,6 +140,23 @@ class GameActor extends BaseActor
         $this->user->getUserNowAttribute()->getSkillManager()->useSkill($skillInfo);
     }
 
+    public function nextLevelMap(){
+        //判断是否还存在怪物
+        foreach ($this->map->getNowMapGrid() as $item){
+            foreach ($item as $value){
+                if ($value['type']==1){
+//                    Assert::assert(false, "还有怪物没有清理");
+                }
+            }
+        }
+        Assert::assert($this->map->getMapInfo()->maxLevel>=$this->map->nowMapLevel,"已经通关地下城");
+        //下一层
+        $this->map->nowMapLevel+=1;
+        $this->map->initGrid();
+        $this->mapInfo();
+        $this->userInfo();
+    }
+
     protected function onException(\Throwable $throwable)
     {
         $actorId = $this->actorId();

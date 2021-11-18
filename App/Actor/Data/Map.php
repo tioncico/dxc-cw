@@ -76,13 +76,41 @@ class Map
             }
         }
         $this->nowMapGrid = $grid;
-        $monsterList = $this->randMapMonster(1, mt_rand(($this->mapInfo->monsterNum * 0.5), $this->mapInfo->monsterNum));
+        $this->addMapGridMonster($randList);
+    }
 
+    public function addMapGridMonster($randList)
+    {
+        //新增普通怪物
+        $monsterList = $this->randMapMonster(1, mt_rand(($this->mapInfo->monsterNum * 0.5), $this->mapInfo->monsterNum));
         $randResultList = (new Rand($randList))->randValue(count($monsterList), false);
-        $this->nowMapGrid[0][0] =[
+        //自定义一个怪物
+        $this->nowMapGrid[0][0] = [
             'type' => 1,
             'data' => array_shift($monsterList)
         ];
+        //如果是boss层
+        if ($this->nowMapLevel == $this->mapInfo->maxLevel) {
+            $bossList = $this->randMapMonster(3, 1);
+            $boss = Rand::randArray($bossList, 1);
+            //自定义一个怪物
+            $this->nowMapGrid[2][2] = [
+                'type' => 1,
+                'data' => $boss
+            ];
+        }
+
+        //如果是精英层
+        if ($this->nowMapLevel % 5 == 0) {
+            $eliteList = $this->randMapMonster(2, 1);
+            $elite = Rand::randArray($eliteList, 1);
+            $this->nowMapGrid[mt_rand(0,4)][mt_rand(0,4)] = [
+                'type' => 1,
+                'data' => $elite
+            ];
+        }
+
+
         foreach ($randResultList as $value) {
             $bean = $value['info'];
             $this->nowMapGrid[$bean->getValue()[0]][$bean->getValue()[1]] = [
@@ -92,7 +120,7 @@ class Map
         }
     }
 
-    public function randMapMonster($type = 1, $num)
+    public function randMapMonster($type, $num): array
     {
         $monsterList = $this->mapMonsterList[$type];
         //随机n个怪物
@@ -117,12 +145,13 @@ class Map
     }
 
 
-    public function toArray(){
+    public function toArray()
+    {
         return [
-            'mapInfo'=>$this->mapInfo,
+            'mapInfo'     => $this->mapInfo,
 //            'mapMonsterList'=>$this->mapMonsterList,
-            'nowMapLevel'=>$this->nowMapLevel,
-            'nowMapGrid'=>$this->nowMapGrid,
+            'nowMapLevel' => $this->nowMapLevel,
+            'nowMapGrid'  => $this->nowMapGrid,
         ];
     }
 

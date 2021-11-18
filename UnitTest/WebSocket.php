@@ -66,7 +66,6 @@ class WebSocket
         $data = ['action' => 'exitMap'];
         $this->push($data);
     }
-
     public function useSkill0002()
     {
         $data = ['action' => 'useSkill', 'skillCode' => '0007'];
