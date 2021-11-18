@@ -336,7 +336,6 @@ class UserSkill extends UserBase
         $model = new SkillModel();
         $model->field("skill_list.*");
         $model->join('skill_shop_list', 'skill_shop_list.skillId = skill_list.skillId');
-//        $model->join('user_skill_list','user_skill_list.skillId = skill_list.skillId and user_skill_list.userId='.$this->who->userId,'right');
         $data = $model->with(['userSkillInfo' => $this->who->userId], false)->all();
         $this->writeJson(Status::CODE_OK, ['list' => $data], '获取列表成功');
     }
