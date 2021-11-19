@@ -98,7 +98,7 @@ class UserEquipment extends UserBase
                 Assert::assert(false, "物品[{$consumableDatum['name']}]不足");
             }
         }
-        BaseModel::transaction(function () use ($consumableData, $newStrengthenInfo) {
+        BaseModel::transaction(function () use ($consumableData,$userEquipmentInfo, $newStrengthenInfo) {
             //先消耗物品
             /**
              * @var $consumableDatum  UserGoodsEquipmentStrengthenAttributeModel
@@ -108,10 +108,12 @@ class UserEquipment extends UserBase
             }
             //强化
             $newStrengthenInfo = EquipmentStrengthenService::getInstance()->strengthenEquipment($newStrengthenInfo);
-            Assert::assert($newStrengthenInfo != null, '强化失败,请重新强化');
+            if (!empty($newStrengthenInfo)){
+                $userEquipmentInfo->update(['strengthenLevel'=>$newStrengthenInfo->strengthenLevel]);
+            }
             return $newStrengthenInfo;
         });
-
+        Assert::assert($newStrengthenInfo != null, '强化失败,请重新强化');
         $this->writeJson(Status::CODE_OK, $newStrengthenInfo, "强化成功");
     }
 

@@ -45,7 +45,6 @@ trait ChangeAttribute
             $this->harm($targetAttribute, $effectResult);
             $this->triggerBuckleBloodEventAfter($targetAttribute, $effectResult);
         }else{
-//            var_dump($effectResult->getPropertyChangeList());
             foreach ($effectResult->getPropertyChangeList() as $propertyName=>$num){
                 $getMethodName = "get".Str::studly($propertyName);
                 $setMethodName = "set".Str::studly($propertyName);

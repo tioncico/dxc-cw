@@ -10,6 +10,7 @@ namespace App\WebSocket\Controller;
 
 use App\Actor\Cache\UserRelationMap;
 use App\Actor\GameActor;
+use App\Actor\Skill\SkillEffectResult;
 use App\Model\Game\GoodsModel;
 use App\Model\Game\MapModel;
 use App\Model\Game\UserAttributeModel;
@@ -210,7 +211,7 @@ class Index extends BaseController
         $backpackInfo = UserBackpackModel::create()->getInfoByCode($userId,$goodsCode);
         Assert::assert($backpackInfo->num>=1,"物品数量不足");
 
-        $goodsInfo = GoodsModel::create()->getInfoByCode('revive');
+        $goodsInfo = GoodsModel::create()->getInfoByCode($goodsCode);
         BackpackService::getInstance()->decGoods($userId,$goodsInfo,1);
         $this->actorSend(Command::CS_USE_GOODS);
     }
