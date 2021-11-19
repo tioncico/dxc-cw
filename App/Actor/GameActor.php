@@ -10,6 +10,7 @@ use App\Actor\Data\User;
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Fight\Fight;
 use App\Actor\Fight\FightReward;
+use App\Actor\Goods\GoodsManager;
 use App\Model\Game\GoodsModel;
 use App\Model\Game\MapModel;
 use App\Model\Game\MapMonsterModel;
@@ -47,6 +48,11 @@ class GameActor extends BaseActor
     protected $fight;
 
     /**
+     * @var GoodsManager
+     */
+    protected $goodsManager;
+
+    /**
      * MapActor constructor.
      * @param Channel $mailBox
      * @param string  $actorId
@@ -71,6 +77,7 @@ class GameActor extends BaseActor
     protected function onStart()
     {
         $this->user = new User($this->userId);
+        $this->goodsManager = new GoodsManager($this->user->userAttribute);
         $this->map = new Map($this->map);
     }
 
@@ -85,6 +92,15 @@ class GameActor extends BaseActor
     {
         $this->push(\App\WebSocket\Command::SC_ACTION_USER_INFO, 200, "用户信息", [
             'userInfo' => $this->user->toArray(),
+        ]);
+    }
+
+    public function useGoods($param)
+    {
+        $goodsInfo = GoodsModel::create()->getInfoByCode($param['goodsCode']);
+        $goodsResult = $this->goodsManager->useGoods($goodsInfo);
+        $this->push(\App\WebSocket\Command::SC_GOODS_RESULT, 200, "物品修改结果", [
+            'goodsResult' => $goodsResult->toArray(),
         ]);
     }
 
@@ -111,11 +127,11 @@ class GameActor extends BaseActor
         $y = $param['y'] ?? 0;
         $monster = $this->map->nowMapGrid[$x][$y]['data'] ?? '';
 //        $monster->hp = 100;
-        if (! $monster instanceof MapMonsterModel){
+        if (!$monster instanceof MapMonsterModel) {
             var_dump($this->map->nowMapGrid);
         }
         Assert::assert($monster instanceof MapMonsterModel, "怪物未找到");
-        $fight = new Fight($this->user,$monster, function ($event, ...$data) {
+        $fight = new Fight($this->user, $monster, function ($event, ...$data) {
 //            $this->push( $event, 200, "发送游戏数据", $data);
         });
         $this->fight = $fight;
@@ -140,18 +156,19 @@ class GameActor extends BaseActor
         $this->user->getUserNowAttribute()->getSkillManager()->useSkill($skillInfo);
     }
 
-    public function nextLevelMap(){
+    public function nextLevelMap()
+    {
         //判断是否还存在怪物
-        foreach ($this->map->getNowMapGrid() as $item){
-            foreach ($item as $value){
-                if ($value['type']==1){
+        foreach ($this->map->getNowMapGrid() as $item) {
+            foreach ($item as $value) {
+                if ($value['type'] == 1) {
                     Assert::assert(false, "还有怪物没有清理");
                 }
             }
         }
-        Assert::assert($this->map->getMapInfo()->maxLevel>=$this->map->nowMapLevel,"已经通关地下城");
+        Assert::assert($this->map->getMapInfo()->maxLevel >= $this->map->nowMapLevel, "已经通关地下城");
         //下一层
-        $this->map->nowMapLevel+=1;
+        $this->map->nowMapLevel += 1;
         $this->map->initGrid();
         $this->mapInfo();
         $this->userInfo();
@@ -175,7 +192,7 @@ class GameActor extends BaseActor
         $command->setMsg($msg);
         $command->setData($data);
         Logger::getInstance()->info("ws推送:{$action}:{$msg}");
-        Push::push($this->userId,$command);
+        Push::push($this->userId, $command);
     }
 
 }

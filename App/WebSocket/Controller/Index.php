@@ -213,7 +213,7 @@ class Index extends BaseController
 
         $goodsInfo = GoodsModel::create()->getInfoByCode($goodsCode);
         BackpackService::getInstance()->decGoods($userId,$goodsInfo,1);
-        $this->actorSend(Command::CS_USE_GOODS);
+        $this->actorSend(Command::CS_USE_GOODS,['goodsCode'=>$goodsCode]);
     }
 
 }

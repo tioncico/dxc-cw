@@ -30,6 +30,7 @@ class Command extends SplBean
     const SC_ACTION_SKILL_AFTER = 'fightSkillAfter';
     const SC_ACTION_BUFF_ADD = 'buffAdd';
     const SC_ACTION_BUFF_RESULT = 'buffResult';
+    const SC_GOODS_RESULT = 'goodsResult';
     const SC_ACTION_HARM = 'fightHarm';
     const SC_ACTION_USER_DIE = 'userDie';
     const SC_ACTION_MONSTER_DIE = 'monsterDie';
