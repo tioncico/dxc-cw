@@ -16,6 +16,7 @@ class GoodsResult extends SplBean
     protected $isCritical = 0;//是否暴击
     protected $buffList = [];//附带buff
     protected $propertyChangeList = [];//元素变更情况,例如mp-10
+    protected $tickTime=0;//冷却时间
 
 
     /**
@@ -176,6 +177,22 @@ class GoodsResult extends SplBean
     public function setPropertyChangeList(array $propertyChangeList): void
     {
         $this->propertyChangeList = $propertyChangeList;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTickTime(): int
+    {
+        return $this->tickTime;
+    }
+
+    /**
+     * @param int $tickTime
+     */
+    public function setTickTime(int $tickTime): void
+    {
+        $this->tickTime = $tickTime;
     }
 
 }

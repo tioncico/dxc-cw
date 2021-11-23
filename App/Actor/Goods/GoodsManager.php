@@ -5,6 +5,7 @@ namespace App\Actor\Goods;
 use App\Actor\Fight\Bean\Attribute;
 use App\Actor\Skill\SkillEffectResult;
 use App\Model\Game\GoodsModel;
+use App\Service\Game\BackpackService;
 use App\Utility\Assert\Assert;
 use EasySwoole\EasySwoole\Logger;
 use EasySwoole\Utility\Str;
@@ -30,7 +31,11 @@ class GoodsManager
         if (!in_array($goodsCode, ['propHp', 'propMp'])) {
             Assert::assert(false, "此物品不能在地下城使用");
         }
-        switch ($goodsCode){
+        if (($this->tickTimeArr[$goodsModel->baseCode] ?? 0) > time()) {
+            Assert::assert(false, "此类型物品未冷却");
+        }
+
+        switch ($goodsCode) {
             case"propHp":
                 $goodsResult = $this->useHp($goodsModel);
                 break;
@@ -38,7 +43,7 @@ class GoodsManager
                 $goodsResult = $this->useMp($goodsModel);
                 break;
         }
-        $this->changeAttribute($this->userAttribute,$goodsResult);
+        $this->changeAttribute($this->userAttribute, $goodsResult);
         return $goodsResult;
     }
 
@@ -47,6 +52,9 @@ class GoodsManager
         $goodsResult = new GoodsResult(['effectName' => $goodsModel->name, 'effectType' => "hp", 'goodsInfo' => $goodsModel]);
         $propertyName = 'hp';
         $goodsResult->addProperty($propertyName, $goodsModel->extraData);
+        $tickTime = 10;
+        $goodsResult->setTickTime($tickTime);
+        $this->tickTimeArr[$goodsModel->baseCode] = time()+$tickTime;
         return $goodsResult;
     }
 
@@ -55,6 +63,9 @@ class GoodsManager
         $goodsResult = new GoodsResult(['effectName' => $goodsModel->name, 'effectType' => "hp", 'goodsInfo' => $goodsModel]);
         $propertyName = 'mp';
         $goodsResult->addProperty($propertyName, $goodsModel->extraData);
+        $tickTime = 10;
+        $goodsResult->setTickTime($tickTime);
+        $this->tickTimeArr[$goodsModel->baseCode] = time()+$tickTime;
         return $goodsResult;
     }
 

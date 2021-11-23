@@ -208,11 +208,6 @@ class Index extends BaseController
         $param = $this->getParam();
         $userId = $this->userId();
         $goodsCode = $param['goodsCode'];
-        $backpackInfo = UserBackpackModel::create()->getInfoByCode($userId,$goodsCode);
-        Assert::assert($backpackInfo->num>=1,"物品数量不足");
-
-        $goodsInfo = GoodsModel::create()->getInfoByCode($goodsCode);
-        BackpackService::getInstance()->decGoods($userId,$goodsInfo,1);
         $this->actorSend(Command::CS_USE_GOODS,['goodsCode'=>$goodsCode]);
     }
 

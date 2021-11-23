@@ -15,6 +15,8 @@ use App\Model\Game\GoodsModel;
 use App\Model\Game\MapModel;
 use App\Model\Game\MapMonsterModel;
 use App\Model\Game\UserAttributeModel;
+use App\Model\Game\UserBackpackModel;
+use App\Service\Game\BackpackService;
 use App\Service\Game\Fight\Reward;
 use App\Service\GameResponse;
 use App\Utility\Assert\Assert;
@@ -97,8 +99,13 @@ class GameActor extends BaseActor
 
     public function useGoods($param)
     {
+        $backpackInfo = UserBackpackModel::create()->getInfoByCode($this->userId,$param['goodsCode']);
+        Assert::assert(($backpackInfo->num??0)>=1,"物品数量不足");
+
         $goodsInfo = GoodsModel::create()->getInfoByCode($param['goodsCode']);
         $goodsResult = $this->goodsManager->useGoods($goodsInfo);
+
+        BackpackService::getInstance()->decGoods($this->userId, $goodsInfo, 1);
         $this->push(\App\WebSocket\Command::SC_GOODS_RESULT, 200, "物品修改结果", [
             'goodsResult' => $goodsResult->toArray(),
         ]);

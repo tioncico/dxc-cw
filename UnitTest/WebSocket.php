@@ -54,6 +54,11 @@ class WebSocket
         $data = ['action' => 'userInfo'];
         $this->push($data);
     }
+    public function useGoods()
+    {
+        $data = ['action' => 'useGoods','goodsCode'=>'prop0001'];
+        $this->push($data);
+    }
 
     public function nextLevelMap()
     {
