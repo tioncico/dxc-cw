@@ -189,6 +189,11 @@ class Index extends BaseController
     }
 
 
+    public function fightStatus(){
+        $this->actorSend(Command::CS_FIGHT_STATUS);
+    }
+
+
     /**
      * 复活(消耗复活币)
      * revive
