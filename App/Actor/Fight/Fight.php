@@ -139,13 +139,13 @@ class Fight
             }
             //怪物死亡
             if ($this->monsterAttribute->isDie()) {
-                $this->state = 1;
+                $this->state = 2;
                 $this->event->monsterDie($this->monsterAttribute);
                 break;
             }
             //用户死亡
             if ($this->userAttribute->isDie()) {
-                $this->state = 1;
+                $this->state = 2;
                 $this->event->userDie($this->userAttribute);
                 break;
             }

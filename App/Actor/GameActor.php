@@ -127,6 +127,12 @@ class GameActor extends BaseActor
         $this->exit();
     }
 
+    public function stopFight()
+    {
+        Assert::assert(!empty($this->fight), "战斗已结束,无法逃跑");
+        $this->fight->state=2;
+    }
+
     public function fightStatus()
     {
         /**
