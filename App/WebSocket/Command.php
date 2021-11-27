@@ -26,6 +26,7 @@ class Command extends SplBean
     const SC_ACTION_EXIT_MAP = 'exitMap';
     const SC_ACTION_BOX_OPEN = 'boxOpen';
     const SC_ACTION_FIGHT = 'fightStart';
+    const SC_ACTION_FIGHT_STATUS = 'fightStatus';
     const SC_ACTION_SKILL_BEFORE = 'fightSkillBefore';
     const SC_ACTION_SKILL_AFTER = 'fightSkillAfter';
     const SC_ACTION_BUFF_ADD = 'buffAdd';
@@ -50,6 +51,7 @@ class Command extends SplBean
     const CS_REVIVE = 'revive';//复活
     const CS_USE_GOODS = 'useGoods';//使用物品
     const CS_NEXT_LEVEL_MAP = 'nextLevelMap';//下一层地图
+    const CS_FIGHT_STATUS = 'fightStatus';//当前战斗状态
 
     /**
      * @return mixed

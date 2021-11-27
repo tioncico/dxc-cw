@@ -99,8 +99,8 @@ class GameActor extends BaseActor
 
     public function useGoods($param)
     {
-        $backpackInfo = UserBackpackModel::create()->getInfoByCode($this->userId,$param['goodsCode']);
-        Assert::assert(($backpackInfo->num??0)>=1,"物品数量不足");
+        $backpackInfo = UserBackpackModel::create()->getInfoByCode($this->userId, $param['goodsCode']);
+        Assert::assert(($backpackInfo->num ?? 0) >= 1, "物品数量不足");
 
         $goodsInfo = GoodsModel::create()->getInfoByCode($param['goodsCode']);
         $goodsResult = $this->goodsManager->useGoods($goodsInfo);
@@ -126,6 +126,27 @@ class GameActor extends BaseActor
         $this->map = null;
         $this->exit();
     }
+
+    public function fightStatus()
+    {
+        /**
+         * @var Fight $fight
+         */
+        $fight = $this->fight;
+        if(empty($fight)){
+            $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT_STATUS, 200, "当前战斗状态", null);
+        }else{
+            $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT_STATUS, 200, "当前战斗状态", [
+                'userAttribute'=>$fight->getUserAttribute(),
+                'userBaseAttribute'=>$fight->getUserBaseAttribute(),
+                'monsterAttribute'=>$fight->getMonsterAttribute(),
+                'monsterBaseAttribute'=>$fight->getMonsterBaseAttribute(),
+                'userPetAttributeList'=>$fight->getPetAttributeList(),
+            ]);
+
+        }
+    }
+
 
     public function fight($param)
     {
