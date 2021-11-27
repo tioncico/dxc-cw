@@ -110,6 +110,8 @@ trait GameActorEventTrait
         $fight = $this->fight;
         $fight->getEvent()->register('FIGHT_END', 'delFightObj', function () {
             $this->fight = null;
+
+            $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT_END, 200, "战斗结束",null);
         });
     }
 
