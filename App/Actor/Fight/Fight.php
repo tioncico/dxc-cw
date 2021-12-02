@@ -134,7 +134,6 @@ class Fight
         while (1) {
             //战斗结束判定
             if ($this->state != 1) {
-                $this->event->fightEnd();
                 break;
             }
             //怪物死亡
