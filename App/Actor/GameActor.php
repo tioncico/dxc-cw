@@ -130,7 +130,7 @@ class GameActor extends BaseActor
     public function stopFight()
     {
         Assert::assert(!empty($this->fight), "战斗已结束,无法逃跑");
-        $this->fight->state=2;
+        $this->fight->state = 2;
     }
 
     public function fightStatus()
@@ -139,15 +139,15 @@ class GameActor extends BaseActor
          * @var Fight $fight
          */
         $fight = $this->fight;
-        if(empty($fight)){
+        if (empty($fight)) {
             $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT_STATUS, 200, "当前战斗状态", null);
-        }else{
+        } else {
             $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT_STATUS, 200, "当前战斗状态", [
-                'userAttribute'=>$fight->getUserAttribute(),
-                'userBaseAttribute'=>$fight->getUserBaseAttribute(),
-                'monsterAttribute'=>$fight->getMonsterAttribute(),
-                'monsterBaseAttribute'=>$fight->getMonsterBaseAttribute(),
-                'userPetAttributeList'=>$fight->getPetAttributeList(),
+                'userAttribute'        => $fight->getUserAttribute(),
+                'userBaseAttribute'    => $fight->getUserBaseAttribute(),
+                'monsterAttribute'     => $fight->getMonsterAttribute(),
+                'monsterBaseAttribute' => $fight->getMonsterBaseAttribute(),
+                'userPetAttributeList' => $fight->getPetAttributeList(),
             ]);
 
         }
@@ -160,6 +160,8 @@ class GameActor extends BaseActor
         $x = $param['x'] ?? 0;
         $y = $param['y'] ?? 0;
         $monster = $this->map->nowMapGrid[$x][$y]['data'] ?? '';
+        Assert::assert($this->user->getUserNowAttribute()->getHp() > 0, "用户已经死亡");
+
 //        $monster->hp = 100;
         if (!$monster instanceof MapMonsterModel) {
             var_dump($this->map->nowMapGrid);
