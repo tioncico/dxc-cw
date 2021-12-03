@@ -4,13 +4,14 @@
 namespace App\Actor\Skill;
 
 
+use App\Actor\Fight\Bean\Attribute;
 use EasySwoole\Spl\SplBean;
 
 class SkillEffectResult extends SplBean
 {
     protected $skillInfo = null;//技能信息
     protected $effectType = "";//效果类型
-    protected $targetModel = null;//目标模型数据
+    protected $targetId = null;//目标模型id
     protected $effectName = "";//效果名称
     protected $targetType = 0;//0自身,1玩家,2怪物
     protected $harmNum = 0;//初始伤害
@@ -195,17 +196,17 @@ class SkillEffectResult extends SplBean
     /**
      * @return null
      */
-    public function getTargetModel()
+    public function getTargetId()
     {
-        return $this->targetModel;
+        return $this->targetId;
     }
 
     /**
-     * @param null $targetModel
+     * @param
      */
-    public function setTargetModel($targetModel): void
+    public function setTargetId($targetId): void
     {
-        $this->targetModel = $targetModel;
+        $this->targetId = $targetId;
     }
 
 

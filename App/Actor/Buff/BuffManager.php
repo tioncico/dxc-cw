@@ -153,6 +153,7 @@ class BuffManager
         Logger::getInstance()->log("触发buff{$buff->getBuffName()}");
         $methodName = "useBuff" . Str::studly($buff->getBuffCode());
         $buffResult = $this->$methodName($buff);
+        $buffResult->setTargetId($this->attribute->getAttributeId());
         $this->changeAttribute($buffResult);
         $this->buffResult($this->attribute,$buffResult);
     }

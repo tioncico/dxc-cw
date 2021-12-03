@@ -231,7 +231,7 @@ class SkillManager
             list($targetBaseAttribute, $targetAttribute) = $this->getTargetAttribute($effectBean->getTarget());
             $methodName = 'effect' . Str::studly($type);
             $skillEffectResult = $this->$methodName($targetBaseAttribute, $targetAttribute, $skill, $effectBean);
-            $skillEffectResult->setTargetModel($targetAttribute->getOriginModel());
+            $skillEffectResult->setTargetId($targetAttribute->getAttributeId());
             $skillResult->addEffectResult($skillEffectResult);
             //触发属性相关
             $this->changeAttribute($targetAttribute, $skillEffectResult);

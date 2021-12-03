@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Actor\Fight\Bean;
+
 use App\Actor\Buff\BuffBean;
 use App\Actor\Buff\BuffManager;
 use App\Actor\Skill\SkillManager;
@@ -48,7 +49,7 @@ class Attribute extends SplBean
      */
     protected $skillManager;
 
-    protected $skillList=[];
+    protected $skillList = [];
 
     /**
      * @return int
@@ -126,7 +127,7 @@ class Attribute extends SplBean
     public function incHp(int $hp)
     {
         $this->hp += $hp;
-        if ($this->hp<=0){
+        if ($this->hp <= 0) {
             $this->setIsDie(true);
         }
     }
@@ -191,6 +192,7 @@ class Attribute extends SplBean
     {
         $this->defense = $defense;
     }
+
     /**
      * @param mixed $defense
      */
@@ -540,6 +542,7 @@ class Attribute extends SplBean
     {
         $this->dodgeRate = $dodgeRate;
     }
+
     /**
      * @return SkillManager
      */
@@ -554,6 +557,24 @@ class Attribute extends SplBean
     public function setSkillManager(SkillManager $skillManager): void
     {
         $this->skillManager = $skillManager;
+    }
+
+    /**
+     * @return null
+     */
+    public function getAttributeId()
+    {
+        $attributeId = 0;
+        if ($this->getAttributeType() == 1) {
+            $attributeId = $this->getOriginModel()->userId;
+        }
+        if ($this->getAttributeType() == 2) {
+            $attributeId = $this->getOriginModel()->userPetId;
+        }
+        if ($this->getAttributeType() == 3) {
+            $attributeId = $this->getOriginModel()->mapMonsterId;
+        }
+        return $attributeId;
     }
 
     /**

@@ -37,32 +37,32 @@ trait GameActorEventTrait
          */
         $fight = $this->fight;
 
-        $addBuffEventFunction = function ($name,Attribute $attribute, BuffBean $buffBean){
+        $addBuffEventFunction = function ($name, Attribute $attribute, BuffBean $buffBean) {
             $this->push(\App\WebSocket\Command::SC_ACTION_BUFF_ADD, 200, 'buff增加推送', [
-                'attributeModel' => $attribute->getOriginModel(),
-                'attributeType'  => $attribute->getAttributeType(),
-                'buffBean'    => $buffBean
+                'attributeId'   => $attribute->getAttributeId(),
+                'attributeType' => $attribute->getAttributeType(),
+                'buffBean'      => $buffBean
             ]);
         };
-        $buffResultEventFunction = function ($name,Attribute $attribute, BuffBean $buffBean){
+        $buffResultEventFunction = function ($name, Attribute $attribute, BuffBean $buffBean) {
             $this->push(\App\WebSocket\Command::SC_ACTION_BUFF_RESULT, 200, 'buff结果推送', [
-                'attributeModel' => $attribute->getOriginModel(),
-                'attributeType'  => $attribute->getAttributeType(),
-                'buffBean'    => $buffBean
+                'attributeId'   => $attribute->getAttributeId(),
+                'attributeType' => $attribute->getAttributeType(),
+                'buffBean'      => $buffBean
             ]);
         };
 
 
-        $fight->getUserAttribute()->getBuffManager()->addEventHandle('addBuffEvent','pushWS',$addBuffEventFunction);
-        $fight->getMonsterAttribute()->getBuffManager()->addEventHandle('addBuffEvent','pushWS',$addBuffEventFunction);
-        foreach ($fight->getPetAttributeList() as $attribute){
-            $attribute->getBuffManager()->addEventHandle('addBuffEvent','pushWS',$addBuffEventFunction);
+        $fight->getUserAttribute()->getBuffManager()->addEventHandle('addBuffEvent', 'pushWS', $addBuffEventFunction);
+        $fight->getMonsterAttribute()->getBuffManager()->addEventHandle('addBuffEvent', 'pushWS', $addBuffEventFunction);
+        foreach ($fight->getPetAttributeList() as $attribute) {
+            $attribute->getBuffManager()->addEventHandle('addBuffEvent', 'pushWS', $addBuffEventFunction);
         }
 
-        $fight->getUserAttribute()->getBuffManager()->addEventHandle('buffResult','pushWS',$buffResultEventFunction);
-        $fight->getMonsterAttribute()->getBuffManager()->addEventHandle('buffResult','pushWS',$buffResultEventFunction);
-        foreach ($fight->getPetAttributeList() as $attribute){
-            $attribute->getBuffManager()->addEventHandle('buffResult','pushWS',$buffResultEventFunction);
+        $fight->getUserAttribute()->getBuffManager()->addEventHandle('buffResult', 'pushWS', $buffResultEventFunction);
+        $fight->getMonsterAttribute()->getBuffManager()->addEventHandle('buffResult', 'pushWS', $buffResultEventFunction);
+        foreach ($fight->getPetAttributeList() as $attribute) {
+            $attribute->getBuffManager()->addEventHandle('buffResult', 'pushWS', $buffResultEventFunction);
         }
 
     }
@@ -72,16 +72,16 @@ trait GameActorEventTrait
         $fight = $this->fight;
         $fight->getEvent()->register('USE_SKILL_BEFORE', 'pushWS', function ($eventName, Attribute $attribute, SkillResult $skillResult) {
             $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, '使用技能前推送', [
-                'attributeModel' => $attribute->getOriginModel(),
-                'attributeType'  => $attribute->getAttributeType(),
-                'skillResult'    => $skillResult
+                'attributeId'   => $attribute->getAttributeId(),
+                'attributeType' => $attribute->getAttributeType(),
+                'skillResult'   => $skillResult
             ]);
         });
         $fight->getEvent()->register('USE_SKILL_AFTER', 'pushWS', function ($eventName, Attribute $attribute, SkillResult $skillResult) {
             $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_AFTER, 200, '使用技能后推送', [
-                'attributeModel' => $attribute->getOriginModel(),
-                'attributeType'  => $attribute->getAttributeType(),
-                'skillResult'    => $skillResult
+                'attributeId'   => $attribute->getAttributeId(),
+                'attributeType' => $attribute->getAttributeType(),
+                'skillResult'   => $skillResult
             ]);
         });
     }
@@ -91,16 +91,16 @@ trait GameActorEventTrait
         $fight = $this->fight;
         $fight->getEvent()->register('USER_BUCKLE_BLOOD_AFTER', 'pushWS', function ($eventName, Attribute $attribute, SkillEffectResult $skillResult) {
             $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, '扣血后推送', [
-                'attributeModel' => $attribute->getOriginModel(),
-                'attributeType'  => $attribute->getAttributeType(),
-                'skillResult'    => $skillResult
+                'attributeId'   => $attribute->getAttributeId(),
+                'attributeType' => $attribute->getAttributeType(),
+                'skillResult'   => $skillResult
             ]);
         });
         $fight->getEvent()->register('MONSTER_BUCKLE_BLOOD_AFTER', 'pushWS', function ($eventName, Attribute $attribute, SkillEffectResult $skillResult) {
             $this->push(\App\WebSocket\Command::SC_ACTION_SKILL_BEFORE, 200, '扣血后推送', [
-                'attributeModel' => $attribute->getOriginModel(),
-                'attributeType'  => $attribute->getAttributeType(),
-                'skillResult'    => $skillResult
+                'attributeId'   => $attribute->getAttributeId(),
+                'attributeType' => $attribute->getAttributeType(),
+                'skillResult'   => $skillResult
             ]);
         });
     }
@@ -112,7 +112,7 @@ trait GameActorEventTrait
         $fight->getEvent()->register('FIGHT_END', 'delFightObj', function () {
             $this->fight = null;
 
-            $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT_END, 200, "战斗结束",null);
+            $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT_END, 200, "战斗结束", null);
         });
     }
 
@@ -171,8 +171,8 @@ trait GameActorEventTrait
     {
         $this->fight->getEvent()->register('MONSTER_DIE', 'deleteMonster', function () use ($x, $y) {
             $this->map->nowMapGrid[$x][$y] = [
-                'type'=>0,
-                'data'=>null
+                'type' => 0,
+                'data' => null
             ];
             Logger::getInstance()->log("{$x},{$y}怪物死亡,删除");
         });
@@ -188,7 +188,7 @@ trait GameActorEventTrait
     protected function userDie()
     {
         $this->fight->getEvent()->register('USER_DIE', 'userDie', function () {
-            $this->push(\App\WebSocket\Command::SC_ACTION_USER_DIE, 200, "玩家死亡",null);
+            $this->push(\App\WebSocket\Command::SC_ACTION_USER_DIE, 200, "玩家死亡", null);
 
         });
     }
