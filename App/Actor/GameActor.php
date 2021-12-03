@@ -133,6 +133,21 @@ class GameActor extends BaseActor
         $this->fight->state = 2;
     }
 
+
+    public function revive()
+    {
+        Assert::assert($this->user->getUserNowAttribute()->getHp()<=0, "玩家没有死亡");
+
+        $userId = $this->userId;
+        $backpackInfo = UserBackpackModel::create()->getInfoByCode($userId,'revive');
+        Assert::assert($backpackInfo->num>=1,"复活币数量不足");
+        $goodsInfo = GoodsModel::create()->getInfoByCode('revive');
+        BackpackService::getInstance()->decGoods($userId,$goodsInfo,1);
+        $this->user->getUserNowAttribute()->setHp($this->user->userAttribute->getHp());
+        $this->fight->state = 0;
+
+    }
+
     public function fightStatus()
     {
         /**

@@ -201,11 +201,6 @@ class Index extends BaseController
      * Time: 4:14 下午
      */
     public function revive(){
-        $userId = $this->userId();
-        $backpackInfo = UserBackpackModel::create()->getInfoByCode($userId,'revive');
-        Assert::assert($backpackInfo->num>=1,"复活币数量不足");
-        $goodsInfo = GoodsModel::create()->getInfoByCode('revive');
-        BackpackService::getInstance()->decGoods($userId,$goodsInfo,1);
         $this->actorSend(Command::CS_REVIVE);
     }
 
