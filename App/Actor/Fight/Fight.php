@@ -98,6 +98,7 @@ class Fight
             $this->petBaseAttributeList[$petAttribute->userPetId] = new Attribute($petAttribute->toArray());;
             $this->petBaseAttributeList[$petAttribute->userPetId]->setAttributeType(2);
             $this->petAttributeList[$petAttribute->userPetId] = clone $this->petBaseAttributeList[$petAttribute->userPetId];
+            $this->petAttributeList[$petAttribute->userPetId]->setOriginModel($petAttribute);
 
             $skillManager = new SkillManager($this->petBaseAttributeList[$petAttribute->userPetId], $this->petAttributeList[$petAttribute->userPetId], $this);
             foreach ($this->petAttributeList[$petAttribute->userPetId]->getSkillList() as $skill){
