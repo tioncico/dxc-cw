@@ -27,6 +27,7 @@ trait GameActorEventTrait
         $this->skillEvent();
         $this->buckleBloodEvent();
         $this->buffEvent();
+        $this->userDie();
     }
 
     protected function buffEvent()
@@ -174,6 +175,21 @@ trait GameActorEventTrait
                 'data'=>null
             ];
             Logger::getInstance()->log("{$x},{$y}怪物死亡,删除");
+        });
+    }
+
+
+    /**
+     * 用户死亡
+     * delMonsterEvent
+     * @author tioncico
+     * Time: 9:43 上午
+     */
+    protected function userDie()
+    {
+        $this->fight->getEvent()->register('USER_DIE', 'userDie', function () {
+            $this->push(\App\WebSocket\Command::SC_ACTION_USER_DIE, 200, "玩家死亡",null);
+
         });
     }
 

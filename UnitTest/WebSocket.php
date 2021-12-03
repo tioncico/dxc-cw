@@ -14,7 +14,7 @@ class WebSocket
     public function __construct()
     {
         $this->wsClient = new HttpClient('127.0.0.1:9501');
-        $this->wsClient->setUrl('ws://127.0.0.1:9501?userId=1');
+        $this->wsClient->setUrl('ws://127.0.0.1:9501?userId=1843');
 
         $this->wsClient->upgrade();
         $this->recv();
