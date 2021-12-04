@@ -47,6 +47,9 @@ class GameActor extends BaseActor
      */
     protected $map;
 
+    /**
+     * @var Fight
+     */
     protected $fight;
 
     /**
@@ -114,7 +117,7 @@ class GameActor extends BaseActor
     public function exitMap()
     {
         //判断是否结束战斗或者未开始
-        Assert::assert(empty($this->fight), "战斗未结束,无法退出");
+        Assert::assert(empty($this->fight)||$this->fight->state!=1, "战斗未结束,无法退出");
         //清理用户地图数据
         UserRelationMap::getInstance()->delUserMap($this->userId);
         $this->push(\App\WebSocket\Command::SC_ACTION_EXIT_MAP, 200, "退出地图", [
@@ -129,7 +132,7 @@ class GameActor extends BaseActor
 
     public function stopFight()
     {
-        Assert::assert(!empty($this->fight), "战斗已结束,无法逃跑");
+        Assert::assert(!empty($this->fight)&&$this->fight->state==1, "战斗已结束,无法逃跑");
         $this->fight->state = 2;
     }
 
@@ -171,7 +174,7 @@ class GameActor extends BaseActor
 
     public function fight($param)
     {
-        Assert::assert(empty($this->fight), "战斗已开始");
+        Assert::assert(empty($this->fight)||$this->fight->state!=1, "战斗已开始");
         $x = $param['x'] ?? 0;
         $y = $param['y'] ?? 0;
         $monster = $this->map->nowMapGrid[$x][$y]['data'] ?? '';
