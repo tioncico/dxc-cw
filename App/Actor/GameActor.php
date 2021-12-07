@@ -167,7 +167,6 @@ class GameActor extends BaseActor
                 'monsterBaseAttribute' => $fight->getMonsterBaseAttribute(),
                 'userPetAttributeList' => $fight->getPetAttributeList(),
             ]);
-
         }
     }
 
