@@ -158,7 +158,7 @@ class GameActor extends BaseActor
          */
         $fight = $this->fight;
         if (empty($fight)) {
-            $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT_STATUS, 200, "当前战斗状态", null);
+            $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT_STATUS, 400, "不在战斗中", null);
         } else {
             $this->push(\App\WebSocket\Command::SC_ACTION_FIGHT_STATUS, 200, "当前战斗状态", [
                 'userAttribute'        => $fight->getUserAttribute(),
