@@ -128,6 +128,9 @@ class GameActor extends BaseActor
         $this->user = null;
         $this->map = null;
         $this->exit();
+
+        //创建关联关系
+        UserRelationMap::getInstance()->delUserMap($this->userId);
     }
 
     public function stopFight()
