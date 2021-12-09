@@ -574,6 +574,7 @@ class Attribute extends SplBean
         if ($this->getAttributeType() == 3) {
             $attributeId = $this->getOriginModel()->mapMonsterId;
         }
+        $this->attributeId =$attributeId;
         return $attributeId;
     }
 

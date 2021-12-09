@@ -63,6 +63,7 @@ class User
     {
         if (empty($this->userNowAttribute)) {
             $this->userNowAttribute = new Attribute($this->userAttribute->toArray());
+            $this->userNowAttribute->setAttributeType(1);
         }
         return $this->userNowAttribute;
     }
