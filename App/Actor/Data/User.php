@@ -39,7 +39,7 @@ class User
     {
         $userAttributeModel = UserService::getInstance()->countFightAttribute($userId);
         $userAttribute = new Attribute($userAttributeModel->toArray());
-
+        $userAttribute->setAttributeType(1);
         //初始化技能
         $skillObjList = [];
         $userSkillList = UserCache::getInstance()->getUserSkillList($userId);

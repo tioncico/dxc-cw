@@ -36,6 +36,11 @@ class WebSocket
         $data = ['action' => 'getMapActorId'];
         $this->push($data);
     }
+    public function fightStatus()
+    {
+        $data = ['action' => 'fightStatus'];
+        $this->push($data);
+    }
 
     public function fight()
     {
@@ -108,7 +113,6 @@ class WebSocket
             try {
                 $line = trim(System::fread(STDIN));
                 if (!empty($line)) {
-
                     $this->$line();
                 }
             } catch (\Throwable $throwable) {
@@ -122,7 +126,7 @@ class WebSocket
     public function push($data)
     {
         $data['requestId'] = time();
-        var_dump(json_encode($data));
+//        var_dump(json_encode($data));
         $this->wsClient->push(json_encode($data));
     }
 
@@ -132,7 +136,11 @@ class WebSocket
             while (1) {
                 $response = $this->wsClient->recv(0);
                 if ($response) {
-                    echo json_encode(json_decode($response->data, true), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) . PHP_EOL;
+                    file_put_contents("text.txt",$response->data,8);
+//                    echo json_encode(json_decode($response->data, true), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) . PHP_EOL;
+//                    if (json_decode($response->data, true)['action']=='fightStatus'){
+//                        var_dump(json_decode($response->data, true));
+//                    }
                 }
                 if ($response===false){
                     break;
