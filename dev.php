@@ -28,7 +28,7 @@ return [
     'TEMP_DIR'    => null,
     'LOG_DIR'     => null,
     "MYSQL"       => [//mysql
-        'host'     => '47.106.110.119',
+        'host'     => 'admin.php20.cn',
         'port'     => 3300,
         'user'     => 'mwxz',
         'password' => 'mwxz123456',
